@@ -28,7 +28,7 @@ export default function SystemPermissionsPage() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          HỆ THỐNG > PHÂN QUYỀN
+          {'HỆ THỐNG > PHÂN QUYỀN'}
         </h1>
         <p className="text-gray-600 mb-4">
           Phân quyền Hệ thống
