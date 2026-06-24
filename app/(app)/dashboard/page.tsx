@@ -118,16 +118,16 @@ export default function DashboardPage() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left font-semibold text-gray-700">STUDENT NAME</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-700">ASSIGNMENT</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-700">DATE SUBMITTED</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-700">STATUS</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-700">ACTION</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">STUDENT NAME</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">ASSIGNMENT</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">DATE SUBMITTED</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">STATUS</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">ACTION</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 text-gray-900">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
                       DH
@@ -135,8 +135,8 @@ export default function DashboardPage() {
                     <span className="font-medium">Dặng Hoàng Nam</span>
                   </div>
                 </td>
-                <td className="px-6 py-4">Giải tích nâng cao - Tuần 8</td>
-                <td className="px-6 py-4">Hôm nay, 09:30 AM</td>
+                <td className="px-6 py-4 text-gray-900">Giải tích nâng cao - Tuần 8</td>
+                <td className="px-6 py-4 text-gray-900">Hôm nay, 09:30 AM</td>
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
                     ✓ SUBMITTED
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                 </td>
               </tr>
               <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 text-gray-900">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
                       MT
@@ -157,8 +157,8 @@ export default function DashboardPage() {
                     <span className="font-medium">Mai Thảo Vy</span>
                   </div>
                 </td>
-                <td className="px-6 py-4">Bài tập Hình học Oxyz</td>
-                <td className="px-6 py-4">Hôm qua, 04:45 PM</td>
+                <td className="px-6 py-4 text-gray-900">Bài tập Hình học Oxyz</td>
+                <td className="px-6 py-4 text-gray-900">Hôm qua, 04:45 PM</td>
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
                     ⏳ PENDING REVIEW
