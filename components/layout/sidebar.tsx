@@ -1,0 +1,82 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
+import { cn } from '@/lib/utils'
+
+export function Sidebar() {
+  const pathname = usePathname()
+  const { user } = useAuth()
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
+
+  const studentNavItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { href: '/my-classes', label: 'My Classes', icon: '📚' },
+    { href: '/gradebook', label: 'Gradebook', icon: '📈' },
+    { href: '/attendance', label: 'Attendance', icon: '✓' },
+    { href: '/administrative-ai', label: 'Administrative AI', icon: '🤖' },
+  ]
+
+  const adminNavItems = [
+    { href: '/dashboard', label: 'Overview', icon: '📊' },
+    { href: '/user-management', label: 'User Management', icon: '👥' },
+    { href: '/system-permissions', label: 'System Permissions', icon: '🔐' },
+    { href: '/ai-configuration', label: 'AI Configuration', icon: '⚙️' },
+    { href: '/security-logs', label: 'Security Logs', icon: '🔒' },
+  ]
+
+  const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems
+
+  return (
+    <aside className="w-64 bg-[#0B3D5C] text-white min-h-screen flex flex-col border-r border-[#054070]">
+      {/* Logo Section */}
+      <div className="p-6 border-b border-[#054070]">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+            <span className="text-[#0B3D5C] font-bold text-lg">CMC</span>
+          </div>
+          <div>
+            <div className="font-bold text-sm">CMC University</div>
+            <div className="text-xs text-gray-300">Trường THPT Chuyên CMC</div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-4 py-8 space-y-2">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium',
+              isActive(item.href)
+                ? 'bg-[#0066CC] text-white'
+                : 'text-gray-200 hover:bg-[#054070]',
+            )}
+          >
+            <span className="text-lg">{item.icon}</span>
+            <span>{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+
+      {/* Settings & Logout */}
+      <div className="border-t border-[#054070] p-4 space-y-2">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-[#054070] transition-colors text-sm font-medium">
+          <span className="text-lg">⚙️</span>
+          <span>Settings</span>
+        </button>
+        <Link
+          href="/login"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-[#054070] transition-colors text-sm font-medium"
+        >
+          <span className="text-lg">🚪</span>
+          <span>Logout</span>
+        </Link>
+      </div>
+    </aside>
+  )
+}

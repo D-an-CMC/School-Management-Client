@@ -164,6 +164,33 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-sans bg-background;
   }
+}
+
+/* CMC University Design System */
+:root {
+  --color-primary-dark: #0B3D5C;
+  --color-primary-blue: #0066CC;
+  --color-success: #27AE60;
+  --color-warning: #F39C12;
+  --color-danger: #E74C3C;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
