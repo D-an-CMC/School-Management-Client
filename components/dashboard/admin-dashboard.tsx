@@ -90,20 +90,20 @@ export function AdminDashboard() {
               ))}
             </div>
 
-            <div className="text-xs text-gray-500 grid grid-cols-5 gap-4">
+            <div className="text-xs text-gray-700 grid grid-cols-5 gap-4">
               <div>
-                <div className="font-semibold">TỶ LỆ HOÀN THÀNH</div>
+                <div className="font-semibold text-gray-900">TỶ LỆ HOÀN THÀNH</div>
               </div>
               <div>
-                <div className="font-semibold">94.2%</div>
-                <div className="text-gray-400">+2.1% so với tháng trước</div>
+                <div className="font-semibold text-gray-900">94.2%</div>
+                <div className="text-gray-600">+2.1% so với tháng trước</div>
               </div>
               <div>
-                <div className="font-semibold">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
+                <div className="font-semibold text-gray-900">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
               </div>
               <div>
-                <div className="font-semibold">7.8</div>
-                <div className="text-gray-400">Xếp loại: Khá</div>
+                <div className="font-semibold text-gray-900">7.8</div>
+                <div className="text-gray-600">Xếp loại: Khá</div>
               </div>
             </div>
           </div>
@@ -119,10 +119,10 @@ export function AdminDashboard() {
             <table className="w-full text-sm">
               <thead className="border-b border-gray-200">
                 <tr>
-                  <th className="text-left py-3 font-semibold text-gray-700">HHC SINH</th>
-                  <th className="text-left py-3 font-semibold text-gray-700">LỚP</th>
-                  <th className="text-left py-3 font-semibold text-gray-700">MLC ĐỘ RỦI RO</th>
-                  <th className="text-left py-3 font-semibold text-gray-700">HÀNH ĐỘNG</th>
+                  <th className="text-left py-3 font-semibold text-gray-900">HHC SINH</th>
+                  <th className="text-left py-3 font-semibold text-gray-900">LỚP</th>
+                  <th className="text-left py-3 font-semibold text-gray-900">MLC ĐỘ RỦI RO</th>
+                  <th className="text-left py-3 font-semibold text-gray-900">HÀNH ĐỘNG</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,13 +132,13 @@ export function AdminDashboard() {
                   { name: 'Lê Hoàng Nam', class: '10C4', risk: 'Trung bình (65%)' },
                 ].map((item, index) => (
                   <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3">
+                    <td className="py-3 text-gray-900">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
                         {item.name}
                       </div>
                     </td>
-                    <td className="py-3">{item.class}</td>
+                    <td className="py-3 text-gray-900">{item.class}</td>
                     <td className="py-3">
                       <span
                         className={`px-3 py-1 rounded text-xs font-semibold ${
