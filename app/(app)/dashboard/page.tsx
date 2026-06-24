@@ -21,11 +21,11 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Xin chào, {user?.name} | {user?.role === 'student' ? 'Giáo viên' : user?.role}
         </h1>
-        <p className="text-gray-600">Chào mừng bạn trở lại hệ thống quản lý học tập. Chúc bạn một ngày làm việc hiệu quả!</p>
+        <p className="text-gray-900">Chào mừng bạn trở lại hệ thống quản lý học tập. Chúc bạn một ngày làm việc hiệu quả!</p>
       </div>
 
       {/* Date */}
-      <div className="mb-8 text-sm text-gray-600">
+      <div className="mb-8 text-sm text-gray-900">
         <span>📅 Thứ Ba, 24 Tháng 10, 2023</span>
       </div>
 
@@ -41,7 +41,7 @@ export default function DashboardPage() {
                 <div key={item.id} className="flex justify-between items-start">
                   <div>
                     <div className="font-medium text-gray-900">{item.time} {item.class}</div>
-                    <div className="text-sm text-gray-500">{item.room}</div>
+                    <div className="text-sm text-gray-700">{item.room}</div>
                   </div>
                   <div className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-700">{item.period}</div>
                 </div>
@@ -58,7 +58,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-center gap-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#0066CC]">93%</div>
-                  <div className="text-sm text-gray-600">Present</div>
+                  <div className="text-sm text-gray-900">Present</div>
                 </div>
                 <div className="w-0.5 h-12 bg-gray-300"></div>
                 <div className="space-y-2 text-sm">
@@ -98,7 +98,7 @@ export default function DashboardPage() {
                   }`}
                 >
                   <div className="font-semibold text-sm text-gray-900">{alert.title}</div>
-                  <div className="text-xs text-gray-600 mt-1">{alert.description}</div>
+                  <div className="text-xs text-gray-900 mt-1">{alert.description}</div>
                 </div>
               ))}
             </div>

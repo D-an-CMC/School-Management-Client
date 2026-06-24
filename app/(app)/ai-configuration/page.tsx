@@ -7,7 +7,7 @@ export default function AIConfigurationPage() {
         <h1 className="text-2xl font-bold text-gray-900">
           Xin chào, Thầy Hiệu Trưởng - Super Admin
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-900 mt-2">
           Hệ thống quản lý học sinh trực tuyến CMC. Dưới đây là báo cáo chuyên sâu hôm nay.
         </p>
       </div>
@@ -19,7 +19,7 @@ export default function AIConfigurationPage() {
             <div className="text-3xl">🤖</div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Trợ lý ảo AI Chatbot</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-900 mt-1">
                 Dự nhật phân hội (Temperature)
               </p>
             </div>
@@ -37,7 +37,7 @@ export default function AIConfigurationPage() {
                 defaultValue="70"
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
-              <div className="flex justify-between text-xs text-gray-600 mt-2">
+              <div className="flex justify-between text-xs text-gray-900 mt-2">
                 <span>Chính xác (0.0)</span>
                 <span className="font-bold text-blue-600">0.7</span>
                 <span>Sáng tạo (1.0)</span>
@@ -62,7 +62,7 @@ export default function AIConfigurationPage() {
             <div className="text-3xl">📊</div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Phân tích & Dự báo Học thuật</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-900 mt-1">
                 Ngưỡng cảnh báo học lực yếu
               </p>
             </div>
@@ -114,7 +114,7 @@ export default function AIConfigurationPage() {
           📋 Theo dõi Sức khoẻ & Rủi ro Học thuật
         </h3>
 
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-900 mb-4">
           Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
         </p>
 
@@ -127,7 +127,7 @@ export default function AIConfigurationPage() {
                   className="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t"
                   style={{ height: `${(value / 72) * 100}%` }}
                 />
-                <span className="text-xs text-gray-600 mt-2">T{index + 2}</span>
+                <span className="text-xs text-gray-900 mt-2">T{index + 2}</span>
               </div>
             ))}
           </div>
@@ -136,24 +136,24 @@ export default function AIConfigurationPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <div className="text-xs text-gray-600 uppercase font-semibold mb-1">Tỷ lệ hoàn thành</div>
+            <div className="text-xs text-gray-900 uppercase font-semibold mb-1">Tỷ lệ hoàn thành</div>
             <div className="text-2xl font-bold text-gray-900">94.2%</div>
-            <div className="text-xs text-gray-500 mt-1">+2.1% so với tháng trước</div>
+            <div className="text-xs text-gray-700 mt-1">+2.1% so với tháng trước</div>
           </div>
           <div>
-            <div className="text-xs text-gray-600 uppercase font-semibold mb-1">Học lực TỀ toàn trường</div>
+            <div className="text-xs text-gray-900 uppercase font-semibold mb-1">Học lực TỀ toàn trường</div>
             <div className="text-2xl font-bold text-gray-900">7.8</div>
-            <div className="text-xs text-gray-500 mt-1">Xếp loại: Khá</div>
+            <div className="text-xs text-gray-700 mt-1">Xếp loại: Khá</div>
           </div>
           <div>
-            <div className="text-xs text-gray-600 uppercase font-semibold mb-1">Hệ thống hoạt động</div>
+            <div className="text-xs text-gray-900 uppercase font-semibold mb-1">Hệ thống hoạt động</div>
             <div className="text-2xl font-bold text-green-600">✓</div>
             <div className="text-xs text-green-600 mt-1">Hoạt động bình thường</div>
           </div>
           <div>
-            <div className="text-xs text-gray-600 uppercase font-semibold mb-1">Dặng ứng lạy</div>
+            <div className="text-xs text-gray-900 uppercase font-semibold mb-1">Dặng ứng lạy</div>
             <div className="text-2xl font-bold text-blue-600">1,242 nodes</div>
-            <div className="text-xs text-gray-500 mt-1">Đang xử lý</div>
+            <div className="text-xs text-gray-700 mt-1">Đang xử lý</div>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default function AIConfigurationPage() {
                   </span>
                 </td>
                 <td className="py-3">
-                  <button className="text-gray-400 hover:text-gray-600">⋯</button>
+                  <button className="text-gray-600 hover:text-gray-900">⋯</button>
                 </td>
               </tr>
             ))}

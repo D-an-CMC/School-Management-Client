@@ -6,12 +6,12 @@ export default function AttendancePage() {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Số điểu bài & Điểm danh</h1>
-      <p className="text-gray-600 mb-8">Số điểu bài Kỳ thuật số</p>
+      <p className="text-gray-700 mb-8">Số điểu bài Kỳ thuật số</p>
 
       {/* Date & Class Filter */}
       <div className="grid grid-cols-3 gap-4 mb-8 bg-white border border-gray-200 rounded-lg p-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">NGÀY HỌC</label>
+          <label className="block text-sm font-medium text-gray-900 mb-2">NGÀY HỌC</label>
           <input
             type="date"
             defaultValue="2023-11-20"
@@ -19,7 +19,7 @@ export default function AttendancePage() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">TIẾT HỌC</label>
+          <label className="block text-sm font-medium text-gray-900 mb-2">TIẾT HỌC</label>
           <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>Tiết 2 (07:50)</option>
             <option>Tiết 3 (08:50)</option>
@@ -27,7 +27,7 @@ export default function AttendancePage() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">LỚP HỌC</label>
+          <label className="block text-sm font-medium text-gray-900 mb-2">LỚP HỌC</label>
           <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>12A1</option>
             <option>12A2</option>
@@ -59,10 +59,10 @@ export default function AttendancePage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">MÃ SV</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">HỌC SINH</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">TRẠNG THÁI ĐIỂM DANH</th>
-                <th className="px-6 py-4 text-center font-semibold text-gray-700 text-sm">GHI CHÚ SỐ ĐẦU BÀI / HÀNH VI</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-900 text-sm">MÃ SV</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-900 text-sm">HỌC SINH</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-900 text-sm">TRẠNG THÁI ĐIỂM DANH</th>
+                <th className="px-6 py-4 text-center font-semibold text-gray-900 text-sm">GHI CHÚ SỐ ĐẦU BÀI / HÀNH VI</th>
               </tr>
             </thead>
             <tbody>
@@ -109,7 +109,7 @@ export default function AttendancePage() {
                         </div>
                         <div>
                           <div className="font-medium text-gray-900">{student.name}</div>
-                          <div className="text-xs text-gray-500">{student.role}</div>
+                          <div className="text-xs text-gray-700">{student.role}</div>
                         </div>
                       </div>
                     </div>
@@ -149,25 +149,25 @@ export default function AttendancePage() {
             <span className="text-green-600 text-xl">✓</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">42/45</div>
-          <div className="text-sm text-gray-600">Hiện diễn: 42/45</div>
+          <div className="text-sm text-gray-900">Hiện diễn: 42/45</div>
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center w-12 h-12 mx-auto mb-2 rounded-full bg-yellow-100">
             <span className="text-yellow-600 text-xl">!</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">02</div>
-          <div className="text-sm text-gray-600">Có phép: 02</div>
+          <div className="text-sm text-gray-900">Có phép: 02</div>
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center w-12 h-12 mx-auto mb-2 rounded-full bg-red-100">
             <span className="text-red-600 text-xl">✗</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">01</div>
-          <div className="text-sm text-gray-600">Không phép: 01</div>
+          <div className="text-sm text-gray-900">Không phép: 01</div>
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-gray-900 mb-2">📊</div>
-          <div className="text-sm text-gray-600">Trang 1 / 4</div>
+          <div className="text-sm text-gray-900">Trang 1 / 4</div>
         </div>
       </div>
     </div>
