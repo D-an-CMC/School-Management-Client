@@ -23,7 +23,7 @@ export function AdminDashboard() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="text-2xl font-bold text-gray-900">{mockDashboardStats.totalStudents}/1500</div>
-              <div className="text-sm text-gray-600 mt-1">Tổng hiến diễn Toàn trường</div>
+              <div className="text-sm text-gray-900 mt-1">Tổng hiến diễn Toàn trường</div>
             </div>
             <div className="text-3xl">🎓</div>
           </div>
@@ -36,7 +36,7 @@ export function AdminDashboard() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="text-2xl font-bold text-gray-900">88/90</div>
-              <div className="text-sm text-gray-600 mt-1">Tổng Giáo viên</div>
+              <div className="text-sm text-gray-900 mt-1">Tổng Giáo viên</div>
             </div>
             <div className="text-3xl">👥</div>
           </div>
@@ -47,7 +47,7 @@ export function AdminDashboard() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="text-2xl font-bold text-gray-900">1300/1340</div>
-              <div className="text-sm text-gray-600 mt-1">Tổng Học sinh</div>
+              <div className="text-sm text-gray-900 mt-1">Tổng Học sinh</div>
             </div>
             <div className="text-3xl">👨‍🎓</div>
           </div>
@@ -58,7 +58,7 @@ export function AdminDashboard() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="text-2xl font-bold text-gray-900">62/70</div>
-              <div className="text-sm text-gray-600 mt-1">Tổng Nhân viên</div>
+              <div className="text-sm text-gray-900 mt-1">Tổng Nhân viên</div>
             </div>
             <div className="text-3xl">👔</div>
           </div>
@@ -73,7 +73,7 @@ export function AdminDashboard() {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Theo dõi Sức khoẻ & Rủi ro Học thuật AI
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-900 mb-4">
               Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
             </p>
 
@@ -85,7 +85,7 @@ export function AdminDashboard() {
                     className="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t transition-all hover:opacity-80"
                     style={{ height: `${(value / 72) * 100}%` }}
                   />
-                  <div className="text-xs text-gray-500 mt-2">T{index + 2}</div>
+                  <div className="text-xs text-gray-700 mt-2">T{index + 2}</div>
                 </div>
               ))}
             </div>
@@ -96,14 +96,14 @@ export function AdminDashboard() {
               </div>
               <div>
                 <div className="font-semibold text-gray-900">94.2%</div>
-                <div className="text-gray-600">+2.1% so với tháng trước</div>
+                <div className="text-gray-900">+2.1% so với tháng trước</div>
               </div>
               <div>
                 <div className="font-semibold text-gray-900">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
               </div>
               <div>
                 <div className="font-semibold text-gray-900">7.8</div>
-                <div className="text-gray-600">Xếp loại: Khá</div>
+                <div className="text-gray-900">Xếp loại: Khá</div>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@ export function AdminDashboard() {
                       </span>
                     </td>
                     <td className="py-3">
-                      <button className="text-gray-400 hover:text-gray-600">⋯</button>
+                      <button className="text-gray-600 hover:text-gray-900">⋯</button>
                     </td>
                   </tr>
                 ))}
@@ -191,21 +191,21 @@ export function AdminDashboard() {
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5"></div>
                 <div>
                   <div className="font-semibold text-gray-900">Admin-01 đã cập nhật AI Prompt</div>
-                  <div className="text-xs text-gray-600">2 giờ trước</div>
+                  <div className="text-xs text-gray-900">2 giờ trước</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-yellow-500 rounded-full mt-1.5"></div>
                 <div>
                   <div className="font-semibold text-gray-900">Báo cáo tuần đã được tạo</div>
-                  <div className="text-xs text-gray-600">5 giờ trước</div>
+                  <div className="text-xs text-gray-900">5 giờ trước</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
                 <div>
                   <div className="font-semibold text-gray-900">Phát hiện đụng nhập lạ tại IP 192.168...</div>
-                  <div className="text-xs text-gray-600">1 giờ trước</div>
+                  <div className="text-xs text-gray-900">1 giờ trước</div>
                 </div>
               </div>
             </div>

@@ -30,7 +30,7 @@ export default function SystemPermissionsPage() {
         <h1 className="text-2xl font-bold text-gray-900 mb-4">
           {'HỆ THỐNG > PHÂN QUYỀN'}
         </h1>
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-900 mb-4">
           Phân quyền Hệ thống
         </p>
       </div>
@@ -62,7 +62,7 @@ export default function SystemPermissionsPage() {
                 {role.name}
               </div>
               {role.description && (
-                <p className="text-xs text-gray-600 mt-2">{role.description}</p>
+                <p className="text-xs text-gray-900 mt-2">{role.description}</p>
               )}
               <span className={`inline-block mt-3 text-xs px-2 py-1 rounded font-semibold ${
                 role.active

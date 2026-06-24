@@ -7,7 +7,7 @@ export default function AdministrativeAIPage() {
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           TMryl AI CMC
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-900">
           Sẵn sàng để dự đoán và tối ưu hóa thông báo
         </p>
       </div>
@@ -20,7 +20,7 @@ export default function AdministrativeAIPage() {
             <div className="text-4xl">🤖</div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Trợ lý ảo AI Chatbot</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-900 mt-1">
                 Dự nhật phân hội (Temperature)
               </p>
             </div>
@@ -38,7 +38,7 @@ export default function AdministrativeAIPage() {
                 defaultValue="70"
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
-              <div className="flex justify-between text-xs text-gray-600 mt-1">
+              <div className="flex justify-between text-xs text-gray-900 mt-1">
                 <span>Chính xác (0.0)</span>
                 <span className="font-semibold text-blue-600">0.7</span>
                 <span>Sáng tạo (1.0)</span>
@@ -63,7 +63,7 @@ export default function AdministrativeAIPage() {
             <div className="text-4xl">📊</div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Phân tích & Dự báo Học thuật</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-900 mt-1">
                 Ngưỡng cảnh báo học lực yếu
               </p>
             </div>
@@ -96,7 +96,7 @@ export default function AdministrativeAIPage() {
                   defaultValue="3"
                   className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <span className="px-4 py-2 text-gray-600 font-medium">ngày liền tiếp</span>
+                <span className="px-4 py-2 text-gray-900 font-medium">ngày liền tiếp</span>
               </div>
             </div>
 

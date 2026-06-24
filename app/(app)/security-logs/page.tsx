@@ -7,7 +7,7 @@ export default function SecurityLogsPage() {
         <span className="text-2xl">✓</span>
         <div>
           <h3 className="font-bold text-gray-900">Nhật kỳ Bảo mật Hệ thống</h3>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-gray-900 mt-1">
             Xin chào, Thầy Hiệu Trưởng - Super Admin. Giám sát toàn diễn các hoạt động hệ thống.
           </p>
         </div>
@@ -18,29 +18,29 @@ export default function SecurityLogsPage() {
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="text-2xl mb-2">📊</div>
           <div className="text-3xl font-bold text-blue-600">12,402</div>
-          <div className="text-sm text-gray-600">Thành công</div>
-          <div className="text-xs text-gray-500 mt-2">Bạn chủ hộp lệ</div>
+          <div className="text-sm text-gray-900">Thành công</div>
+          <div className="text-xs text-gray-700 mt-2">Bạn chủ hộp lệ</div>
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="text-2xl mb-2">⚠️</div>
           <div className="text-3xl font-bold text-red-600">243</div>
-          <div className="text-sm text-gray-600">Thất bại</div>
+          <div className="text-sm text-gray-900">Thất bại</div>
           <div className="text-xs text-red-500 mt-2">Token Nổi hôm qua</div>
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="text-2xl mb-2">🔐</div>
           <div className="text-3xl font-bold text-orange-600">98.2%</div>
-          <div className="text-sm text-gray-600">Thành công</div>
-          <div className="text-xs text-gray-500 mt-2">Tỷ lệ hoàn thành</div>
+          <div className="text-sm text-gray-900">Thành công</div>
+          <div className="text-xs text-gray-700 mt-2">Tỷ lệ hoàn thành</div>
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="text-2xl mb-2">🔒</div>
           <div className="text-3xl font-bold text-blue-600">49</div>
-          <div className="text-sm text-gray-600">Cảnh báo ngàn</div>
-          <div className="text-xs text-gray-500 mt-2">Cập nhật hôm nay</div>
+          <div className="text-sm text-gray-900">Cảnh báo ngàn</div>
+          <div className="text-xs text-gray-700 mt-2">Cập nhật hôm nay</div>
         </div>
       </div>
 
@@ -62,7 +62,7 @@ export default function SecurityLogsPage() {
                   className="w-full bg-gray-300 rounded-t"
                   style={{ height: `${30 + Math.random() * 70}%` }}
                 />
-                <span className="text-xs text-gray-600 mt-2 whitespace-nowrap">{time}</span>
+                <span className="text-xs text-gray-900 mt-2 whitespace-nowrap">{time}</span>
               </div>
             ))}
           </div>
@@ -163,13 +163,13 @@ export default function SecurityLogsPage() {
                 },
               ].map((log, index) => (
                 <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-6 py-3 text-gray-600 text-xs whitespace-pre">
+                  <td className="px-6 py-3 text-gray-900 text-xs whitespace-pre">
                     {log.time}
                   </td>
                   <td className="px-6 py-3 font-mono text-gray-900">{log.account}</td>
                   <td className="px-6 py-3 text-gray-700">{log.role}</td>
-                  <td className="px-6 py-3 font-mono text-gray-600">{log.ip}</td>
-                  <td className="px-6 py-3 text-gray-600 text-xs">{log.device}</td>
+                  <td className="px-6 py-3 font-mono text-gray-900">{log.ip}</td>
+                  <td className="px-6 py-3 text-gray-900 text-xs">{log.device}</td>
                   <td className="px-6 py-3 text-gray-700">{log.action}</td>
                   <td className="px-6 py-3">
                     <span
@@ -190,14 +190,14 @@ export default function SecurityLogsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="mt-6 flex justify-between items-center text-sm text-gray-600">
+      <div className="mt-6 flex justify-between items-center text-sm text-gray-900">
         <div>Hiển thị 1 - 20 trên tổng số 12,450 bản ghi</div>
         <div className="flex gap-2">
           <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">←</button>
           <button className="px-3 py-1 bg-blue-600 text-white rounded font-semibold">1</button>
           <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">2</button>
           <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">3</button>
-          <button className="px-3 py-1 text-gray-400">...</button>
+          <button className="px-3 py-1 text-gray-600">...</button>
           <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">62</button>
           <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">→</button>
         </div>

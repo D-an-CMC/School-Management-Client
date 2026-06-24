@@ -73,7 +73,7 @@ export default function LoginPage() {
               </div>
             </div>
             <h2 className="text-2xl font-bold text-center text-[#0B3D5C] mb-2">TRƯỜNG THPT CHUYÊN CMC</h2>
-            <p className="text-center text-gray-600 text-sm">Trường THPT Chuyên CMC</p>
+            <p className="text-center text-gray-900 text-sm">Trường THPT Chuyên CMC</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -82,13 +82,13 @@ export default function LoginPage() {
                 TÊN ĐĂNG NHẬP HOẶC EMAIL
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-3.5 text-gray-400">👤</span>
+                <span className="absolute left-4 top-3.5 text-gray-600">👤</span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="username@school.edu.vn"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:border-transparent text-gray-900 placeholder:text-gray-500"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:border-transparent text-gray-900 placeholder:text-gray-700"
                   required
                 />
               </div>
@@ -97,19 +97,19 @@ export default function LoginPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">MẬT KHẨU</label>
               <div className="relative">
-                <span className="absolute left-4 top-3.5 text-gray-400">🔒</span>
+                <span className="absolute left-4 top-3.5 text-gray-600">🔒</span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:border-transparent text-gray-900 placeholder:text-gray-500"
+                  className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:border-transparent text-gray-900 placeholder:text-gray-700"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-3.5 text-gray-600 hover:text-gray-900"
                 >
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -122,7 +122,7 @@ export default function LoginPage() {
                 id="remember"
                 className="w-4 h-4 text-[#0066CC] rounded focus:ring-[#0066CC]"
               />
-              <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+              <label htmlFor="remember" className="ml-2 text-sm text-gray-900">
                 Ghi nhớ đăng nhập
               </label>
               <Link href="#" className="ml-auto text-sm text-[#0066CC] hover:underline">
@@ -139,7 +139,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-gray-200 text-center text-sm text-gray-600">
+          <div className="mt-6 pt-6 border-t border-gray-200 text-center text-sm text-gray-900">
             <p>
               <span className="inline-flex items-center gap-1">
                 🔒
