@@ -64,15 +64,15 @@ export default function DashboardPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-green-500"></span>
-                    <span>42 students</span>
+                    <span className="text-gray-900 font-medium">42 students</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-red-500"></span>
-                    <span>3 students</span>
+                    <span className="text-gray-900 font-medium">3 students</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-gray-300"></span>
-                    <span>45 students</span>
+                    <span className="text-gray-900 font-medium">45 students</span>
                   </div>
                 </div>
               </div>
