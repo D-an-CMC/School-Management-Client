@@ -69,41 +69,110 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Charts */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Theo dõi Sức khoẻ & Rủi ro Học thuật AI
-            </h3>
-            <p className="text-sm text-gray-900 mb-4">
-              Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
-            </p>
-
-            {/* Simple Bar Chart */}
-            <div className="flex items-end gap-2 h-40 mb-4">
-              {[45, 52, 38, 65, 42, 58, 72].map((value, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div
-                    className="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t transition-all hover:opacity-80"
-                    style={{ height: `${(value / 72) * 100}%` }}
-                  />
-                  <div className="text-xs text-gray-700 mt-2">T{index + 2}</div>
-                </div>
-              ))}
+          <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Theo dõi Sức khoẻ & Rủi ro Học thuật AI
+              </h3>
+              <p className="text-sm text-gray-900">
+                Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
+              </p>
             </div>
 
-            <div className="text-xs text-gray-700 grid grid-cols-5 gap-4">
-              <div>
-                <div className="font-semibold text-gray-900">TỶ LỆ HOÀN THÀNH</div>
+            {/* Performance Trend Chart */}
+            <div>
+              <div className="text-xs text-gray-600 font-semibold mb-3">TREND: PERFORMANCE STABILITY</div>
+              <div className="flex items-end gap-1.5 h-40 bg-gray-50 rounded p-4">
+                {[28, 42, 35, 52, 30, 55, 68, 45].map((value, index) => {
+                  let barColor = 'bg-blue-300';
+                  if (index === 4) barColor = 'bg-red-400';
+                  if (index === 7) barColor = 'bg-yellow-400';
+                  
+                  return (
+                    <div key={index} className="flex-1 flex flex-col items-center">
+                      <div
+                        className={`w-full ${barColor} rounded-t transition-all hover:opacity-80`}
+                        style={{ height: `${(value / 72) * 100}%` }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
-              <div>
-                <div className="font-semibold text-gray-900">94.2%</div>
-                <div className="text-gray-900">+2.1% so với tháng trước</div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-xs text-gray-600 font-semibold mb-2">TỶ LỆ HOÀN THÀNH</div>
+                <div className="text-3xl font-bold text-gray-900">94.2%</div>
+                <div className="text-sm text-green-600 font-semibold mt-2">+2.1% so với tháng trước</div>
               </div>
-              <div>
-                <div className="font-semibold text-gray-900">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-xs text-gray-600 font-semibold mb-2">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
+                <div className="text-3xl font-bold text-gray-900">7.8</div>
+                <div className="text-sm text-gray-600 mt-2">Xếp loại: Khá</div>
               </div>
-              <div>
-                <div className="font-semibold text-gray-900">7.8</div>
-                <div className="text-gray-900">Xếp loại: Khá</div>
+            </div>
+
+            {/* Student Risk Analysis Table */}
+            <div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-3">DANH SÁCH CẢNH BÁO RỦI RO HỌC THUẬT</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b-2 border-gray-200">
+                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">HHC SINH</th>
+                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">LỚP</th>
+                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">MLC ĐỘ RỦI RO</th>
+                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">HÀNH ĐỘNG</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { name: 'Nguyễn Võn Anh', class: '12A1', risk: 'Cao (92%)', color: 'bg-red-100 text-red-700' },
+                      { name: 'Trần Thị Bình', class: '11B2', risk: 'Cao (88%)', color: 'bg-red-100 text-red-700' },
+                      { name: 'Lê Hoàng Nam', class: '10C4', risk: 'Trung bình (65%)', color: 'bg-yellow-100 text-yellow-700' },
+                    ].map((item, index) => (
+                      <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-3 text-gray-900">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
+                            <span className="font-medium">{item.name}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3 text-gray-900">{item.class}</td>
+                        <td className="py-3 px-3">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${item.color}`}>
+                            {item.risk}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3">
+                          <button className="text-gray-600 hover:text-gray-900 text-lg">⋯</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button className="text-blue-600 text-sm font-medium hover:underline mt-3">Chi tiết toàn bộ →</button>
+            </div>
+
+            {/* Completion Analysis */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="text-sm font-semibold text-gray-900 mb-3">DANH SÁCH CHỈ HUY BÁO RỦI RO HỌC THUẬT</h4>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <div className="text-xs text-gray-600 font-semibold mb-2">HHC SINH</div>
+                  <div className="text-2xl font-bold text-gray-900">5</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-600 font-semibold mb-2">LỚP</div>
+                  <div className="text-2xl font-bold text-gray-900">3</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-600 font-semibold mb-2">MLC ĐỘ RỦI RO</div>
+                  <div className="text-2xl font-bold text-gray-900">2</div>
+                </div>
               </div>
             </div>
           </div>
