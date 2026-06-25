@@ -69,62 +69,78 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Charts */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Theo dõi Sức khoẻ & Rủi ro Học thuật AI
-              </h3>
-              <p className="text-sm text-gray-900">
-                Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
-              </p>
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            {/* Header with Title and Warning Badge */}
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded text-blue-600 font-bold text-lg">📊</div>
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900">
+                    Theo dõi Sức khỏe & Rủi ro Học thuật AI
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
+                  </p>
+                </div>
+              </div>
+              <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-center">
+                <div className="text-xs text-red-600 font-semibold">⚠️</div>
+                <div className="text-sm font-bold text-red-700">12 Cảnh</div>
+                <div className="text-xs font-semibold text-red-600">báo Rủi ro</div>
+              </div>
             </div>
 
-            {/* Performance Trend Chart */}
-            <div>
-              <div className="text-xs text-gray-600 font-semibold mb-3">TREND: PERFORMANCE STABILITY</div>
-              <div className="flex items-end gap-1.5 h-40 bg-gray-50 rounded p-4">
-                {[28, 42, 35, 52, 30, 55, 68, 45].map((value, index) => {
-                  let barColor = 'bg-blue-300';
-                  if (index === 4) barColor = 'bg-red-400';
-                  if (index === 7) barColor = 'bg-yellow-400';
-                  
-                  return (
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-3 gap-6">
+              {/* Chart Section */}
+              <div className="col-span-2">
+                <div className="text-xs text-gray-500 font-semibold tracking-wide mb-4">TREND: PERFORMANCE STABILITY</div>
+                <div className="flex items-end justify-center gap-2 h-40 bg-gray-50 rounded-lg p-6">
+                  {[
+                    { value: 35, color: 'bg-blue-200' },
+                    { value: 48, color: 'bg-blue-300' },
+                    { value: 32, color: 'bg-blue-200' },
+                    { value: 62, color: 'bg-blue-500' },
+                    { value: 28, color: 'bg-red-400' },
+                    { value: 58, color: 'bg-blue-400' },
+                    { value: 72, color: 'bg-yellow-400' },
+                  ].map((bar, index) => (
                     <div key={index} className="flex-1 flex flex-col items-center">
                       <div
-                        className={`w-full ${barColor} rounded-t transition-all hover:opacity-80`}
-                        style={{ height: `${(value / 72) * 100}%` }}
+                        className={`w-full ${bar.color} rounded-sm transition-all hover:opacity-80`}
+                        style={{ height: `${(bar.value / 72) * 100}%` }}
                       />
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-xs text-gray-600 font-semibold mb-2">TỶ LỆ HOÀN THÀNH</div>
-                <div className="text-3xl font-bold text-gray-900">94.2%</div>
-                <div className="text-sm text-green-600 font-semibold mt-2">+2.1% so với tháng trước</div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-xs text-gray-600 font-semibold mb-2">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
-                <div className="text-3xl font-bold text-gray-900">7.8</div>
-                <div className="text-sm text-gray-600 mt-2">Xếp loại: Khá</div>
+              {/* Stats Section */}
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-xs text-gray-500 font-semibold tracking-wide mb-3">TỶ LỆ HOÀN THÀNH</div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1">94.2%</div>
+                  <div className="text-sm text-green-600 font-semibold">+2.1% so với tháng trước</div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-xs text-gray-500 font-semibold tracking-wide mb-3">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1">7.8</div>
+                  <div className="text-sm text-gray-600">Xếp loại: Khá</div>
+                </div>
               </div>
             </div>
 
             {/* Student Risk Analysis Table */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">DANH SÁCH CẢNH BÁO RỦI RO HỌC THUẬT</h4>
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-900 mb-4">DANH SÁCH CẢNH BÁO RỦI RO HỌC THUẬT</h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b-2 border-gray-200">
-                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">HHC SINH</th>
-                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">LỚP</th>
-                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">MLC ĐỘ RỦI RO</th>
-                      <th className="text-left py-2 px-3 font-semibold text-gray-900 text-xs">HÀNH ĐỘNG</th>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-3 font-semibold text-gray-900 text-xs">HHC SINH</th>
+                      <th className="text-left py-3 px-3 font-semibold text-gray-900 text-xs">LỚP</th>
+                      <th className="text-left py-3 px-3 font-semibold text-gray-900 text-xs">MLC ĐỘ RỦI RO</th>
+                      <th className="text-left py-3 px-3 font-semibold text-gray-900 text-xs">HÀNH ĐỘNG</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -155,25 +171,6 @@ export function AdminDashboard() {
                 </table>
               </div>
               <button className="text-blue-600 text-sm font-medium hover:underline mt-3">Chi tiết toàn bộ →</button>
-            </div>
-
-            {/* Completion Analysis */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">DANH SÁCH CHỈ HUY BÁO RỦI RO HỌC THUẬT</h4>
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <div className="text-xs text-gray-600 font-semibold mb-2">HHC SINH</div>
-                  <div className="text-2xl font-bold text-gray-900">5</div>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-600 font-semibold mb-2">LỚP</div>
-                  <div className="text-2xl font-bold text-gray-900">3</div>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-600 font-semibold mb-2">MLC ĐỘ RỦI RO</div>
-                  <div className="text-2xl font-bold text-gray-900">2</div>
-                </div>
-              </div>
             </div>
           </div>
 
