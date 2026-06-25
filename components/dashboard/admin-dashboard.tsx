@@ -95,23 +95,27 @@ export function AdminDashboard() {
               {/* Chart Section */}
               <div className="col-span-2">
                 <div className="text-xs text-gray-500 font-semibold tracking-wide mb-4">TREND: PERFORMANCE STABILITY</div>
-                <div className="flex items-end justify-center gap-2 h-40 bg-gray-50 rounded-lg p-6">
-                  {[
-                    { value: 35, color: 'bg-blue-200' },
-                    { value: 48, color: 'bg-blue-300' },
-                    { value: 32, color: 'bg-blue-200' },
-                    { value: 62, color: 'bg-blue-500' },
-                    { value: 28, color: 'bg-red-400' },
-                    { value: 58, color: 'bg-blue-400' },
-                    { value: 72, color: 'bg-yellow-400' },
-                  ].map((bar, index) => (
-                    <div key={index} className="flex-1 flex flex-col items-center">
-                      <div
-                        className={`w-full ${bar.color} rounded-sm transition-all hover:opacity-80`}
-                        style={{ height: `${(bar.value / 72) * 100}%` }}
-                      />
-                    </div>
-                  ))}
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <div className="flex items-end justify-between gap-1.5 h-40 mb-3">
+                    {[
+                      { value: 35, color: 'bg-blue-200', time: '08:00' },
+                      { value: 48, color: 'bg-blue-300', time: '10:00' },
+                      { value: 32, color: 'bg-blue-200', time: '12:00' },
+                      { value: 62, color: 'bg-blue-500', time: '14:00' },
+                      { value: 28, color: 'bg-red-400', time: '16:00' },
+                      { value: 58, color: 'bg-blue-400', time: '18:00' },
+                      { value: 72, color: 'bg-yellow-400', time: '20:00' },
+                      { value: 45, color: 'bg-blue-300', time: '22:00' },
+                    ].map((bar, index) => (
+                      <div key={index} className="flex-1 flex flex-col items-center">
+                        <div
+                          className={`w-full ${bar.color} rounded-sm transition-all hover:opacity-80`}
+                          style={{ height: `${(bar.value / 72) * 100}%` }}
+                        />
+                        <div className="text-xs text-gray-600 font-medium mt-2 whitespace-nowrap">{bar.time}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
