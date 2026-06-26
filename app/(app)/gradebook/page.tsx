@@ -2,7 +2,7 @@
 
 import { mockGrades } from '@/lib/mock-data'
 
-export default function Bảng điểmPage() {
+export default function GradebookPage() {
   return (
     <div className="p-8">
       <div className="mb-8">
