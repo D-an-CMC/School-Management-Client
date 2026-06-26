@@ -12,19 +12,19 @@ export function Sidebar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   const studentNavItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/my-classes', label: 'My Classes', icon: '📚' },
-    { href: '/gradebook', label: 'Gradebook', icon: '📈' },
-    { href: '/attendance', label: 'Attendance', icon: '✓' },
-    { href: '/administrative-ai', label: 'Administrative AI', icon: '🤖' },
+    { href: '/dashboard', label: 'Tổng quan', icon: '📊' },
+    { href: '/my-classes', label: 'Lớp của tôi', icon: '📚' },
+    { href: '/gradebook', label: 'Bảng điểm', icon: '📈' },
+    { href: '/attendance', label: 'Điểm danh', icon: '✓' },
+    { href: '/administrative-ai', label: 'AI Hành chính', icon: '🤖' },
   ]
 
   const adminNavItems = [
-    { href: '/dashboard', label: 'Overview', icon: '📊' },
-    { href: '/user-management', label: 'User Management', icon: '👥' },
-    { href: '/system-permissions', label: 'System Permissions', icon: '🔐' },
-    { href: '/ai-configuration', label: 'AI Configuration', icon: '⚙️' },
-    { href: '/security-logs', label: 'Security Logs', icon: '🔒' },
+    { href: '/dashboard', label: 'Tổng quan', icon: '📊' },
+    { href: '/user-management', label: 'Quản lý người dùng', icon: '👥' },
+    { href: '/system-permissions', label: 'Quyền hệ thống', icon: '🔐' },
+    { href: '/ai-configuration', label: 'Cấu hình AI', icon: '⚙️' },
+    { href: '/security-logs', label: 'Nhật ký bảo mật', icon: '🔒' },
   ]
 
   const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems
@@ -63,18 +63,18 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Settings & Logout */}
+      {/* Cài đặt & Đăng xuất */}
       <div className="border-t border-[#054070] p-4 space-y-2">
         <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-[#054070] transition-colors text-sm font-medium">
           <span className="text-lg">⚙️</span>
-          <span>Settings</span>
+          <span>Cài đặt</span>
         </button>
         <Link
           href="/login"
           className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-[#054070] transition-colors text-sm font-medium"
         >
           <span className="text-lg">🚪</span>
-          <span>Logout</span>
+          <span>Đăng xuất</span>
         </Link>
       </div>
     </aside>

@@ -2,7 +2,7 @@
 
 import { mockGrades } from '@/lib/mock-data'
 
-export default function GradebookPage() {
+export default function Bảng điểmPage() {
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -54,7 +54,7 @@ export default function GradebookPage() {
         </div>
       </div>
 
-      {/* Gradebook Table */}
+      {/* Bảng điểm Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

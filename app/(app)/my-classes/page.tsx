@@ -60,22 +60,22 @@ export default function MyClassesPage() {
       <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-blue-50 rounded-lg border border-blue-200 p-6">
           <div className="text-3xl font-bold text-blue-600 mb-2">{mockClasses.length}</div>
-          <div className="text-gray-900">Total Classes</div>
-          <div className="text-sm text-gray-700 mt-2">Assigned to you</div>
+          <div className="text-gray-900">Tổng số lớp</div>
+          <div className="text-sm text-gray-700 mt-2">Được giao cho bạn</div>
         </div>
         <div className="bg-green-50 rounded-lg border border-green-200 p-6">
           <div className="text-3xl font-bold text-green-600 mb-2">
             {mockClasses.reduce((sum, c) => sum + c.students, 0)}
           </div>
-          <div className="text-gray-900">Total Students</div>
-          <div className="text-sm text-gray-700 mt-2">Across all classes</div>
+          <div className="text-gray-900">Tổng số học sinh</div>
+          <div className="text-sm text-gray-700 mt-2">Trên tất cả các lớp</div>
         </div>
         <div className="bg-orange-50 rounded-lg border border-orange-200 p-6">
           <div className="text-3xl font-bold text-orange-600 mb-2">
             {mockClasses.reduce((sum, c) => sum + c.credits, 0)}
           </div>
-          <div className="text-gray-900">Total Credits</div>
-          <div className="text-sm text-gray-700 mt-2">Combined credits</div>
+          <div className="text-gray-900">Tổng số tín chỉ</div>
+          <div className="text-sm text-gray-700 mt-2">Cộng các tín chỉ</div>
         </div>
       </div>
     </div>
