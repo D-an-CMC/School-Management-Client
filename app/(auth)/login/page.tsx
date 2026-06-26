@@ -19,31 +19,23 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
-  const [selectedRole, setSelectedRole] = useState<'admin' | 'teacher' | 'student' | null>(null)
 
-  const handleLogin = async (e: React.FormEvent, role?: 'admin' | 'teacher' | 'student') => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
 
     try {
-      const targetRole = role || selectedRole
-      const account = validAccounts.find((acc) => acc.role === targetRole)
+      // Find matching account by email and password
+      const account = validAccounts.find((acc) => acc.email === email && acc.password === password)
 
       if (!account) {
-        setError('Vui lòng chọn vai trò hợp lệ')
-        setIsLoading(false)
-        return
-      }
-
-      // Validate credentials
-      if (email !== account.email || password !== account.password) {
         setError('Email hoặc mật khẩu không chính xác')
         setIsLoading(false)
         return
       }
 
-      await login(email, password, targetRole)
+      await login(email, password, account.role)
       router.push('/dashboard')
     } finally {
       setIsLoading(false)
@@ -112,30 +104,6 @@ export default function LoginPage() {
             <p className="text-center text-gray-600 text-sm">Trường THPT Chuyên CMC</p>
           </div>
 
-          {/* Role Selection */}
-          <div className="mb-8">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">CHỌN VAI TRÒ</label>
-            <div className="grid grid-cols-3 gap-2">
-              {validAccounts.map((account) => (
-                <button
-                  key={account.role}
-                  onClick={() => {
-                    setSelectedRole(account.role as any)
-                    setEmail(account.email)
-                    setPassword(account.password)
-                  }}
-                  className={`py-2 px-3 rounded-lg text-sm font-medium transition ${
-                    selectedRole === account.role
-                      ? 'bg-[#0066CC] text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {account.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">TÊN ĐĂNG NHẬP HOẶC EMAIL</label>
@@ -192,11 +160,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={isLoading || !selectedRole}
-              onClick={(e) => handleLogin(e, selectedRole as any)}
+              disabled={isLoading}
               className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
             >
-              {isLoading ? 'Đang đăng nhập...' : `Đăng nhập với vai trò ${validAccounts.find(a => a.role === selectedRole)?.name || ''}`}
+              {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập với vai trò Quản trị viên'}
               <span>→</span>
             </button>
           </form>
@@ -204,17 +171,7 @@ export default function LoginPage() {
           {/* Role Links */}
           <div className="mt-6 pt-6 border-t border-gray-200 text-center">
             <p className="text-sm text-gray-600">
-              Nếu bạn là giáo viên |{' '}
-              <button
-                onClick={() => {
-                  setSelectedRole('student')
-                  setEmail('student@cmc.edu.vn')
-                  setPassword('12345a')
-                }}
-                className="text-[#0066CC] hover:underline font-medium"
-              >
-                Nếu bạn là học sinh?
-              </button>
+              Nếu bạn là giáo viên? | Nếu bạn là học sinh?
             </p>
           </div>
 
