@@ -1,8 +1,8 @@
 'use client'
 
-import { mockĐiểm danh } from '@/lib/mock-data'
+import { mockAttendance } from '@/lib/mock-data'
 
-export default function Điểm danhPage() {
+export default function AttendancePage() {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Số điểu bài & Điểm danh</h1>

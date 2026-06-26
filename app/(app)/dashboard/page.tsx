@@ -1,17 +1,17 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
-import { mockSchedule, mockAlerts, mockTổng quanStats } from '@/lib/mock-data'
+import { mockSchedule, mockAlerts, mockDashboardStats } from '@/lib/mock-data'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { ScheduleCard } from '@/components/dashboard/schedule-card'
 import { AlertCard } from '@/components/dashboard/alert-card'
-import { AdminTổng quan } from '@/components/dashboard/admin-dashboard'
+import { AdminDashboard } from '@/components/dashboard/admin-dashboard'
 
-export default function Tổng quanPage() {
+export default function DashboardPage() {
   const { user } = useAuth()
 
   if (user?.role === 'admin') {
-    return <AdminTổng quan />
+    return <AdminDashboard />
   }
 
   return (
