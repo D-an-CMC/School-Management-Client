@@ -85,16 +85,103 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#0B3D5C] to-[#0066CC] flex items-center justify-center p-4 overflow-hidden relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Animated circles */}
+        {/* SVG animated background pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          
+          {/* Animated lines representing knowledge flow */}
+          <path d="M 0 400 Q 300 200, 600 400 T 1200 400" stroke="url(#grad1)" strokeWidth="2" fill="none" opacity="0.6" />
+          <path d="M 1200 400 Q 900 600, 600 400 T 0 400" stroke="url(#grad1)" strokeWidth="2" fill="none" opacity="0.4" />
+          
+          {/* Animated network nodes */}
+          <circle cx="200" cy="150" r="4" fill="white" opacity="0.8" />
+          <circle cx="600" cy="100" r="4" fill="white" opacity="0.8" />
+          <circle cx="1000" cy="200" r="4" fill="white" opacity="0.8" />
+          <circle cx="150" cy="600" r="4" fill="white" opacity="0.8" />
+          <circle cx="750" cy="650" r="4" fill="white" opacity="0.8" />
+        </svg>
+
+        {/* Animated gradient circles */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-white/5 rounded-full animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/5 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         <div className="absolute top-1/2 left-1/4 w-80 h-80 bg-blue-400/5 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute right-1/3 bottom-1/4 w-72 h-72 bg-cyan-400/5 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
 
-        {/* Animated floating shapes - education related */}
-        <div className="absolute top-20 left-20 text-6xl opacity-20 animate-bounce">📚</div>
-        <div className="absolute top-1/3 right-20 text-5xl opacity-15 animate-bounce" style={{ animationDelay: '0.5s' }}>🎓</div>
-        <div className="absolute bottom-1/3 left-1/4 text-5xl opacity-15 animate-bounce" style={{ animationDelay: '1s' }}>✏️</div>
-        <div className="absolute top-2/3 right-1/4 text-6xl opacity-20 animate-bounce" style={{ animationDelay: '1.5s' }}>🔬</div>
+        {/* Animated floating education icons with smooth movement */}
+        <div className="absolute top-20 left-20 text-6xl opacity-20 animate-bounce" style={{
+          animation: 'bounce 4s infinite',
+          transformOrigin: 'center bottom'
+        }}>📚</div>
+        
+        <div className="absolute top-1/3 right-20 text-5xl opacity-15 animate-bounce" style={{
+          animationDelay: '0.5s',
+          animation: 'bounce 5s infinite',
+          transformOrigin: 'center bottom'
+        }}>🎓</div>
+        
+        <div className="absolute bottom-1/3 left-1/4 text-5xl opacity-15 animate-bounce" style={{
+          animationDelay: '1s',
+          animation: 'bounce 6s infinite',
+          transformOrigin: 'center bottom'
+        }}>✏️</div>
+        
+        <div className="absolute top-2/3 right-1/4 text-6xl opacity-20 animate-bounce" style={{
+          animationDelay: '1.5s',
+          animation: 'bounce 4.5s infinite',
+          transformOrigin: 'center bottom'
+        }}>🔬</div>
+
+        {/* Additional animated elements */}
+        <div className="absolute left-1/2 top-1/4 text-7xl opacity-10 animate-bounce" style={{
+          animationDelay: '2s',
+          animation: 'bounce 7s infinite',
+          transformOrigin: 'center bottom'
+        }}>🏫</div>
+
+        <div className="absolute right-1/3 top-2/3 text-6xl opacity-12 animate-bounce" style={{
+          animationDelay: '2.5s',
+          animation: 'bounce 5.5s infinite',
+          transformOrigin: 'center bottom'
+        }}>💡</div>
+
+        <div className="absolute left-1/3 bottom-1/4 text-5xl opacity-15 animate-bounce" style={{
+          animationDelay: '1.2s',
+          animation: 'bounce 6.5s infinite',
+          transformOrigin: 'center bottom'
+        }}>🎨</div>
+
+        {/* Floating knowledge bubbles */}
+        <div className="absolute top-1/2 left-1/3 w-20 h-20 border-2 border-white/20 rounded-full animate-pulse" style={{
+          animation: 'pulse 3s infinite',
+          animationDelay: '0.3s'
+        }}></div>
+
+        <div className="absolute bottom-1/3 right-1/4 w-16 h-16 border-2 border-white/15 rounded-full animate-pulse" style={{
+          animation: 'pulse 4s infinite',
+          animationDelay: '0.8s'
+        }}></div>
+
+        <div className="absolute top-1/4 right-1/3 w-24 h-24 border border-white/10 rounded-full animate-pulse" style={{
+          animation: 'pulse 3.5s infinite',
+          animationDelay: '0.5s'
+        }}></div>
+
+        <style>{`
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+          }
+          
+          @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+          }
+        `}</style>
       </div>
 
       {/* AI Feature Badge */}
