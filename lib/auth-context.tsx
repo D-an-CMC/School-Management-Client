@@ -7,7 +7,7 @@ import { mockCurrentUser, mockTeacher } from './mock-data'
 interface AuthContextType {
   user: User | null
   isLoggedIn: boolean
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string, role?: 'student' | 'teacher' | 'admin') => Promise<void>
   logout: () => void
   switchRole: (role: 'student' | 'teacher' | 'admin') => void
 }
@@ -18,15 +18,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, role?: 'student' | 'teacher' | 'admin') => {
     // Mock login - in production this would call an API
     await new Promise((resolve) => setTimeout(resolve, 500))
 
-    if (email.includes('admin')) {
-      setUser(mockTeacher)
-    } else {
-      setUser(mockCurrentUser)
+    // Determine role from email or parameter
+    let selectedRole = role
+    if (!selectedRole) {
+      if (email.includes('admin')) selectedRole = 'admin'
+      else if (email.includes('teacher')) selectedRole = 'teacher'
+      else selectedRole = 'student'
     }
+
+    // Create user with the selected role
+    const baseUser = selectedRole === 'admin' ? { ...mockTeacher, role: 'admin' } : selectedRole === 'teacher' ? { ...mockTeacher, role: 'teacher' } : { ...mockCurrentUser, role: 'student' }
+    setUser(baseUser)
     setIsLoggedIn(true)
   }
 
