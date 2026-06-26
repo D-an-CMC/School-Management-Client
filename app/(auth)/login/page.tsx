@@ -19,6 +19,19 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'teacher' | 'student'>('admin')
+
+  const currentAccount = validAccounts.find((acc) => acc.role === selectedRole)
+
+  const handleRoleChange = (role: 'admin' | 'teacher' | 'student') => {
+    setSelectedRole(role)
+    const account = validAccounts.find((acc) => acc.role === role)
+    if (account) {
+      setEmail(account.email)
+      setPassword(account.password)
+    }
+    setError('')
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,8 +39,8 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // Find matching account by email and password
-      const account = validAccounts.find((acc) => acc.email === email && acc.password === password)
+      // Find matching account by email and password and selected role
+      const account = validAccounts.find((acc) => acc.email === email && acc.password === password && acc.role === selectedRole)
 
       if (!account) {
         setError('Email hoặc mật khẩu không chính xác')
@@ -39,6 +52,32 @@ export default function LoginPage() {
       router.push('/dashboard')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const getButtonColor = () => {
+    switch (selectedRole) {
+      case 'admin':
+        return 'bg-red-600 hover:bg-red-700'
+      case 'teacher':
+        return 'bg-yellow-500 hover:bg-yellow-600'
+      case 'student':
+        return 'bg-green-600 hover:bg-green-700'
+      default:
+        return 'bg-red-600 hover:bg-red-700'
+    }
+  }
+
+  const getButtonText = () => {
+    switch (selectedRole) {
+      case 'admin':
+        return 'Đăng nhập với vai trò Quản trị viên'
+      case 'teacher':
+        return 'Đăng nhập với vai trò Giáo viên'
+      case 'student':
+        return 'Đăng nhập với vai trò Học sinh'
+      default:
+        return 'Đăng nhập'
     }
   }
 
@@ -161,9 +200,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              className={`w-full ${getButtonColor()} disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2`}
             >
-              {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập với vai trò Quản trị viên'}
+              {isLoading ? 'Đang đăng nhập...' : getButtonText()}
               <span>→</span>
             </button>
           </form>
@@ -171,7 +210,21 @@ export default function LoginPage() {
           {/* Role Links */}
           <div className="mt-6 pt-6 border-t border-gray-200 text-center">
             <p className="text-sm text-gray-600">
-              Nếu bạn là giáo viên? | Nếu bạn là học sinh?
+              <button
+                type="button"
+                onClick={() => handleRoleChange('teacher')}
+                className="text-yellow-600 hover:text-yellow-700 font-medium hover:underline"
+              >
+                Nếu bạn là giáo viên?
+              </button>
+              {' | '}
+              <button
+                type="button"
+                onClick={() => handleRoleChange('student')}
+                className="text-green-600 hover:text-green-700 font-medium hover:underline"
+              >
+                Nếu bạn là học sinh?
+              </button>
             </p>
           </div>
 
