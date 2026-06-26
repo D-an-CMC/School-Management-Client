@@ -210,21 +210,37 @@ export default function LoginPage() {
           {/* Role Links */}
           <div className="mt-6 pt-6 border-t border-gray-200 text-center">
             <p className="text-sm text-gray-600">
-              <button
-                type="button"
-                onClick={() => handleRoleChange('teacher')}
-                className="text-yellow-600 hover:text-yellow-700 font-medium hover:underline"
-              >
-                Nếu bạn là giáo viên?
-              </button>
-              {' | '}
-              <button
-                type="button"
-                onClick={() => handleRoleChange('student')}
-                className="text-green-600 hover:text-green-700 font-medium hover:underline"
-              >
-                Nếu bạn là học sinh?
-              </button>
+              {selectedRole !== 'teacher' && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => handleRoleChange('teacher')}
+                    className="text-yellow-600 hover:text-yellow-700 font-medium hover:underline"
+                  >
+                    Nếu bạn là giáo viên?
+                  </button>
+                  {selectedRole !== 'student' && ' | '}
+                </>
+              )}
+              {selectedRole !== 'student' && (
+                <button
+                  type="button"
+                  onClick={() => handleRoleChange('student')}
+                  className="text-green-600 hover:text-green-700 font-medium hover:underline"
+                >
+                  Nếu bạn là học sinh?
+                </button>
+              )}
+              {selectedRole !== 'admin' && selectedRole !== 'teacher' && ' | '}
+              {selectedRole !== 'admin' && (
+                <button
+                  type="button"
+                  onClick={() => handleRoleChange('admin')}
+                  className="text-red-600 hover:text-red-700 font-medium hover:underline"
+                >
+                  Nếu bạn là quản trị viên?
+                </button>
+              )}
             </p>
           </div>
 
