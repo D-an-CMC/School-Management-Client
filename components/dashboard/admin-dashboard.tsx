@@ -1,9 +1,9 @@
 'use client'
 
-import { mockDashboardStats, mockTeachers } from '@/lib/mock-data'
+import { mockTổng quanStats, mockTeachers } from '@/lib/mock-data'
 import { StatCard } from './stat-card'
 
-export function AdminDashboard() {
+export function AdminTổng quan() {
   return (
     <div className="p-8">
       {/* Welcome Section */}
@@ -22,7 +22,7 @@ export function AdminDashboard() {
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <div className="text-2xl font-bold text-gray-900">{mockDashboardStats.totalStudents}/1500</div>
+              <div className="text-2xl font-bold text-gray-900">{mockTổng quanStats.totalStudents}/1500</div>
               <div className="text-sm text-gray-900 mt-1">Tổng hiến diễn Toàn trường</div>
             </div>
             <div className="text-3xl">🎓</div>

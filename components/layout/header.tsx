@@ -13,7 +13,7 @@ export function Header() {
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600">🔍</span>
           <input
             type="text"
-            placeholder="Tìm kiếm nhật ký..."
+            placeholder="Tìm kiếm..."
             className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] text-sm"
           />
         </div>

@@ -1,17 +1,17 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
-import { mockSchedule, mockAlerts, mockDashboardStats } from '@/lib/mock-data'
+import { mockSchedule, mockAlerts, mockTổng quanStats } from '@/lib/mock-data'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { ScheduleCard } from '@/components/dashboard/schedule-card'
 import { AlertCard } from '@/components/dashboard/alert-card'
-import { AdminDashboard } from '@/components/dashboard/admin-dashboard'
+import { AdminTổng quan } from '@/components/dashboard/admin-dashboard'
 
-export default function DashboardPage() {
+export default function Tổng quanPage() {
   const { user } = useAuth()
 
   if (user?.role === 'admin') {
-    return <AdminDashboard />
+    return <AdminTổng quan />
   }
 
   return (
@@ -33,8 +33,8 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard
           icon="📅"
-          title="Today's Schedule"
-          action="View All"
+          title="Lịch học hôm nay"
+          action="Xem tất cả"
           content={
             <div className="space-y-3">
               {mockSchedule.map((item) => (
@@ -52,13 +52,13 @@ export default function DashboardPage() {
 
         <StatCard
           icon="✓"
-          title="Attendance Status"
+          title="Trạng thái Điểm danh"
           content={
             <div>
               <div className="flex items-center justify-center gap-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#0066CC]">93%</div>
-                  <div className="text-sm text-gray-900">Present</div>
+                  <div className="text-sm text-gray-900">Có mặt</div>
                 </div>
                 <div className="w-0.5 h-12 bg-gray-300"></div>
                 <div className="space-y-2 text-sm">
@@ -82,8 +82,8 @@ export default function DashboardPage() {
 
         <StatCard
           icon="🤖"
-          title="AI Insights Alert"
-          badge="SMART ENGINE"
+          title="Cảnh báo AI"
+          badge="CÔNG CỤ THÔNG MINH"
           content={
             <div className="space-y-3">
               {mockAlerts.map((alert) => (
@@ -109,20 +109,20 @@ export default function DashboardPage() {
       {/* Recent Submissions */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Student Submissions</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Bài tập gần đây</h2>
           <a href="#" className="text-sm text-[#0066CC] hover:underline">
-            View All Submissions
+            Xem tất cả bài tập
           </a>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left font-semibold text-gray-900">STUDENT NAME</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-900">ASSIGNMENT</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-900">DATE SUBMITTED</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-900">STATUS</th>
-                <th className="px-6 py-3 text-left font-semibold text-gray-900">ACTION</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">TÊN HỌC SINH</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">BÀI TẬP</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">NGÀY NỘP</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">TRẠNG THÁI</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-900">HÀNH ĐỘNG</th>
               </tr>
             </thead>
             <tbody>
@@ -139,12 +139,12 @@ export default function DashboardPage() {
                 <td className="px-6 py-4 text-gray-900">Hôm nay, 09:30 AM</td>
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                    ✓ SUBMITTED
+                    ✓ ĐÃ NỘP
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <a href="#" className="text-[#0066CC] font-medium hover:underline">
-                    Grade Now
+                    Chấm điểm
                   </a>
                 </td>
               </tr>
@@ -161,12 +161,12 @@ export default function DashboardPage() {
                 <td className="px-6 py-4 text-gray-900">Hôm qua, 04:45 PM</td>
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
-                    ⏳ PENDING REVIEW
+                    ⏳ CHỜ DUYỆT
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <a href="#" className="text-[#0066CC] font-medium hover:underline">
-                    Review
+                    Xem xét
                   </a>
                 </td>
               </tr>

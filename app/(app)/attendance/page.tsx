@@ -1,8 +1,8 @@
 'use client'
 
-import { mockAttendance } from '@/lib/mock-data'
+import { mockĐiểm danh } from '@/lib/mock-data'
 
-export default function AttendancePage() {
+export default function Điểm danhPage() {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Số điểu bài & Điểm danh</h1>
@@ -53,7 +53,7 @@ export default function AttendancePage() {
         </div>
       </div>
 
-      {/* Attendance Records */}
+      {/* Điểm danh Records */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
