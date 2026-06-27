@@ -13,7 +13,6 @@ export function Sidebar() {
 
   const studentNavItems = [
     { href: '/dashboard', label: 'Tổng quan', icon: '📊' },
-    { href: '/my-classes', label: 'Lớp của tôi', icon: '📚' },
     { href: '/gradebook', label: 'Bảng điểm', icon: '📈' },
     { href: '/attendance', label: 'Điểm danh', icon: '✓' },
     { href: '/administrative-ai', label: 'AI Chat', icon: '🤖' },
