@@ -225,7 +225,7 @@ export default function LoginPage() {
               <img
                 src="/cmc-logo.png"
                 alt="CMC Secondary School Logo"
-                className="h-24 w-auto"
+                className="h-40 w-auto"
               />
             </div>
             <h2 className="text-2xl font-bold text-center text-[#0B3D5C] mb-2">TRƯỜNG THCS CMC</h2>
