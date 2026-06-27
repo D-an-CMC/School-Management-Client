@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export default function AIChat Page() {
+export default function AIChatPage() {
   const [messages, setMessages] = useState([
     {
       type: 'user',
