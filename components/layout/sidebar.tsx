@@ -16,7 +16,7 @@ export function Sidebar() {
     { href: '/my-classes', label: 'Lớp của tôi', icon: '📚' },
     { href: '/gradebook', label: 'Bảng điểm', icon: '📈' },
     { href: '/attendance', label: 'Điểm danh', icon: '✓' },
-    { href: '/administrative-ai', label: 'AI Hành chính', icon: '🤖' },
+    { href: '/administrative-ai', label: 'AI Chat', icon: '🤖' },
   ]
 
   const adminNavItems = [
