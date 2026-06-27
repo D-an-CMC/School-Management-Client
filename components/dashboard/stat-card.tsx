@@ -4,6 +4,7 @@ interface StatCardProps {
   badge?: string
   action?: string
   content?: React.ReactNode
+  iconColor?: string
 }
 
 export function StatCard({
@@ -12,12 +13,13 @@ export function StatCard({
   badge,
   action,
   content,
+  iconColor,
 }: StatCardProps) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {icon && <span className="text-2xl">{icon}</span>}
+          {icon && <span className={`text-4xl ${iconColor || 'text-gray-700'}`}>{icon}</span>}
           <div>
             <h3 className="font-semibold text-gray-900">{title}</h3>
             {badge && <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">{badge}</span>}

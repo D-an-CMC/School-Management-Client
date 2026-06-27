@@ -199,7 +199,7 @@ export default function LoginPage() {
             Hệ thống quản lý trường học thông minh tích hợp <span className="text-blue-300">AI</span>
           </h1>
           <p className="text-lg opacity-90 mb-12">
-            Nền tảng quản trị giáo dục hiện đại, bảo mật và tối ưu hóa cho đội ngũ cần bộ Trường THPT Chuyên CMC.
+            Nền tảng quản trị giáo dục hiện đại, bảo mật và tối ưu hóa cho đội ngũ cần bộ Trường THCS CMC.
           </p>
 
           {/* Features */}
@@ -226,8 +226,8 @@ export default function LoginPage() {
                 <span className="text-white font-bold text-3xl">CMC</span>
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-center text-[#0B3D5C] mb-2">TRƯỜNG THPT CHUYÊN CMC</h2>
-            <p className="text-center text-gray-600 text-sm">Trường THPT Chuyên CMC</p>
+            <h2 className="text-2xl font-bold text-center text-[#0B3D5C] mb-2">TRƯỜNG THCS CMC</h2>
+            <p className="text-center text-gray-600 text-sm">Trường THCS CMC</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">

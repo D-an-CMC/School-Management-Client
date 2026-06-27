@@ -30,31 +30,31 @@ export function Sidebar() {
   const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems
 
   return (
-    <aside className="w-64 bg-[#0B3D5C] text-white min-h-screen flex flex-col border-r border-[#054070]">
+    <aside className="w-64 bg-gradient-to-b from-[#1E5A8D] to-[#0B3D5C] text-white min-h-screen flex flex-col border-r border-[#054070] overflow-y-auto scroll-smooth">
       {/* Logo Section */}
-      <div className="p-6 border-b border-[#054070]">
+      <div className="p-6 border-b border-[#054070] flex-shrink-0">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
             <span className="text-[#0B3D5C] font-bold text-lg">CMC</span>
           </div>
           <div>
-            <div className="font-bold text-sm">CMC University</div>
-            <div className="text-xs text-gray-300">Trường THPT Chuyên CMC</div>
+            <div className="font-bold text-sm text-white">CMC University</div>
+            <div className="text-xs text-blue-200">Trường THCS CMC</div>
           </div>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-8 space-y-2">
+      <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={cn(
-              'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium',
+              'flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-sm font-medium',
               isActive(item.href)
-                ? 'bg-[#0066CC] text-white'
-                : 'text-gray-200 hover:bg-[#054070]',
+                ? 'bg-[#3B82F6] text-white shadow-md transform scale-105'
+                : 'text-blue-100 hover:bg-[#2563EB] hover:text-white',
             )}
           >
             <span className="text-lg">{item.icon}</span>
@@ -64,14 +64,14 @@ export function Sidebar() {
       </nav>
 
       {/* Cài đặt & Đăng xuất */}
-      <div className="border-t border-[#054070] p-4 space-y-2">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-[#054070] transition-colors text-sm font-medium">
+      <div className="border-t border-[#054070] p-4 space-y-2 flex-shrink-0">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-[#2563EB] hover:text-white transition-all text-sm font-medium">
           <span className="text-lg">⚙️</span>
           <span>Cài đặt</span>
         </button>
         <Link
           href="/login"
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-[#054070] transition-colors text-sm font-medium"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-[#DC2626] hover:text-white transition-all text-sm font-medium"
         >
           <span className="text-lg">🚪</span>
           <span>Đăng xuất</span>

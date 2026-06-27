@@ -10,11 +10,11 @@ export function Header() {
       {/* Left Section - Search */}
       <div className="flex-1 max-w-xl">
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600">🔍</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">🔍</span>
           <input
             type="text"
-            placeholder="Tìm kiếm..."
-            className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] text-sm"
+            placeholder="Tìm kiếm học sinh, lớp, giáo viên..."
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:border-transparent text-sm text-gray-900 placeholder-gray-400 shadow-sm"
           />
         </div>
       </div>

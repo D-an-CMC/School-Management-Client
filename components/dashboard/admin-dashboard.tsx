@@ -2,10 +2,20 @@
 
 import { mockDashboardStats, mockTeachers } from '@/lib/mock-data'
 import { StatCard } from './stat-card'
+import { HealthRiskChart } from './health-risk-chart'
 
 export function AdminDashboard() {
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Banner Image */}
+      <div className="mb-8 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-[#0B3D5C] via-[#0066CC] to-[#3B82F6] h-32 flex items-center justify-center relative">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10 text-center text-white">
+          <h2 className="text-2xl font-bold mb-2">🎓 Trường THCS CMC</h2>
+          <p className="text-blue-100">Hệ thống quản lý và phân tích dữ liệu học tập</p>
+        </div>
+      </div>
+
       {/* Welcome Section */}
       <div className="mb-8 bg-gradient-to-r from-[#0B3D5C] to-[#0066CC] text-white rounded-lg p-6">
         <h1 className="text-2xl font-bold mb-2">Xin chào, Thầy Hiệu Trưởng - Hiệu Trưởng</h1>
@@ -83,10 +93,9 @@ export function AdminDashboard() {
                   </p>
                 </div>
               </div>
-              <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-center">
-                <div className="text-xs text-red-600 font-semibold">⚠️</div>
-                <div className="text-sm font-bold text-red-700">12 Cảnh</div>
-                <div className="text-xs font-semibold text-red-600">báo Rủi ro</div>
+              <div className="bg-gradient-to-br from-red-500 to-red-600 text-white rounded-lg px-4 py-3 text-center shadow-md">
+                <div className="text-lg font-bold">⚠️ 12</div>
+                <div className="text-xs font-semibold opacity-90">Cảnh báo Rủi ro</div>
               </div>
             </div>
 
@@ -94,29 +103,7 @@ export function AdminDashboard() {
             <div className="grid grid-cols-3 gap-6">
               {/* Chart Section */}
               <div className="col-span-2">
-                <div className="text-xs text-gray-500 font-semibold tracking-wide mb-4">TREND: PERFORMANCE STABILITY</div>
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <div className="flex items-end justify-between gap-1.5 h-40 mb-3">
-                    {[
-                      { value: 35, color: 'bg-blue-200', time: '08:00' },
-                      { value: 48, color: 'bg-blue-300', time: '10:00' },
-                      { value: 32, color: 'bg-blue-200', time: '12:00' },
-                      { value: 62, color: 'bg-blue-500', time: '14:00' },
-                      { value: 28, color: 'bg-red-400', time: '16:00' },
-                      { value: 58, color: 'bg-blue-400', time: '18:00' },
-                      { value: 72, color: 'bg-yellow-400', time: '20:00' },
-                      { value: 45, color: 'bg-blue-300', time: '22:00' },
-                    ].map((bar, index) => (
-                      <div key={index} className="flex-1 flex flex-col items-center">
-                        <div
-                          className={`w-full ${bar.color} rounded-sm transition-all hover:opacity-80`}
-                          style={{ height: `${(bar.value / 72) * 100}%` }}
-                        />
-                        <div className="text-xs text-gray-600 font-medium mt-2 whitespace-nowrap">{bar.time}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <HealthRiskChart />
               </div>
 
               {/* Stats Section */}
@@ -156,7 +143,11 @@ export function AdminDashboard() {
                       <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-3 text-gray-900">
                           <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
+                            <img
+                              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.name)}`}
+                              alt={item.name}
+                              className="w-7 h-7 rounded-full object-cover"
+                            />
                             <span className="font-medium">{item.name}</span>
                           </div>
                         </td>
@@ -204,7 +195,11 @@ export function AdminDashboard() {
                   <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 text-gray-900">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
+                        <img
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.name)}`}
+                          alt={item.name}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
                         {item.name}
                       </div>
                     </td>

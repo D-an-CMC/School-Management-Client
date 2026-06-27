@@ -8,7 +8,7 @@ export default function GradebookPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Số điểm Học thuật</h1>
         <p className="text-gray-700">
-          📌 Trường THPT Chuyên CMC • Học kỳ II • 2023-2024
+          📌 Trường THCS CMC • Học kỳ II • 2023-2024
         </p>
       </div>
 
