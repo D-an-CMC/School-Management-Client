@@ -222,9 +222,11 @@ export default function LoginPage() {
           {/* Header */}
           <div className="mb-10">
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#0B3D5C] to-[#0066CC] rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-3xl">CMC</span>
-              </div>
+              <img
+                src="/cmc-logo.png"
+                alt="CMC Secondary School Logo"
+                className="h-40 w-auto"
+              />
             </div>
             <h2 className="text-2xl font-bold text-center text-[#0B3D5C] mb-2">TRƯỜNG THCS CMC</h2>
             <p className="text-center text-gray-600 text-sm">Trường THCS CMC</p>
