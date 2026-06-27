@@ -1,162 +1,95 @@
 'use client'
 
-export default function AdministrativeAIPage() {
+import { useState } from 'react'
+
+export default function AIChatPage() {
+  const [messages, setMessages] = useState([
+    {
+      type: 'user',
+      text: 'Chào bạn, tôi muốn kiểm tra kết quả học tập kỳ này của con trai tôi - Nguyễn Văn Nam.',
+      time: '10:15 AM',
+    },
+    {
+      type: 'ai',
+      text: 'Chào anh! Kết quả học tập của bạn Nguyễn Văn Nam (MSSV: CMC2023001) trong Học kỳ 1 năm 2024 đã được cập nhật:',
+      suggestions: [
+        'Lập trình hướng đối tượng: A+',
+        'Toán rời rạc: B',
+        'Kiến trúc máy tính: A',
+      ],
+      details: 'Anh có cần xem bảng điểm chi tiết hay lịch thi sắp tới của bạn không?',
+      time: '10:16 AM',
+    },
+  ])
+
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          TMryl AI CMC
-        </h1>
-        <p className="text-gray-900">
-          Sẵn sàng để dự đoán và tối ưu hóa thông báo
-        </p>
-      </div>
-
-      {/* Main Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* AI Chatbot Config */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-start gap-4 mb-4">
-            <div className="text-4xl">🤖</div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Trợ lý ảo AI Chatbot</h3>
-              <p className="text-sm text-gray-900 mt-1">
-                Dự nhật phân hội (Temperature)
-              </p>
-            </div>
+    <div className="flex flex-col h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-[#0066CC] rounded-full flex items-center justify-center text-3xl">
+            👑
           </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Dự liễu thông báo nổi bộ trưởng
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                defaultValue="70"
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-              <div className="flex justify-between text-xs text-gray-900 mt-1">
-                <span>Chính xác (0.0)</span>
-                <span className="font-semibold text-blue-600">0.7</span>
-                <span>Sáng tạo (1.0)</span>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-700">
-                AI sẽ tiến thông báo nổi phát tính và học sinh
-              </p>
-            </div>
-
-            <button className="w-full py-2 px-4 bg-blue-50 text-blue-600 font-medium rounded-lg hover:bg-blue-100 transition-colors">
-              Lưu Cài đặt
-            </button>
-          </div>
-        </div>
-
-        {/* Performance Analytics */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-start gap-4 mb-4">
-            <div className="text-4xl">📊</div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Phân tích & Dự báo Học thuật</h3>
-              <p className="text-sm text-gray-900 mt-1">
-                Ngưỡng cảnh báo học lực yếu
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ngưỡng cảnh báo: GPA &lt; 5.0
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  defaultValue="5"
-                  min="1"
-                  max="10"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <span className="px-4 py-2 bg-red-100 text-red-600 font-bold rounded-lg">GPA &lt; 5.0</span>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-700 mb-2">
-                Số ngày nghỉ học để đăng ký khi AI phát hiện báo cáo
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  defaultValue="3"
-                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <span className="px-4 py-2 text-gray-900 font-medium">ngày liền tiếp</span>
-              </div>
-            </div>
-
-            <button className="w-full py-2 px-4 bg-blue-50 text-blue-600 font-medium rounded-lg hover:bg-blue-100 transition-colors">
-              Dự báo xu hướng
-            </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">CMC AI Trmlý</h1>
+            <p className="text-sm text-gray-600">Xin chào! Tôi là trVIý ảo từ CMC University. Tôi có thể hỏi trực tiếp số liệu, lịch học, và các thủ tục hành chính.</p>
           </div>
         </div>
       </div>
 
-      {/* Alert Notifications */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          🔔 Bộ lọc & Phân loại Cảnh báo
-        </h3>
-
-        <div className="space-y-4">
-          {[
-            {
-              title: 'Nhập điểm cảnh báo cho học sinh trong các tiết học hằng ngày',
-              enabled: true,
-            },
-            {
-              title: 'Sửa điểm',
-              enabled: true,
-            },
-            {
-              title: 'Phế duyệt điểm',
-              enabled: false,
-            },
-            {
-              title: 'Điểm danh Học sinh',
-              enabled: true,
-            },
-            {
-              title: 'Chốt số điểm danh',
-              enabled: false,
-            },
-          ].map((item, index) => (
-            <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <input
-                type="checkbox"
-                checked={item.enabled}
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-              />
-              <span className="flex-1 text-gray-700">{item.title}</span>
-              <span className={`text-xs px-3 py-1 rounded-full font-semibold ${
-                item.enabled
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-300 text-gray-700'
-              }`}>
-                {item.enabled ? 'Hoạt động' : 'Tắt'}
-              </span>
+      {/* Chat Area */}
+      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+        {messages.map((msg, idx) => (
+          <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div
+              className={`max-w-2xl ${
+                msg.type === 'user'
+                  ? 'bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm p-4'
+                  : 'space-y-3'
+              }`}
+            >
+              {msg.type === 'user' ? (
+                <div>
+                  <p className="text-sm">{msg.text}</p>
+                  <p className="text-xs text-gray-500 mt-2">{msg.time}</p>
+                </div>
+              ) : (
+                <>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-gray-900 mb-3">{msg.text}</p>
+                    <div className="space-y-2">
+                      {msg.suggestions?.map((suggestion, i) => (
+                        <div key={i} className="flex items-start gap-2 text-sm">
+                          <span className="text-blue-600 font-bold">•</span>
+                          <span className="text-gray-900">{suggestion}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {msg.details && (
+                      <p className="text-sm text-gray-700 mt-3">{msg.details}</p>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 px-2">{msg.time}</p>
+                </>
+              )}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
 
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <button className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-            🔒 Lưu cấu hình
+      {/* Input Area */}
+      <div className="bg-white border-t border-gray-200 px-8 py-6">
+        <div className="flex gap-3">
+          <input
+            type="text"
+            placeholder="Nhập câu hỏi của bạn..."
+            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] text-gray-900"
+          />
+          <button className="bg-[#0066CC] hover:bg-[#0052A3] text-white px-6 py-3 rounded-lg font-semibold transition">
+            Gửi
+          </button>
+          <button className="bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition">
+            💬
           </button>
         </div>
       </div>
