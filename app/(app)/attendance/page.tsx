@@ -96,7 +96,7 @@ export default function AttendancePage() {
                 <span className="text-gray-900">Có mặt</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-gray-400"></span>
+                <span className="w-3 h-3 rounded-full bg-yellow-400"></span>
                 <span className="text-gray-900">Nghi có phép</span>
               </div>
               <div className="flex items-center gap-2">
