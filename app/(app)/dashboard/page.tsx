@@ -23,9 +23,6 @@ return (
 {/* Banner Image */}
 <div className="mb-8 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-[#0B3D5C] via-[#0066CC] to-[#3B82F6] h-32 flex items-center justify-center relative">
 <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10 text-center text-white">
-          <h2 className="text-2xl font-bold mb-2">Trường THCS CMC</h2>
-        </div>
 </div>
 
 {/* Welcome Section */}
