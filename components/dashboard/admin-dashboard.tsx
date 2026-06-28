@@ -7,15 +7,6 @@ import { HealthRiskChart } from './health-risk-chart'
 export function AdminDashboard() {
   return (
     <div className="p-8 min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Banner Image */}
-      <div className="mb-8 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-[#0B3D5C] via-[#0066CC] to-[#3B82F6] h-32 flex items-center justify-center relative">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10 text-center text-white">
-          <h2 className="text-2xl font-bold mb-2">🎓 Trường THCS CMC</h2>
-          <p className="text-blue-100">Hệ thống quản lý và phân tích dữ liệu học tập</p>
-        </div>
-      </div>
-
       {/* Welcome Section */}
       <div className="mb-8 bg-gradient-to-r from-[#0B3D5C] to-[#0066CC] text-white rounded-lg p-6">
         <h1 className="text-2xl font-bold mb-2">Xin chào, Thầy Hiệu Trưởng - Hiệu Trưởng</h1>

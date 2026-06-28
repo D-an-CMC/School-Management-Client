@@ -220,16 +220,15 @@ export default function LoginPage() {
         {/* Right Section - Form */}
         <div className="bg-white rounded-3xl shadow-2xl p-10 flex flex-col justify-center h-fit">
           {/* Header */}
-          <div className="mb-10">
-            <div className="flex justify-center mb-6">
+          <div className="mb-10 flex flex-col items-center">
+            <div className="mb-6">
               <img
                 src="/cmc-logo.png"
                 alt="CMC Secondary School Logo"
-                className="h-40 w-auto"
+                className="h-48 w-auto"
               />
             </div>
-            <h2 className="text-2xl font-bold text-center text-[#0B3D5C] mb-2">TRƯỜNG THCS CMC</h2>
-            <p className="text-center text-gray-600 text-sm">Trường THCS CMC</p>
+            <h2 className="text-2xl font-bold text-center text-[#0B3D5C]">TRƯỜNG THCS CMC</h2>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
