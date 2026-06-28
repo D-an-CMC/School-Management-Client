@@ -11,11 +11,12 @@ export function Sidebar() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
-  const studentNavItems = [
-    { href: '/dashboard', label: 'Tổng quan', icon: '📊' },
-    { href: '/gradebook', label: 'Bảng điểm', icon: '📈' },
-    { href: '/attendance', label: 'Điểm danh', icon: '✓' },
-    { href: '/administrative-ai', label: 'AI Chat', icon: '🤖' },
+  const teacherNavItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { href: '/my-classes', label: 'My Classes', icon: '👨‍🎓' },
+    { href: '/gradebook', label: 'Gradebook', icon: '📈' },
+    { href: '/attendance', label: 'Attendance', icon: '✓' },
+    { href: '/administrative-ai', label: 'Administrative AI', icon: '🤖' },
   ]
 
   const adminNavItems = [
@@ -26,7 +27,7 @@ export function Sidebar() {
     { href: '/security-logs', label: 'Nhật ký bảo mật', icon: '🔒' },
   ]
 
-  const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems
+  const navItems = user?.role === 'admin' ? adminNavItems : teacherNavItems
 
   return (
     <aside className="w-64 bg-gradient-to-b from-[#1E5A8D] to-[#0B3D5C] text-white min-h-screen flex flex-col border-r border-[#054070] overflow-y-auto scroll-smooth">
