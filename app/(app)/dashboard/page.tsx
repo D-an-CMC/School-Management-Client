@@ -287,203 +287,162 @@ Mở AI Chat
 }
 
 function TeacherDashboard({ user }: { user: any }) {
-const currentDate = new Date();
-const dateStr = `${currentDate.getDate() <= 9 ? '0' : ''}${currentDate.getDate()}/${currentDate.getMonth() + 1 <= 9 ? '0' : ''}${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
-
 return (
-<div className="p-8 min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+<div className="p-8 min-h-screen bg-white">
 {/* Welcome Section */}
 <div className="mb-8">
-<h1 className="text-3xl font-bold text-gray-900 mb-2">
+<h1 className="text-3xl font-bold text-gray-900">
 Xin chào, {user?.name} | Giáo viên
 </h1>
-<p className="text-gray-600 mb-1">Chào mừng bạn trở lại hệ thống quản lý học tập. Chúc bạn một ngày làm việc hiệu quả!</p>
-<p className="text-sm text-gray-500">📅 Thứ Ba, 26 Tháng 10, 2023</p>
+<p className="text-gray-600">
+Chào mừng bạn trở lại hệ thống quản lý học tập. Chúc bạn một ngày làm việc hiệu quả!
+</p>
+<p className="text-sm text-gray-500 mt-1">📅 Thứ Ba, 26 Tháng 10, 2023</p>
 </div>
 
-{/* Main Content Grid */}
-<div className="grid grid-cols-3 gap-6">
-{/* Left Column - Classes & Schedule */}
-<div className="col-span-2 space-y-6">
-{/* Today's Schedule Card */}
+{/* Main Cards Grid */}
+<div className="grid grid-cols-3 gap-6 mb-6">
+{/* Today's Schedule */}
 <div className="bg-white rounded-lg border border-gray-200 p-6">
 <div className="flex items-center justify-between mb-4">
 <h2 className="text-lg font-semibold text-gray-900">Today&apos;s Schedule</h2>
-<a href="#" className="text-sm text-[#0066CC] hover:underline font-medium">View All</a>
+<a href="#" className="text-blue-600 text-sm hover:underline">View All</a>
 </div>
 <div className="space-y-3">
-<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border-l-4 border-[#0066CC] hover:shadow transition">
-<div className="text-sm font-bold text-gray-700 bg-gray-200 px-2 py-1 rounded">08:00</div>
-<div className="flex-1">
-<div className="font-semibold text-gray-900">Lớp 12A1 - Toán học</div>
-<div className="text-sm text-gray-600">Phòng học B204 • Tiết 1-2</div>
+<div className="flex items-center gap-3">
+<span className="text-sm font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">08:00</span>
+<div>
+<p className="font-semibold text-gray-900">Lớp 12A1 - Toán học</p>
+<p className="text-sm text-gray-600">Phòng học B204 • Tiết 1-2</p>
 </div>
 </div>
-<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border-l-4 border-gray-300 hover:shadow transition">
-<div className="text-sm font-bold text-gray-700 bg-gray-200 px-2 py-1 rounded">10:15</div>
-<div className="flex-1">
-<div className="font-semibold text-gray-900">Lớp 11B2 - Đại số</div>
-<div className="text-sm text-gray-600">Phòng học A102 • Tiết 3-4</div>
+<div className="flex items-center gap-3">
+<span className="text-sm font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">10:15</span>
+<div>
+<p className="font-semibold text-gray-900">Lớp 11B2 - Đại số</p>
+<p className="text-sm text-gray-600">Phòng học A102 • Tiết 3-4</p>
 </div>
 </div>
-<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border-l-4 border-gray-300 hover:shadow transition">
-<div className="text-sm font-bold text-gray-700 bg-gray-200 px-2 py-1 rounded">14:00</div>
-<div className="flex-1">
-<div className="font-semibold text-gray-900">Lớp 12A5 - Ôn thi THPT</div>
-<div className="text-sm text-gray-600">Hội trường lớn • Tiết 6-8</div>
+<div className="flex items-center gap-3">
+<span className="text-sm font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">14:00</span>
+<div>
+<p className="font-semibold text-gray-900">Lớp 12A5 - Ôn thi THPT</p>
+<p className="text-sm text-gray-600">Hội trường lớn • Tiết 6-8</p>
 </div>
-</div>
-</div>
-</div>
-
-{/* My Classes Card */}
-<div className="bg-white rounded-lg border border-gray-200 p-6">
-<div className="flex items-center justify-between mb-4">
-<h2 className="text-lg font-semibold text-gray-900">My Classes</h2>
-<a href="#" className="text-sm text-[#0066CC] hover:underline font-medium">View All</a>
-</div>
-<div className="grid grid-cols-3 gap-4">
-{/* Class Card 1 */}
-<div className="border border-gray-200 rounded-lg p-4 hover:shadow transition cursor-pointer">
-<div className="flex items-center justify-between mb-3">
-<h3 className="font-semibold text-gray-900">Lớp 10A1</h3>
-<span className="text-2xl font-bold text-[#0066CC]">10</span>
-</div>
-<p className="text-sm text-gray-600 mb-2">Chủ nhiệm: Nguyễn Minh Tâm</p>
-<div className="pt-3 border-t border-gray-200">
-<p className="text-xs font-medium text-gray-600 mb-1">STUDENTS</p>
-<p className="text-lg font-bold text-gray-900">42 Học sinh</p>
-<p className="text-xs text-gray-500 mt-2">GPA AVG: 8.4/10</p>
-</div>
-</div>
-
-{/* Class Card 2 */}
-<div className="border border-[#0066CC] bg-blue-50 rounded-lg p-4 hover:shadow transition cursor-pointer ring-2 ring-[#0066CC] ring-offset-2">
-<div className="flex items-center justify-between mb-3">
-<h3 className="font-semibold text-gray-900">Lớp 11B2</h3>
-<span className="text-2xl font-bold text-[#0066CC]">11</span>
-</div>
-<p className="text-sm text-gray-600 mb-2">Chủ nhiệm: Trần Thu Hạ</p>
-<div className="pt-3 border-t border-gray-200">
-<p className="text-xs font-medium text-gray-600 mb-1">STUDENTS</p>
-<p className="text-lg font-bold text-gray-900">38 Học sinh</p>
-<p className="text-xs text-gray-500 mt-2">GPA AVG: 7.9/10</p>
-</div>
-</div>
-
-{/* Class Card 3 */}
-<div className="border border-gray-200 rounded-lg p-4 hover:shadow transition cursor-pointer">
-<div className="flex items-center justify-between mb-3">
-<h3 className="font-semibold text-gray-900">Lớp 12A1</h3>
-<span className="text-2xl font-bold text-[#0066CC]">12</span>
-</div>
-<p className="text-sm text-gray-600 mb-2">Chủ nhiệm: Lê Vợi Hùng</p>
-<div className="pt-3 border-t border-gray-200">
-<p className="text-xs font-medium text-gray-600 mb-1">STUDENTS</p>
-<p className="text-lg font-bold text-gray-900">45 Học sinh</p>
-<p className="text-xs text-gray-500 mt-2">GPA AVG: 9.1/10</p>
-</div>
-</div>
-</div>
-</div>
-
-{/* Requests & Recommendations */}
-<div className="bg-white rounded-lg border border-gray-200 p-6">
-<h2 className="text-lg font-semibold text-gray-900 mb-4">Xu hướng chuyên cần hằng tuần</h2>
-<div className="space-y-3">
-<div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-<p className="text-sm font-medium text-gray-900 mb-1">📊 Phân tích Phó điểm</p>
-<p className="text-sm text-gray-600">Phó điểm đang tập trung ở mức 7.0 - 8.5. TTỉ lệ học sinh khá giỏi chiếm 68% tổng số.</p>
-</div>
-<div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-<p className="text-sm font-medium text-gray-900 mb-1">📋 Chủ giải dự liệu</p>
-<p className="text-sm text-gray-600">Dự liệu thực tế (Giáo viên nhập) • Dự báo AI (Dựa trên lịch sử tập)</p>
-</div>
-</div>
-</div>
-</div>
-
-{/* Right Column - Alerts & Stats */}
-<div className="space-y-6">
-{/* AI Insights Alert */}
-<div className="bg-white rounded-lg border border-gray-200 p-6">
-<div className="flex items-center gap-2 mb-4">
-<h3 className="font-semibold text-gray-900">AI Insights Alert</h3>
-<span className="px-3 py-1 bg-[#0066CC] text-white text-xs font-bold rounded">SMART ENGINE</span>
-</div>
-<div className="space-y-3">
-{/* Alert 1 */}
-<div className="border-l-4 border-red-500 bg-red-50 p-4 rounded-r">
-<p className="font-semibold text-gray-900 mb-1">⚠️ Lê Thu Phương</p>
-<p className="text-sm text-gray-600">GPA drop -15% trong 2 tuần. Gợi ý: Lên kế hoạch tư vấn 1-on-1.</p>
-</div>
-
-{/* Alert 2 */}
-<div className="border-l-4 border-gray-400 bg-gray-50 p-4 rounded-r">
-<p className="font-semibold text-gray-900 mb-1">🔔 Trần Văn B</p>
-<p className="text-sm text-gray-600">3 lần vắng liên tiếp được phát hiện. Thông báo phụ huynh tự động gửi.</p>
-</div>
-
-{/* Alert 3 */}
-<div className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r">
-<p className="font-semibold text-gray-900 mb-1">📈 Nguyễn Hoàng Nam</p>
-<p className="text-sm text-gray-600">Thành tích Toán tăng 20%. Hãy xem xét cho Giải thưởng Xuất sắc.</p>
 </div>
 </div>
 </div>
 
 {/* Attendance Status */}
 <div className="bg-white rounded-lg border border-gray-200 p-6">
-<h3 className="font-semibold text-gray-900 mb-4">Attendance Status</h3>
-<div className="flex flex-col items-center">
-<div className="relative w-40 h-40">
+<div className="flex items-center justify-between mb-4">
+<h2 className="text-lg font-semibold text-gray-900">Attendance Status</h2>
+<div className="w-6 h-6 rounded-full bg-blue-600"></div>
+</div>
+<div className="flex flex-col items-center py-6">
+<div className="relative w-32 h-32">
 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
 <circle cx="18" cy="18" r="16" fill="none" stroke="#E5E7EB" strokeWidth="2" />
-<circle cx="18" cy="18" r="16" fill="none" stroke="#22C55E" strokeWidth="2" strokeDasharray="84.24 100.53" strokeDashoffset="0" strokeLinecap="round" />
-<circle cx="18" cy="18" r="16" fill="none" stroke="#EF4444" strokeWidth="2" strokeDasharray="12.06 100.53" strokeDashoffset="-84.24" strokeLinecap="round" />
+<circle cx="18" cy="18" r="16" fill="none" stroke="#0066CC" strokeWidth="2" strokeDasharray="93.92 100.53" strokeDashoffset="0" strokeLinecap="round" />
+<circle cx="18" cy="18" r="16" fill="none" stroke="#EF4444" strokeWidth="2" strokeDasharray="6.61 100.53" strokeDashoffset="-93.92" strokeLinecap="round" />
 </svg>
-<div className="absolute inset-0 flex items-center justify-center">
-<div className="text-center">
+<div className="absolute inset-0 flex flex-col items-center justify-center">
 <div className="text-3xl font-bold text-gray-900">93%</div>
 <div className="text-xs text-gray-600">Present</div>
 </div>
 </div>
-</div>
-
-<div className="mt-6 w-full space-y-2">
+<div className="mt-6 w-full space-y-1.5 text-sm">
 <div className="flex items-center justify-between">
-<div className="flex items-center gap-2">
-<span className="w-3 h-3 rounded-full bg-green-600"></span>
-<span className="text-sm text-gray-900">Present</span>
-</div>
-<span className="text-sm font-semibold text-gray-900">42 students</span>
+<span className="text-gray-700">Present</span>
+<span className="font-semibold">42 students</span>
 </div>
 <div className="flex items-center justify-between">
-<div className="flex items-center gap-2">
-<span className="w-3 h-3 rounded-full bg-red-600"></span>
-<span className="text-sm text-gray-900">Absent</span>
-</div>
-<span className="text-sm font-semibold text-gray-900">03 students</span>
+<span className="text-gray-700">Absent</span>
+<span className="font-semibold">03 students</span>
 </div>
 <div className="flex items-center justify-between">
-<div className="flex items-center gap-2">
-<span className="w-3 h-3 rounded-full bg-gray-500"></span>
-<span className="text-sm text-gray-900">Total Expected</span>
-</div>
-<span className="text-sm font-semibold text-gray-900">45 students</span>
+<span className="text-gray-700">Total Expected</span>
+<span className="font-semibold">45 students</span>
 </div>
 </div>
 </div>
 </div>
 
-{/* Performance Alert Card */}
-<div className="bg-gradient-to-br from-[#0B3D5C] to-[#0066CC] rounded-lg p-6 text-white">
-<h3 className="font-semibold mb-2">Thống kê điểm danh</h3>
-<p className="text-sm text-blue-100 mb-4">Học sinh vắng mặt không phép cần được xử lý ngay tuần này để tránh ảnh hưởng đến quá trình học tập.</p>
-<button className="w-full bg-white text-[#0066CC] px-4 py-2 rounded font-semibold text-sm hover:bg-gray-100 transition">
-Full AI Analysis Report →
-</button>
+{/* AI Insights Alert */}
+<div className="bg-white rounded-lg border border-gray-200 p-6">
+<div className="flex items-center gap-2 mb-4">
+<h2 className="text-lg font-semibold text-gray-900">AI Insights Alert</h2>
+<span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">SMART ENGINE</span>
 </div>
+<div className="space-y-3">
+<div className="border-l-4 border-red-500 bg-red-50 p-3 rounded-r">
+<p className="font-semibold text-sm text-gray-900">Lê Thu Phương</p>
+<p className="text-xs text-gray-600">GPA drop -15% trong 2 tuần. Gợi ý: Tư vấn 1-on-1.</p>
+</div>
+<div className="border-l-4 border-gray-400 bg-gray-50 p-3 rounded-r">
+<p className="font-semibold text-sm text-gray-900">Trần Văn B</p>
+<p className="text-xs text-gray-600">3 lần vắng liên tiếp. Thông báo phụ huynh gửi.</p>
+</div>
+<div className="border-l-4 border-blue-500 bg-blue-50 p-3 rounded-r">
+<p className="font-semibold text-sm text-gray-900">Nguyễn Hoàng Nam</p>
+<p className="text-xs text-gray-600">Toán tăng 20%. Xem xét Giải thưởng.</p>
+</div>
+</div>
+</div>
+</div>
+
+{/* Recent Student Submissions */}
+<div className="bg-white rounded-lg border border-gray-200 p-6">
+<div className="flex items-center justify-between mb-4">
+<h2 className="text-lg font-semibold text-gray-900">Recent Student Submissions</h2>
+<a href="#" className="text-blue-600 text-sm hover:underline">View All Submissions</a>
+</div>
+<div className="overflow-x-auto">
+<table className="w-full text-sm">
+<thead>
+<tr className="border-b border-gray-200">
+<th className="text-left py-2 px-3 font-semibold text-gray-700 uppercase text-xs">Student Name</th>
+<th className="text-left py-2 px-3 font-semibold text-gray-700 uppercase text-xs">Assignment</th>
+<th className="text-left py-2 px-3 font-semibold text-gray-700 uppercase text-xs">Date Submitted</th>
+<th className="text-left py-2 px-3 font-semibold text-gray-700 uppercase text-xs">Status</th>
+<th className="text-left py-2 px-3 font-semibold text-gray-700 uppercase text-xs">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr className="border-b border-gray-100 hover:bg-gray-50">
+<td className="py-3 px-3">
+<div className="flex items-center gap-2">
+<div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-gray-700">DH</div>
+<span className="font-medium text-gray-900">Đặng Hoàng Nam</span>
+</div>
+</td>
+<td className="py-3 px-3 text-gray-700">Giải tích nâng cao - Tuần 8</td>
+<td className="py-3 px-3 text-gray-700">Hôm nay, 09:30 AM</td>
+<td className="py-3 px-3">
+<span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">SUBMITTED</span>
+</td>
+<td className="py-3 px-3">
+<a href="#" className="text-blue-600 font-semibold hover:underline">Grade Now</a>
+</td>
+</tr>
+<tr className="border-b border-gray-100 hover:bg-gray-50">
+<td className="py-3 px-3">
+<div className="flex items-center gap-2">
+<div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-gray-700">MT</div>
+<span className="font-medium text-gray-900">Mai Thảo Vy</span>
+</div>
+</td>
+<td className="py-3 px-3 text-gray-700">Bài tập Hình học Oxyz</td>
+<td className="py-3 px-3 text-gray-700">Hôm qua, 04:45 PM</td>
+<td className="py-3 px-3">
+<span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded">PENDING REVIEW</span>
+</td>
+<td className="py-3 px-3">
+<a href="#" className="text-blue-600 font-semibold hover:underline">Review</a>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
