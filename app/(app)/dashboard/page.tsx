@@ -20,11 +20,6 @@ return <TeacherDashboard user={user} />
 function StudentDashboard({ user }: { user: any }) {
 return (
 <div className="p-8 min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-{/* Banner Image */}
-<div className="mb-8 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-[#0B3D5C] via-[#0066CC] to-[#3B82F6] h-32 flex items-center justify-center relative">
-<div className="absolute inset-0 bg-black/20"></div>
-</div>
-
 {/* Welcome Section */}
 <div className="mb-8">
 <h1 className="text-3xl font-bold text-gray-900 mb-2">
