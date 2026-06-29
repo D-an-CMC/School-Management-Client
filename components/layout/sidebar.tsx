@@ -35,9 +35,9 @@ export function Sidebar() {
       <div className="p-4 border-b border-[#054070] flex-shrink-0">
         <Link href="/" className="flex items-center">
           <img
-            src="/cmc-university-logo.png"
-            alt="CMC University"
-            className="h-16 w-auto"
+            src="/cmc-logo.png"
+            alt="CMC Secondary School"
+            className="h-20 w-auto"
           />
         </Link>
       </div>
