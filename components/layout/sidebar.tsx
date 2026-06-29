@@ -32,15 +32,13 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-gradient-to-b from-[#1E5A8D] to-[#0B3D5C] text-white min-h-screen flex flex-col border-r border-[#054070] overflow-y-auto scroll-smooth">
       {/* Logo Section */}
-      <div className="p-6 border-b border-[#054070] flex-shrink-0">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-            <span className="text-[#0B3D5C] font-bold text-lg">CMC</span>
-          </div>
-          <div>
-            <div className="font-bold text-sm text-white">CMC University</div>
-            <div className="text-xs text-blue-200">Trường THCS CMC</div>
-          </div>
+      <div className="p-4 border-b border-[#054070] flex-shrink-0">
+        <Link href="/" className="flex items-center">
+          <img
+            src="/cmc-logo.png"
+            alt="CMC Secondary School"
+            className="h-20 w-auto"
+          />
         </Link>
       </div>
 
