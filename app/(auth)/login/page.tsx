@@ -206,12 +206,12 @@ export default function LoginPage() {
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/15 transition">
               <div className="text-3xl mb-3">🛡️</div>
-              <h3 className="font-semibold mb-2">Bảo mật RBAC</h3>
+              <h3 className="font-semibold text-white mb-2">Bảo mật RBAC</h3>
               <p className="text-sm opacity-80">Mã hóa dữ liệu 256-bit</p>
             </div>
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/15 transition">
               <div className="text-3xl mb-3">📊</div>
-              <h3 className="font-semibold mb-2">AI Analytics</h3>
+              <h3 className="font-semibold text-white mb-2">AI Analytics</h3>
               <p className="text-sm opacity-80">Phân tích hành vi ứng dụng thực</p>
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="username@school.edu.vn"
+                  placeholder="username@truong.edu.vn"
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:border-transparent text-gray-900 placeholder:text-gray-500"
                   required
                 />

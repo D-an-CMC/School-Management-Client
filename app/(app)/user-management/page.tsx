@@ -9,7 +9,7 @@ export default function UserManagementPage() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Xin chào, Thầy Hiệu Trưởng - Super Admin
+          Xin chào, Thầy Hiệu Trưởng - Quản trị viên tối cao
         </h1>
         <p className="text-gray-900">
           Chào mừng bạn quay lại hệ thống quản lý nhân sự chuyên sâu.
@@ -47,7 +47,7 @@ export default function UserManagementPage() {
           <input
             type="text"
             placeholder="Tìm kiếm học sinh, mã HS, lớp..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
           />
         </div>
         <button className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">

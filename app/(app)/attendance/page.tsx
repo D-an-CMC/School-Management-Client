@@ -54,7 +54,7 @@ export default function AttendancePage() {
           📥 Xuất dữ liệu Số đầu bài
         </button>
         <button className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-2">
-          📤 Gửi và Đóng bộ với Phụ huynh
+          📤 Gửi và Đồng bộ với Phụ huynh
         </button>
       </div>
 
@@ -116,29 +116,26 @@ export default function AttendancePage() {
                 <td className="py-4 px-4">
                   <div className="flex flex-wrap gap-2">
                     <button
-                      className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                        student.status === 'present'
+                      className={`px-3 py-1 rounded text-xs font-semibold transition ${student.status === 'present'
                           ? 'bg-green-100 text-green-700'
                           : 'bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-700'
-                      }`}
+                        }`}
                     >
                       Có mặt
                     </button>
                     <button
-                      className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                        student.status === 'excused'
+                      className={`px-3 py-1 rounded text-xs font-semibold transition ${student.status === 'excused'
                           ? 'bg-yellow-100 text-yellow-700'
                           : 'bg-gray-100 text-gray-700 hover:bg-yellow-100 hover:text-yellow-700'
-                      }`}
+                        }`}
                     >
                       Vắng
                     </button>
                     <button
-                      className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                        student.status === 'absent'
+                      className={`px-3 py-1 rounded text-xs font-semibold transition ${student.status === 'absent'
                           ? 'bg-red-100 text-red-700'
                           : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-700'
-                      }`}
+                        }`}
                     >
                       Vắng không
                     </button>
@@ -151,7 +148,7 @@ export default function AttendancePage() {
                   <input
                     type="text"
                     placeholder={student.remarks}
-                    className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder:text-gray-500"
                   />
                 </td>
               </tr>
@@ -180,7 +177,7 @@ export default function AttendancePage() {
           </div>
           <textarea
             placeholder="Nhập nội dung giảng dạy của tiết học này..."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder:text-gray-500"
           ></textarea>
         </div>
 
@@ -196,7 +193,7 @@ export default function AttendancePage() {
           </div>
           <textarea
             placeholder="Nhập nhận xét về thái độ học tập của cả lớp..."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder:text-gray-500"
           ></textarea>
         </div>
       </div>

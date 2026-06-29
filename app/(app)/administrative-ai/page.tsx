@@ -21,7 +21,7 @@ export default function AdminAIPage() {
       id: 3,
       icon: '👔',
       title: 'Hãy kiểm tra giúp tôi lịch thi học kỳ 1 của lớp 12A1.',
-      subtitle: 'AI response message',
+      subtitle: 'Tin nhắn phản hồi AI',
       time: '08:16 AM',
       highlight: true,
     },
@@ -58,7 +58,7 @@ export default function AdminAIPage() {
       name: 'Lê Vợi ViSt',
       class: 'Lớp 12A1',
       attendance: '75%',
-      gpa: '4.5 GPA',
+      gpa: '4.5 Điểm',
       alert: 'CẢNH BÁO CAO',
       alertColor: 'bg-red-100 text-red-700',
     },
@@ -67,7 +67,7 @@ export default function AdminAIPage() {
       name: 'Trần Minh Anh',
       class: 'Lớp 12A1',
       attendance: '88%',
-      gpa: '6.2 GPA',
+      gpa: '6.2 Điểm',
       alert: 'TRUNG BÌNH',
       alertColor: 'bg-yellow-100 text-yellow-700',
     },
@@ -116,7 +116,7 @@ export default function AdminAIPage() {
                         </div>
                       )}
                       {msg.time && (
-                        <p className="text-xs text-gray-500 mt-2">{msg.time}</p>
+                        <p className="text-xs text-gray-600 mt-2">{msg.time}</p>
                       )}
                     </div>
                   </div>
@@ -136,7 +136,7 @@ export default function AdminAIPage() {
               <input
                 type="text"
                 placeholder="Nhập yêu cầu tại đây (vd: Tra cứu lịch dạy...)"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder:text-gray-500"
               />
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg">
                 ▶

@@ -38,7 +38,7 @@ export default function MyClassesPage() {
       class: 'Khối 11',
       statusClass: 'ĐANG HHC',
       statusStyle: 'bg-green-100 text-green-700',
-      performance: 'Excellent',
+      performance: 'Xuất sắc',
       performanceBar: '100%',
     },
     {
@@ -49,7 +49,7 @@ export default function MyClassesPage() {
       class: 'Khối 11',
       statusClass: 'VÀNG (P)',
       statusStyle: 'bg-yellow-100 text-yellow-700',
-      performance: 'At-Risk',
+      performance: 'Có rủi ro',
       performanceBar: '45%',
     },
     {
@@ -60,7 +60,7 @@ export default function MyClassesPage() {
       class: 'Khối 11',
       statusClass: 'ĐANG HHC',
       statusStyle: 'bg-green-100 text-green-700',
-      performance: 'Good',
+      performance: 'Tốt',
       performanceBar: '85%',
     },
     {
@@ -71,7 +71,7 @@ export default function MyClassesPage() {
       class: 'Lớp trưởng',
       statusClass: 'ĐANG HHC',
       statusStyle: 'bg-green-100 text-green-700',
-      performance: 'Excellent',
+      performance: 'Xuất sắc',
       performanceBar: '100%',
     },
   ]
@@ -104,14 +104,14 @@ export default function MyClassesPage() {
             </div>
             <p className="text-sm text-gray-600 mb-4">Chủ nhiệm: {classItem.instructor}</p>
             <div className="pt-4 border-t border-gray-200">
-              <p className="text-xs font-medium text-gray-600 mb-1">STUDENTS</p>
+              <p className="text-xs font-medium text-gray-600 mb-1">HỌC SINH</p>
               <p className="text-lg font-bold text-gray-900 mb-1">{classItem.students} Học sinh</p>
-              <p className="text-xs text-gray-500">GPA AVG: {classItem.gpa}/10</p>
+              <p className="text-xs text-gray-600">ĐIỂM TB: {classItem.gpa}/10</p>
             </div>
             {classItem.aiRisks > 0 && (
               <div className="mt-3 pt-3 border-t border-gray-200">
                 <div className="inline-block bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded">
-                  ⚠ AI Risk Warnings: {classItem.aiRisks} Students
+                  ⚠ Cảnh báo AI: {classItem.aiRisks} học sinh
                 </div>
               </div>
             )}
@@ -124,13 +124,13 @@ export default function MyClassesPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Chi tiết học sinh - Lớp 11B2</h2>
-            <p className="text-sm text-gray-600">Cập nhật lúc: 14:30 Today</p>
+            <p className="text-sm text-gray-600">Cập nhật lúc: 14:30 Hôm nay</p>
           </div>
           <div className="flex gap-2">
             <input
               type="text"
               placeholder="Tìm tên, ID..."
-              className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500"
             />
             <button className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium text-sm">
               Lọc
@@ -151,7 +151,7 @@ export default function MyClassesPage() {
                 <th className="text-left py-3 px-4 font-bold text-gray-700 uppercase text-xs">LIÊN HỆ</th>
                 <th className="text-left py-3 px-4 font-bold text-gray-700 uppercase text-xs">PHÂN LOẠI</th>
                 <th className="text-left py-3 px-4 font-bold text-gray-700 uppercase text-xs">TRẠNG THÁI</th>
-                <th className="text-left py-3 px-4 font-bold text-gray-700 uppercase text-xs">PERFORMANCE</th>
+                <th className="text-left py-3 px-4 font-bold text-gray-700 uppercase text-xs">HIỆU SUẤT</th>
               </tr>
             </thead>
             <tbody>

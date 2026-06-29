@@ -16,8 +16,8 @@ const data = [
 export function HealthRiskChart() {
   return (
     <div className="bg-gray-50 rounded-lg p-6">
-      <div className="text-xs text-gray-500 font-semibold tracking-wide mb-4">
-        TREND: PERFORMANCE STABILITY
+      <div className="text-xs text-gray-600 font-semibold tracking-wide mb-4">
+        XU HƯỚNG: ỔN ĐỊNH HIỆU SUẤT
       </div>
       <ResponsiveContainer width="100%" height={160}>
         <BarChart
@@ -49,7 +49,7 @@ export function HealthRiskChart() {
               borderRadius: '8px',
               fontSize: '12px',
             }}
-            formatter={(value: number) => [value, 'Performance']}
+            formatter={(value: number) => [value, 'Hiệu suất']}
           />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (

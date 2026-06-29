@@ -5,7 +5,7 @@ export default function AIConfigurationPage() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          Xin chào, Thầy Hiệu Trưởng - Super Admin
+          Xin chào, Thầy Hiệu Trưởng - Quản trị viên tối cao
         </h1>
         <p className="text-gray-900 mt-2">
           Hệ thống quản lý học sinh trực tuyến CMC. Dưới đây là báo cáo chuyên sâu hôm nay.
@@ -56,7 +56,7 @@ export default function AIConfigurationPage() {
           </div>
         </div>
 
-        {/* Performance & Predictive Analytics */}
+        {/* Performance & Phân tích dự đoán */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-start gap-3 mb-4">
             <div className="text-3xl">📊</div>
@@ -71,7 +71,7 @@ export default function AIConfigurationPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ngưỡng cảnh báo: GPA &lt; 5.0
+                Ngưỡng cảnh báo: Điểm &lt; 5.0
               </label>
               <input
                 type="number"
@@ -95,7 +95,7 @@ export default function AIConfigurationPage() {
 
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <p className="text-sm text-green-800">
-                <span className="font-bold">AI Hệ thống Hoạt động</span>
+                <span className="font-bold text-white">AI Hệ thống Hoạt động</span>
                 <br />
                 Độ chính xác hiệu tại
               </p>
@@ -115,7 +115,7 @@ export default function AIConfigurationPage() {
         </h3>
 
         <p className="text-sm text-gray-900 mb-4">
-          Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
+          Phân tích dữ liệu học tập và hành vi dự đoán Phân tích dự đoán
         </p>
 
         {/* Chart Placeholder */}

@@ -80,7 +80,7 @@ export function AdminDashboard() {
                     Theo dõi Sức khỏe & Rủi ro Học thuật AI
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    Phân tích dữ liệu học tập và hành vi dự đoán Predictive Analytics
+                    Phân tích dữ liệu học tập và hành vi dự đoán Phân tích dự đoán
                   </p>
                 </div>
               </div>
@@ -100,12 +100,12 @@ export function AdminDashboard() {
               {/* Stats Section */}
               <div className="space-y-4">
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-xs text-gray-500 font-semibold tracking-wide mb-3">TỶ LỆ HOÀN THÀNH</div>
+                  <div className="text-xs text-gray-600 font-semibold tracking-wide mb-3">TỶ LỆ HOÀN THÀNH</div>
                   <div className="text-3xl font-bold text-gray-900 mb-1">94.2%</div>
                   <div className="text-sm text-green-600 font-semibold">+2.1% so với tháng trước</div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-xs text-gray-500 font-semibold tracking-wide mb-3">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
+                  <div className="text-xs text-gray-600 font-semibold tracking-wide mb-3">HỌC LỰC TỀ TOÀN TRƯỜNG</div>
                   <div className="text-3xl font-bold text-gray-900 mb-1">7.8</div>
                   <div className="text-sm text-gray-600">Xếp loại: Khá</div>
                 </div>
@@ -139,7 +139,7 @@ export function AdminDashboard() {
                               alt={item.name}
                               className="w-7 h-7 rounded-full object-cover"
                             />
-                            <span className="font-medium">{item.name}</span>
+                            <span className="font-medium text-gray-900">{item.name}</span>
                           </div>
                         </td>
                         <td className="py-3 px-3 text-gray-900">{item.class}</td>

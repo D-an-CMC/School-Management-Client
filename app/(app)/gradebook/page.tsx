@@ -112,11 +112,11 @@ export default function GradebookPage() {
       <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>LỚP HỌC & MÔN HỌC</option>
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900">
+              <option>Chọn Lớp Học</option>
             </select>
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-              <option>Lớp 11B2 - Môn Toán</option>
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900">
+              <option>Chọn Môn Học</option>
             </select>
           </div>
           <div className="flex items-center gap-8">

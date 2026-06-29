@@ -11,8 +11,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'CMC University - Smart School Management System',
-  description: 'Comprehensive school management system with AI-powered analytics and student management',
+  title: 'Trường Trung học CMC - Hệ thống Quản lý Học tập',
+  description: 'Hệ thống quản lý học tập toàn diện với phân tích thông minh AI và quản lý học sinh',
   generator: 'v0.app',
   icons: {
     icon: [

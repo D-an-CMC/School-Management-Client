@@ -40,7 +40,7 @@ export default function SystemPermissionsPage() {
         <span className="text-2xl">✓</span>
         <div>
           <h3 className="font-semibold text-green-900">Nhật kỳ Bảo mật Hệ thống</h3>
-          <p className="text-sm text-green-800">Xin chào, Thầy Hiệu Trưởng - Super Admin. Giám sát toàn diễn các hoạt động hệ thống.</p>
+          <p className="text-sm text-green-800">Xin chào, Thầy Hiệu Trưởng - Quản trị viên tối cao. Giám sát toàn diễn các hoạt động hệ thống.</p>
         </div>
       </div>
 

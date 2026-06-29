@@ -8,7 +8,7 @@ export default function SecurityLogsPage() {
         <div>
           <h3 className="font-bold text-gray-900">Nhật kỳ Bảo mật Hệ thống</h3>
           <p className="text-sm text-gray-900 mt-1">
-            Xin chào, Thầy Hiệu Trưởng - Super Admin. Giám sát toàn diễn các hoạt động hệ thống.
+            Xin chào, Thầy Hiệu Trưởng - Quản trị viên tối cao. Giám sát toàn diễn các hoạt động hệ thống.
           </p>
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function SecurityLogsPage() {
                 {
                   time: '2023-11-24\n14:32:01',
                   account: 'thaylieutrương',
-                  role: 'Super Admin',
+                  role: 'Quản trị viên tối cao',
                   ip: '192.168.1.105',
                   device: 'Chrome / Windows',
                   action: 'Thay đổi cầu hình AI (v2.4)',
@@ -155,7 +155,7 @@ export default function SecurityLogsPage() {
                 {
                   time: '2023-11-24\n14:25:59',
                   account: 'thaylieutrương',
-                  role: 'Super Admin',
+                  role: 'Quản trị viên tối cao',
                   ip: '192.168.1.105',
                   device: 'Chrome / Windows',
                   action: 'Đăng nhập thành công',

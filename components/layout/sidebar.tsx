@@ -12,11 +12,11 @@ export function Sidebar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   const teacherNavItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/my-classes', label: 'My Classes', icon: '👨‍🎓' },
-    { href: '/gradebook', label: 'Gradebook', icon: '📈' },
-    { href: '/attendance', label: 'Attendance', icon: '✓' },
-    { href: '/administrative-ai', label: 'Administrative AI', icon: '🤖' },
+    { href: '/dashboard', label: 'Bảng điều khiển', icon: '📊' },
+    { href: '/my-classes', label: 'Lớp học của tôi', icon: '👨‍🎓' },
+    { href: '/gradebook', label: 'Sổ điểm', icon: '📈' },
+    { href: '/attendance', label: 'Điểm danh', icon: '✓' },
+    { href: '/administrative-ai', label: 'AI Quản trị', icon: '🤖' },
   ]
 
   const adminNavItems = [
@@ -32,12 +32,12 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-gradient-to-b from-[#1E5A8D] to-[#0B3D5C] text-white min-h-screen flex flex-col border-r border-[#054070] overflow-y-auto scroll-smooth">
       {/* Logo Section */}
-      <div className="p-4 border-b border-[#054070] flex-shrink-0">
-        <Link href="/" className="flex items-center">
+      <div className="p-4 border-b border-[#054070] flex-shrink-0 flex justify-center">
+        <Link href="/dashboard" className="flex items-center">
           <img
-            src="/cmc-logo.png"
+            src="/cmc-secondary-logo.png"
             alt="CMC Secondary School"
-            className="h-20 w-auto"
+            className="h-28 w-auto"
           />
         </Link>
       </div>
