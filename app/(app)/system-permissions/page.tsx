@@ -1,123 +1,99 @@
 'use client'
 
+import { useState } from 'react'
+
 export default function SystemPermissionsPage() {
   const permissions = [
-    { name: 'Admin', icon: '🛡️', description: 'Các quyền cao nhất, cho phép thiết lập toàn bộ module hệ thống.', active: true },
-    { name: 'Giáo viên', icon: '👨‍🏫', description: '', active: false },
-    { name: 'Học sinh', icon: '👨‍🎓', description: '', active: false },
-    { name: 'Phụ huynh', icon: '👨‍👩‍👧', description: '', active: false },
-    { name: 'Y tế', icon: '⚕️', description: '', active: false },
-    { name: 'Kế toán', icon: '📊', description: '', active: false },
-    { name: 'Thiết bị', icon: '🛠️', description: '', active: false },
+    { name: 'Admin', icon: '🛡️', description: 'Toàn quyền hệ thống', active: true },
+    { name: 'Giáo viên', icon: '👨‍🏫', description: 'Quản lý lớp, điểm danh, điểm', active: false },
+    { name: 'Học sinh', icon: '👨‍🎓', description: 'Xem điểm, thời khóa biểu', active: false },
+    { name: 'Phụ huynh', icon: '👨‍👩‍👧', description: 'Xem tiến độ con em', active: false },
+    { name: 'Y tế', icon: '⚕️', description: 'Quản lý sức khỏe học sinh', active: false },
+    { name: 'Kế toán', icon: '📊', description: 'Quản lý học phí', active: false },
   ]
 
   const permissionDetails = [
-    { category: 'Nhập điểm', enabled: true },
-    { category: 'Quản lý điểm danh cho học sinh trong các tiết học hằng ngày qua thiết bị nhận diện.', enabled: true },
-    { category: 'Sửa điểm', enabled: true },
-    { category: 'Quyền thay đổi điểm dã lưu trong cơ sở dữ liệu. Mọi thay đổi sẽ được ghi nhận ký.', enabled: true },
-    { category: 'Phế duyệt điểm', enabled: true },
-    { category: 'Xác nhận bằng điểm cuối kỳ để đưa vào cơ sở dữ liệu học tập của cá lớp.', enabled: false },
-    { category: 'Điểm danh Học sinh', enabled: true },
-    { category: 'Xác nhận sự có mặt của học sinh trong các tiết học hằng ngày qua thiết bị nhận diện.', enabled: true },
-    { category: 'Chốt số điểm danh', enabled: false },
-    { category: 'Khoá dữ liệu điểm danh sau khi kết thúc buổi học để gửi báo cáo cho phụ huynh.', enabled: false },
+    { category: 'Nhập điểm', desc: 'Quyền thay đổi điểm đã lưu. Mọi thay đổi được ghi nhận.', enabled: true },
+    { category: 'Quản lý điểm danh', desc: 'Xác nhận sự có mặt học sinh qua thiết bị nhận diện.', enabled: true },
+    { category: 'Sửa điểm', desc: '', enabled: true },
+    { category: 'Phê duyệt điểm cuối kỳ', desc: 'Xác nhận điểm để đưa vào CSDL học tập lớp.', enabled: false },
+    { category: 'Điểm danh HS', desc: '', enabled: true },
+    { category: 'Chốt số điểm danh', desc: 'Khóa dữ liệu điểm danh sau tiết học.', enabled: false },
   ]
 
+  const [activeRole, setActiveRole] = useState(0)
+
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          {'HỆ THỐNG > PHÂN QUYỀN'}
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-lg md:text-2xl font-bold text-gray-900 mb-1">
+          PHÂN QUYỀN HỆ THỐNG
         </h1>
-        <p className="text-gray-900 mb-4">
-          Phân quyền Hệ thống
+        <p className="text-xs md:text-sm text-gray-600">
+          Cấu hình quyền truy cập cho từng vai trò
         </p>
       </div>
 
-      {/* Success Message */}
-      <div className="mb-8 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-        <span className="text-2xl">✓</span>
-        <div>
-          <h3 className="font-semibold text-green-900">Nhật kỳ Bảo mật Hệ thống</h3>
-          <p className="text-sm text-green-800">Xin chào, Thầy Hiệu Trưởng - Quản trị viên tối cao. Giám sát toàn diễn các hoạt động hệ thống.</p>
-        </div>
+      {/* Role Selection */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4 mb-6 lg:mb-8">
+        {permissions.map((perm, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveRole(i)}
+            className={`p-3 md:p-4 rounded-lg border-2 transition text-center ${
+              activeRole === i
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-200 bg-white hover:border-gray-300'
+            }`}
+          >
+            <span className="text-2xl md:text-3xl block mb-1 md:mb-2">{perm.icon}</span>
+            <span className={`text-[10px] md:text-sm font-semibold ${activeRole === i ? 'text-blue-700' : 'text-gray-900'}`}>
+              {perm.name}
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* Role Selection */}
-      <div className="mb-8">
-        <h3 className="font-bold text-gray-900 mb-4">NHÓM VAI TRÒ</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {permissions.map((role, index) => (
-            <button
-              key={index}
-              className={`p-4 rounded-lg border-2 transition-all text-left ${
-                role.active
-                  ? 'border-blue-600 bg-blue-50'
-                  : 'border-gray-300 bg-white hover:border-blue-400'
-              }`}
-            >
-              <div className="text-3xl mb-2">{role.icon}</div>
-              <div className={`font-bold ${role.active ? 'text-blue-900' : 'text-gray-900'}`}>
-                {role.name}
-              </div>
-              {role.description && (
-                <p className="text-xs text-gray-900 mt-2">{role.description}</p>
-              )}
-              <span className={`inline-block mt-3 text-xs px-2 py-1 rounded font-semibold ${
-                role.active
-                  ? 'bg-green-200 text-green-800'
-                  : 'bg-gray-200 text-gray-800'
-              }`}>
-                {role.active ? 'Hoạt động' : 'Chưa hoạt động'}
-              </span>
-            </button>
-          ))}
+      {/* Active role info */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 mb-4 md:mb-6">
+        <div className="flex items-start gap-2 md:gap-3">
+          <span className="text-lg md:text-xl">{permissions[activeRole].icon}</span>
+          <div>
+            <h3 className="text-sm md:text-base font-semibold text-blue-900">{permissions[activeRole].name}</h3>
+            <p className="text-xs md:text-sm text-blue-700 mt-0.5">{permissions[activeRole].description}</p>
+          </div>
         </div>
       </div>
 
       {/* Permission Details */}
-      <div className="mb-8">
-        <div className="mb-4">
-          <button className="text-blue-600 text-sm font-medium hover:underline">Chi tiết toàn bộ</button>
-        </div>
-
-        <div className="space-y-3">
-          {permissionDetails.map((perm, index) => (
-            <div
-              key={index}
-              className="bg-white border border-gray-200 rounded-lg p-4 flex items-start gap-4 hover:bg-gray-50 transition-colors"
-            >
-              <input
-                type="checkbox"
-                checked={perm.enabled}
-                className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 mt-1"
-              />
+      <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+        <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-3 md:mb-4">CHI TIẾT QUYỀN</h3>
+        <div className="space-y-3 md:space-y-4">
+          {permissionDetails.map((perm, i) => (
+            <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 md:gap-2 py-2 md:py-3 border-b border-gray-100 last:border-0">
               <div className="flex-1">
-                <h4 className="font-medium text-gray-900">{perm.category}</h4>
+                <div className="text-xs md:text-sm font-medium text-gray-900">{perm.category}</div>
+                {perm.desc && <div className="text-[10px] md:text-xs text-gray-600 mt-0.5">{perm.desc}</div>}
               </div>
-              <span
-                className={`text-xs px-3 py-1 rounded-full font-semibold whitespace-nowrap ${
-                  perm.enabled
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-700'
-                }`}
-              >
-                {perm.enabled ? 'Hoạt động' : 'Tắt'}
-              </span>
+              <div className="sm:text-right">
+                <span className={`inline-block px-2 md:px-3 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-semibold ${
+                  perm.enabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                }`}>
+                  {perm.enabled ? 'ĐÃ BẬT' : 'ĐÃ TẮT'}
+                </span>
+              </div>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-4">
-        <button className="px-6 py-2 text-gray-700 font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-          Hủy thay đổi
-        </button>
-        <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
-          🔒 Lưu cấu hình
-        </button>
+        <div className="flex flex-col sm:flex-row justify-end gap-2 md:gap-3 mt-4 md:mt-6">
+          <button className="px-4 md:px-6 py-1.5 md:py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 text-xs md:text-sm w-full sm:w-auto">
+            Hủy
+          </button>
+          <button className="px-4 md:px-6 py-1.5 md:py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 text-xs md:text-sm w-full sm:w-auto">
+            Lưu thay đổi
+          </button>
+        </div>
       </div>
     </div>
   )
