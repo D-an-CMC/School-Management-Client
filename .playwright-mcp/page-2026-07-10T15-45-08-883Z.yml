@@ -1,0 +1,105 @@
+- generic [active] [ref=e11]:
+  - button "Open Next.js Dev Tools" [ref=e6] [cursor=pointer]
+  - alert [ref=e10]
+  - generic [ref=e70]:
+    - complementary [ref=e71]:
+      - link [ref=e73] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=e74]
+      - navigation [ref=e75]:
+        - link "📊 Tổng quan" [ref=e76] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e77]: 📊
+          - generic [ref=e78]: Tổng quan
+        - link "👥 Quản lý người dùng" [ref=e79] [cursor=pointer]:
+          - /url: /user-management
+          - generic [ref=e80]: 👥
+          - generic [ref=e81]: Quản lý người dùng
+        - link "🔐 Quyền hệ thống" [ref=e82] [cursor=pointer]:
+          - /url: /system-permissions
+          - generic [ref=e83]: 🔐
+          - generic [ref=e84]: Quyền hệ thống
+        - link "⚙️ Cấu hình AI" [ref=e85] [cursor=pointer]:
+          - /url: /ai-configuration
+          - generic [ref=e86]: ⚙️
+          - generic [ref=e87]: Cấu hình AI
+        - link "🔒 Nhật ký bảo mật" [ref=e88] [cursor=pointer]:
+          - /url: /security-logs
+          - generic [ref=e89]: 🔒
+          - generic [ref=e90]: Nhật ký bảo mật
+      - generic [ref=e91]:
+        - button "⚙️ Cài đặt" [ref=e92]:
+          - generic [ref=e93]: ⚙️
+          - generic [ref=e94]: Cài đặt
+        - link "🚪 Đăng xuất" [ref=e95] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=e96]: 🚪
+          - generic [ref=e97]: Đăng xuất
+    - generic [ref=e98]:
+      - banner [ref=e99]:
+        - generic [ref=e102]:
+          - generic [ref=e103]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=e104]
+        - generic [ref=e105]:
+          - button "🔔" [ref=e106]
+          - button "❓" [ref=e108]
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]: admin_test
+              - generic [ref=e112]: admin
+            - generic [ref=e113]: A
+      - main [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - heading "Xin chào, Thầy Hiệu Trưởng" [level=1] [ref=e117]
+            - paragraph [ref=e118]: AI đã hoàn tất báo cáo phân tích rủi ro cho học kỳ này.
+            - button "Xem Báo cáo AI Mới Nhất" [ref=e119]
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - generic [ref=e122]: "-"
+              - generic [ref=e123]: Tổng HS Toàn trường
+            - generic [ref=e124]:
+              - generic [ref=e125]: "-"
+              - generic [ref=e126]: Tổng Giáo viên
+            - generic [ref=e127]:
+              - generic [ref=e128]: "-"
+              - generic [ref=e129]: Tổng Lớp học
+            - generic [ref=e130]:
+              - generic [ref=e131]: "-"
+              - generic [ref=e132]: Cảnh báo rủi ro
+          - generic [ref=e133]:
+            - generic [ref=e135]:
+              - generic [ref=e136]:
+                - generic [ref=e137]:
+                  - generic [ref=e138]: 📊
+                  - generic [ref=e139]:
+                    - heading "Theo dõi Sức khỏe & Rủi ro" [level=3] [ref=e140]
+                    - paragraph [ref=e141]: Phân tích dữ liệu học tập AI
+                - generic [ref=e142]:
+                  - generic [ref=e143]: ⚠ 0
+                  - generic [ref=e144]: Rủi ro
+              - generic [ref=e145]:
+                - generic [ref=e146]:
+                  - generic [ref=e147]: TỶ LỆ HOÀN THÀNH
+                  - generic [ref=e148]: 94.2%
+                  - generic [ref=e149]: +2.1%
+                - generic [ref=e150]:
+                  - generic [ref=e151]: HỌC LỰC TỆ
+                  - generic [ref=e152]: "7.8"
+                  - generic [ref=e153]: Khá
+              - generic [ref=e154]:
+                - heading "DANH SÁCH CẢNH BÁO RỦI RO" [level=4] [ref=e155]
+                - generic [ref=e156]: Đang tải...
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - heading "Thống kê theo khối" [level=3] [ref=e159]
+                - generic [ref=e160]: Đang tải...
+              - generic [ref=e161]:
+                - heading "HOẠT ĐỘNG GẦN ĐÂY" [level=3] [ref=e162]
+                - generic [ref=e163]:
+                  - generic [ref=e166]:
+                    - generic [ref=e167]: Admin-01 đã cập nhật AI Prompt
+                    - generic [ref=e168]: 2 giờ trước
+                  - generic [ref=e171]:
+                    - generic [ref=e172]: Báo cáo tuần đã được tạo
+                    - generic [ref=e173]: 5 giờ trước

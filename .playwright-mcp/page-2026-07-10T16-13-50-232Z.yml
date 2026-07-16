@@ -1,0 +1,51 @@
+- generic [ref=f11e2]:
+  - generic [ref=f11e3]:
+    - generic [ref=f11e8]: 📚
+    - generic [ref=f11e9]: 🎓
+    - generic [ref=f11e10]: ✏️
+    - generic [ref=f11e11]: 🔬
+    - generic [ref=f11e12]: 🏫
+    - generic [ref=f11e13]: 💡
+    - generic [ref=f11e14]: 🎨
+  - generic [ref=f11e19]:
+    - generic [ref=f11e20]: ✨
+    - text: Tích hợp AI cho giáo dục
+  - generic [ref=f11e21]:
+    - generic [ref=f11e22]:
+      - heading "Hệ thống quản lý trường học thông minh tích hợp AI" [level=1] [ref=f11e23]
+      - paragraph [ref=f11e24]: Nền tảng quản trị giáo dục hiện đại, bảo mật và tối ưu hóa cho đội ngũ cán bộ Trường THCS CMC.
+      - generic [ref=f11e25]:
+        - generic [ref=f11e26]:
+          - generic [ref=f11e27]: 🛡️
+          - heading "Bảo mật RBAC" [level=3] [ref=f11e28]
+          - paragraph [ref=f11e29]: Mã hóa dữ liệu 256-bit
+        - generic [ref=f11e30]:
+          - generic [ref=f11e31]: 📊
+          - heading "AI Analytics" [level=3] [ref=f11e32]
+          - paragraph [ref=f11e33]: Phân tích hành vi ứng dụng thực
+    - generic [ref=f11e34]:
+      - generic [ref=f11e35]:
+        - img "CMC Secondary School Logo" [ref=f11e37]
+        - heading "TRƯỜNG THCS CMC" [level=2] [ref=f11e38]
+      - generic [ref=f11e39]:
+        - generic [ref=f11e40]:
+          - generic [ref=f11e41]: TÊN ĐĂNG NHẬP HOẶC EMAIL
+          - generic [ref=f11e42]:
+            - generic [ref=f11e43]: 👤
+            - textbox "username@cmc.edu.vn" [ref=f11e44]
+        - generic [ref=f11e45]:
+          - generic [ref=f11e46]: MẬT KHẨU
+          - generic [ref=f11e47]:
+            - generic [ref=f11e48]: 🔒
+            - textbox "••••••••" [ref=f11e49]
+            - button "👁️‍🗨️" [ref=f11e50]
+        - generic [ref=f11e51]:
+          - generic [ref=f11e52]:
+            - checkbox "Ghi nhớ đăng nhập" [ref=f11e53]
+            - generic [ref=f11e54]: Ghi nhớ đăng nhập
+          - link "Quên mật khẩu?" [ref=f11e55] [cursor=pointer]:
+            - /url: "#"
+        - button "Đăng nhập →" [ref=f11e56]:
+          - text: Đăng nhập
+          - generic [ref=f11e57]: →
+      - paragraph [ref=f11e59]: 🔒 Hệ thống được bảo mật bằng cơ chế mã hóa JWT & Phân quyền RBAC

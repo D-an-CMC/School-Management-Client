@@ -1,0 +1,3144 @@
+[     337ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) @ http://localhost:3000/login:0
+[     346ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     378ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     491ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     534ms] [LOG] [Fast Refresh] done in 146ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     541ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/users/public/accounts:0
+[   19253ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[   19357ms] [LOG] [Fast Refresh] done in 64ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  100033ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  100465ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[  100466ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login?_rsc=2PWn4eNgFwgEGU5W:0
+[  100522ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login?_rsc=2PWn4eNgFwgEGU5W:0
+[  100533ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[  100580ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[  100708ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[  100816ms] Error: ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(auth)/login/page.tsx:250:2)
+    at Object.getCompilationErrors (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\base-server.js:1753:26)
+[  100814ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[  100820ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  100826ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[  100914ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  100969ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101031ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101091ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101153ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101215ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101276ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101339ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101401ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101463ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101526ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101590ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101651ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101712ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101774ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101834ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101896ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  101958ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102020ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102082ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102143ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102205ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102267ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102329ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102391ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102455ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102516ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102578ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102640ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102701ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102763ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102824ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102886ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  102952ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103010ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103073ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103134ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103195ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103258ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103320ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103383ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103444ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103506ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103569ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103630ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103690ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103752ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103814ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103877ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  103940ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104001ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104064ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104125ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104187ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104249ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104310ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104372ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104434ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104497ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104560ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104623ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104686ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104748ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104810ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104873ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104936ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  104998ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105061ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105123ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105186ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105247ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105309ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105370ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105432ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105495ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105558ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105620ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105683ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105745ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105806ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105869ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105930ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  105993ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106055ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106117ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106179ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106242ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106304ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106364ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106426ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106488ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106551ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106613ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106674ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106736ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106798ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106860ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106921ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  106984ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107045ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107109ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107173ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107234ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107295ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107359ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107420ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107482ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107545ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107608ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107670ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107733ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107795ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107857ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107919ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  107981ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108045ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108106ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108168ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108232ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108293ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108356ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108418ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108482ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108544ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108606ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108667ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108729ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108790ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108853ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108913ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  108976ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109039ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109100ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109163ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109226ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109347ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[  109358ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109410ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109474ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109536ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109598ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109660ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109722ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109784ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109846ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109908ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  109977ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  110031ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  110093ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  110154ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  110217ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  110278ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  110340ms] [ERROR] ./app/(auth)/login/page.tsx:250:2
+Unterminated regexp literal
+  248 | </div>
+  249 | </div>
+> 250 | </div>
+      |  ^^^^^
+  251 | )
+  252 | }
+  253 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(auth)/login/page.tsx [Client Component Browser]
+    ./app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(auth)/login/page.tsx [Client Component SSR]
+    ./app/(auth)/login/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945

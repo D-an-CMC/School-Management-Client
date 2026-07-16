@@ -38,6 +38,7 @@ export function Sidebar({ variant = 'default', onClose }: SidebarProps) {
   const adminNavItems = [
     { href: '/dashboard', label: 'Tổng quan', icon: '📊' },
     { href: '/user-management', label: 'Quản lý người dùng', icon: '👥' },
+    { href: '/school-years', label: 'Quản lý năm học', icon: '📅' },
     { href: '/system-permissions', label: 'Quyền hệ thống', icon: '🔐' },
     { href: '/ai-configuration', label: 'Cấu hình AI', icon: '⚙️' },
     { href: '/security-logs', label: 'Nhật ký bảo mật', icon: '🔒' },

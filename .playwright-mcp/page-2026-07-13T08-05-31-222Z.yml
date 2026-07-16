@@ -1,0 +1,63 @@
+- generic:
+  - generic [active]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - navigation [ref=f1e6]:
+          - button [disabled] [ref=f1e7]:
+            - img "previous" [ref=f1e8]
+          - generic [ref=f1e10]:
+            - generic [ref=f1e11]: 1/
+            - text: "1"
+          - button [disabled] [ref=f1e12]:
+            - img "next" [ref=f1e13]
+        - link "Next.js 16.2.6 (stale) Turbopack" [ref=f1e16] [cursor=pointer]:
+          - /url: https://nextjs.org/docs/messages/version-staleness
+          - generic "There is a newer version (16.2.10) available, upgrade recommended!" [ref=f1e19]: Next.js 16.2.6 (stale)
+          - generic [ref=f1e20]: Turbopack
+      - dialog "Build Error" [ref=f1e22]:
+        - generic [ref=f1e25]:
+          - generic [ref=f1e26]:
+            - generic [ref=f1e27]:
+              - generic [ref=f1e28]: Build Error
+              - generic [ref=f1e30]:
+                - button "Copy Error Info" [ref=f1e31] [cursor=pointer]
+                - button "No related documentation found" [disabled] [ref=f1e34]
+                - button "Attach Node.js inspector" [ref=f1e37] [cursor=pointer]
+            - generic [ref=f1e46]: "Expected ',', got '{'"
+          - generic [ref=f1e49]:
+            - generic [ref=f1e51]:
+              - generic [ref=f1e56]: ./app/(app)/user-management/page.tsx (455:1)
+              - button "Open in editor" [ref=f1e57] [cursor=pointer]
+            - generic [ref=f1e62]:
+              - generic [ref=f1e63]: "Expected ',', got '{'"
+              - generic [ref=f1e64]: 453 |
+              - generic [ref=f1e65]: </div>
+              - generic [ref=f1e66]: 454 |
+              - generic [ref=f1e67]: </div>
+              - text: ">"
+              - generic [ref=f1e68]: 455 |
+              - generic [ref=f1e69]: "{showAddModal && ("
+              - generic [ref=f1e70]: "|"
+              - text: ^
+              - generic [ref=f1e71]: 456 |
+              - generic [ref=f1e72]: <div className=
+              - generic [ref=f1e73]: "\"fixed inset-0 z-50 flex items-center justify-center bg-black/50\""
+              - generic [ref=f1e74]: "onClick={closeAddModal}>"
+              - generic [ref=f1e75]: 457 |
+              - generic [ref=f1e76]: <div className=
+              - generic [ref=f1e77]: "\"bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto\""
+              - generic [ref=f1e78]: onClic...
+              - generic [ref=f1e79]: 458 |
+              - generic [ref=f1e80]: <div className=
+              - generic [ref=f1e81]: "\"flex justify-between items-center p-5 border-b border-gray-200\""
+              - generic [ref=f1e82]: "> Parsing ecmascript source code failed Import traces: Client Component Browser: ./app/(app)/user-management/page.tsx [Client Component Browser] ./app/(app)/user-management/page.tsx [Server Component] Client Component SSR: ./app/(app)/user-management/page.tsx [Client Component SSR] ./app/(app)/user-management/page.tsx [Server Component]"
+        - generic [ref=f1e83]: "1"
+        - generic [ref=f1e84]: "2"
+    - generic [ref=f1e89] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=f1e90]
+      - button "Open issues overlay" [ref=f1e95]:
+        - generic [ref=f1e96]:
+          - generic [ref=f1e97]: "0"
+          - generic [ref=f1e98]: "1"
+        - generic [ref=f1e99]: Issue
+  - alert [ref=f1e100]

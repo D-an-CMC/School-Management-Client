@@ -1,0 +1,258 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - complementary [ref=f2e172]:
+      - link [ref=f2e174] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=f2e175]
+      - navigation [ref=f2e176]:
+        - link "📊 Tổng quan" [ref=f2e177] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f2e178]: 📊
+          - generic [ref=f2e179]: Tổng quan
+        - link "👥 Quản lý người dùng" [ref=f2e180] [cursor=pointer]:
+          - /url: /user-management
+          - generic [ref=f2e181]: 👥
+          - generic [ref=f2e182]: Quản lý người dùng
+        - link "🏫 Quản lý lớp học" [ref=f2e183] [cursor=pointer]:
+          - /url: /my-classes
+          - generic [ref=f2e184]: 🏫
+          - generic [ref=f2e185]: Quản lý lớp học
+        - link "🔐 Quyền hệ thống" [ref=f2e186] [cursor=pointer]:
+          - /url: /system-permissions
+          - generic [ref=f2e187]: 🔐
+          - generic [ref=f2e188]: Quyền hệ thống
+        - link "⚙️ Cấu hình AI" [ref=f2e189] [cursor=pointer]:
+          - /url: /ai-configuration
+          - generic [ref=f2e190]: ⚙️
+          - generic [ref=f2e191]: Cấu hình AI
+        - link "🔒 Nhật ký bảo mật" [ref=f2e192] [cursor=pointer]:
+          - /url: /security-logs
+          - generic [ref=f2e193]: 🔒
+          - generic [ref=f2e194]: Nhật ký bảo mật
+      - generic [ref=f2e195]:
+        - button "⚙️ Cài đặt" [ref=f2e196]:
+          - generic [ref=f2e197]: ⚙️
+          - generic [ref=f2e198]: Cài đặt
+        - link "🚪 Đăng xuất" [ref=f2e199] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=f2e200]: 🚪
+          - generic [ref=f2e201]: Đăng xuất
+    - generic [ref=f2e202]:
+      - banner [ref=f2e203]:
+        - generic [ref=f2e206]:
+          - generic [ref=f2e207]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=f2e208]
+        - generic [ref=f2e209]:
+          - button "🔔" [ref=f2e210]
+          - button "❓" [ref=f2e212]
+          - generic [ref=f2e213]:
+            - generic [ref=f2e214]:
+              - generic [ref=f2e215]: admin_test
+              - generic [ref=f2e216]: admin
+            - generic [ref=f2e217]: A
+      - main [ref=f2e14]:
+        - generic [ref=f2e15]:
+          - generic [ref=f2e16]:
+            - heading "Quản lý người dùng" [level=1] [ref=f2e17]
+            - paragraph [ref=f2e18]: Quản lý nhân sự toàn trường
+          - generic [ref=f2e19]:
+            - generic [ref=f2e20]:
+              - generic [ref=f2e21]: "102"
+              - generic [ref=f2e22]: Học sinh
+            - generic [ref=f2e23]:
+              - generic [ref=f2e24]: "20"
+              - generic [ref=f2e25]: Giáo viên
+            - generic [ref=f2e26]:
+              - generic [ref=f2e27]: "1"
+              - generic [ref=f2e28]: Quản trị
+            - generic [ref=f2e29]:
+              - generic [ref=f2e30]: "123"
+              - generic [ref=f2e31]: Tổng người dùng
+          - generic [ref=f2e32]:
+            - generic [ref=f2e33]:
+              - generic [ref=f2e34]: 🔎
+              - textbox "Tìm kiếm tên, email..." [ref=f2e35]
+            - button "Loc" [ref=f2e37]
+            - button "➕ Thêm người dùng" [active] [ref=f2e40]
+          - table [ref=f2e43]:
+            - rowgroup [ref=f2e44]:
+              - row [ref=f2e45]:
+                - columnheader "Ma" [ref=f2e46]
+                - columnheader "Họ tên" [ref=f2e47]
+                - columnheader "Lớp học" [ref=f2e48]
+                - columnheader "Email" [ref=f2e49]
+                - columnheader "Ngày sinh" [ref=f2e50]
+                - columnheader "Trạng thái" [ref=f2e51]
+                - columnheader "Hành động" [ref=f2e52]
+            - rowgroup [ref=f2e53]:
+              - row [ref=f2e54]:
+                - cell "7A1-03" [ref=f2e55]
+                - cell "Bui An" [ref=f2e56]
+                - cell "7A1" [ref=f2e57]
+                - cell "bui.an.7A103@student.cmc.edu.vn" [ref=f2e58]
+                - cell "9/12/2010" [ref=f2e59]
+                - cell "Hoạt động" [ref=f2e60]
+                - cell [ref=f2e62]:
+                  - button "&#128274;" [ref=f2e63]
+              - row [ref=f2e64]:
+                - cell "7A3-05" [ref=f2e65]
+                - cell "Bui Binh" [ref=f2e66]
+                - cell "7A3" [ref=f2e67]
+                - cell "bui.binh.7A305@student.cmc.edu.vn" [ref=f2e68]
+                - cell "11/4/2008" [ref=f2e69]
+                - cell "Hoạt động" [ref=f2e70]
+                - cell [ref=f2e72]:
+                  - button "&#128274;" [ref=f2e73]
+              - row [ref=f2e74]:
+                - cell "8A5-04" [ref=f2e75]
+                - cell "Bui Hoa" [ref=f2e76]
+                - cell "8A5" [ref=f2e77]
+                - cell "bui.hoa.8A504@student.cmc.edu.vn" [ref=f2e78]
+                - cell "11/2/2011" [ref=f2e79]
+                - cell "Hoạt động" [ref=f2e80]
+                - cell [ref=f2e82]:
+                  - button "&#128274;" [ref=f2e83]
+              - row [ref=f2e84]:
+                - cell "9A4-05" [ref=f2e85]
+                - cell "Bui Khai" [ref=f2e86]
+                - cell "9A4" [ref=f2e87]
+                - cell "hs.fill7.9A405@student.cmc.edu.vn" [ref=f2e88]
+                - cell "16/11/2009" [ref=f2e89]
+                - cell "Hoạt động" [ref=f2e90]
+                - cell [ref=f2e92]:
+                  - button "&#128274;" [ref=f2e93]
+              - row [ref=f2e94]:
+                - cell "8A3-04" [ref=f2e95]
+                - cell "Bui Nga" [ref=f2e96]
+                - cell "8A3" [ref=f2e97]
+                - cell "bui.nga.8A304@student.cmc.edu.vn" [ref=f2e98]
+                - cell "13/1/2011" [ref=f2e99]
+                - cell "Hoạt động" [ref=f2e100]
+                - cell [ref=f2e102]:
+                  - button "&#128274;" [ref=f2e103]
+              - row [ref=f2e104]:
+                - cell "6A5-05" [ref=f2e105]
+                - cell "Dang Khai" [ref=f2e106]
+                - cell "6A5" [ref=f2e107]
+                - cell "dang.khai.6A505@student.cmc.edu.vn" [ref=f2e108]
+                - cell "4/5/2012" [ref=f2e109]
+                - cell "Hoạt động" [ref=f2e110]
+                - cell [ref=f2e112]:
+                  - button "&#128274;" [ref=f2e113]
+              - row [ref=f2e114]:
+                - cell "6A1-01" [ref=f2e115]
+                - cell "Dang Mai" [ref=f2e116]
+                - cell "6A1" [ref=f2e117]
+                - cell "dang.mai.6A101@student.cmc.edu.vn" [ref=f2e118]
+                - cell "23/10/2012" [ref=f2e119]
+                - cell "Hoạt động" [ref=f2e120]
+                - cell [ref=f2e122]:
+                  - button "&#128274;" [ref=f2e123]
+              - row [ref=f2e124]:
+                - cell "6A3-05" [ref=f2e125]
+                - cell "Dang Tuan" [ref=f2e126]
+                - cell "6A3" [ref=f2e127]
+                - cell "dang.tuan.6A305@student.cmc.edu.vn" [ref=f2e128]
+                - cell "17/1/2012" [ref=f2e129]
+                - cell "Hoạt động" [ref=f2e130]
+                - cell [ref=f2e132]:
+                  - button "&#128274;" [ref=f2e133]
+              - row [ref=f2e134]:
+                - cell "6A5-01" [ref=f2e135]
+                - cell "Dao Binh" [ref=f2e136]
+                - cell "6A5" [ref=f2e137]
+                - cell "dao.binh.6A501@student.cmc.edu.vn" [ref=f2e138]
+                - cell "22/5/2009" [ref=f2e139]
+                - cell "Hoạt động" [ref=f2e140]
+                - cell [ref=f2e142]:
+                  - button "&#128274;" [ref=f2e143]
+              - row [ref=f2e144]:
+                - cell "7A1-04" [ref=f2e145]
+                - cell "Dao Dat" [ref=f2e146]
+                - cell "7A1" [ref=f2e147]
+                - cell "dao.dat.7A104@student.cmc.edu.vn" [ref=f2e148]
+                - cell "1/3/2010" [ref=f2e149]
+                - cell "Hoạt động" [ref=f2e150]
+                - cell [ref=f2e152]:
+                  - button "&#128274;" [ref=f2e153]
+          - generic [ref=f2e154]:
+            - generic [ref=f2e155]: Hiển thị 1-10 / 123 người dùng
+            - generic [ref=f2e156]:
+              - button "Trước" [disabled] [ref=f2e157]
+              - button "1" [ref=f2e158]
+              - button "2" [ref=f2e159]
+              - button "3" [ref=f2e160]
+              - button "4" [ref=f2e161]
+              - button "5" [ref=f2e162]
+              - button "6" [ref=f2e163]
+              - button "7" [ref=f2e164]
+              - button "8" [ref=f2e165]
+              - button "9" [ref=f2e166]
+              - button "10" [ref=f2e167]
+              - button "11" [ref=f2e168]
+              - button "12" [ref=f2e169]
+              - button "13" [ref=f2e170]
+              - button "Sau" [ref=f2e171]
+          - generic [ref=f2e219]:
+            - generic [ref=f2e220]:
+              - heading "Thêm người dùng mới" [level=2] [ref=f2e221]
+              - button "×" [ref=f2e222]
+            - generic [ref=f2e223]:
+              - generic [ref=f2e224]:
+                - generic [ref=f2e225]: Vai trò
+                - combobox [ref=f2e226]:
+                  - option "Học sinh" [selected]
+                  - option "Giáo viên"
+                  - option "Quản trị"
+              - generic [ref=f2e227]:
+                - generic [ref=f2e228]:
+                  - generic [ref=f2e229]: Email *
+                  - textbox "email@cmc.edu.vn" [ref=f2e230]
+                - generic [ref=f2e231]:
+                  - generic [ref=f2e232]: Mật khẩu *
+                  - textbox "Ít nhất 6 ký tự" [ref=f2e233]
+              - generic [ref=f2e235]:
+                - generic [ref=f2e236]: Họ tên
+                - textbox "Nguyen Van A" [ref=f2e237]
+              - generic [ref=f2e239]:
+                - generic [ref=f2e240]:
+                  - generic [ref=f2e241]: Số điện thoại
+                  - textbox "0912345678" [ref=f2e242]
+                - generic [ref=f2e243]:
+                  - generic [ref=f2e244]: Ngày Tháng Năm Sinh
+                  - generic [ref=f2e245]:
+                    - textbox [ref=f2e246]
+                    - generic: 📅
+              - generic [ref=f2e247]:
+                - generic [ref=f2e248]:
+                  - generic [ref=f2e249]: Lop
+                  - combobox [ref=f2e250]:
+                    - option "-- Chọn lop --" [selected]
+                    - option "6A1 (Khối 6)"
+                    - option "6A2 (Khối 6)"
+                    - option "6A3 (Khối 6)"
+                    - option "6A4 (Khối 6)"
+                    - option "6A5 (Khối 6)"
+                    - option "7A1 (Khối 7)"
+                    - option "7A2 (Khối 7)"
+                    - option "7A3 (Khối 7)"
+                    - option "7A4 (Khối 7)"
+                    - option "7A5 (Khối 7)"
+                    - option "8A1 (Khối 8)"
+                    - option "8A2 (Khối 8)"
+                    - option "8A3 (Khối 8)"
+                    - option "8A4 (Khối 8)"
+                    - option "8A5 (Khối 8)"
+                    - option "9A1 (Khối 9)"
+                    - option "9A2 (Khối 9)"
+                    - option "9A3 (Khối 9)"
+                    - option "9A4 (Khối 9)"
+                    - option "9A5 (Khối 9)"
+                - generic [ref=f2e251]:
+                  - generic [ref=f2e252]: Mã học sinh
+                  - textbox "7A1-01" [ref=f2e253]
+              - generic [ref=f2e254]:
+                - button "Hủy" [ref=f2e255]
+                - button "Tạo người dùng" [ref=f2e256]
+  - button "Open Next.js Dev Tools" [ref=f2e9] [cursor=pointer]
+  - alert [ref=f2e13]

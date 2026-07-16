@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e16]: 📚
+      - generic [ref=e17]: 🎓
+      - generic [ref=e18]: ✏️
+      - generic [ref=e19]: 🔬
+      - generic [ref=e20]: 🏫
+      - generic [ref=e21]: 💡
+      - generic [ref=e22]: 🎨
+    - generic [ref=e24]:
+      - generic [ref=e25]: ✨
+      - text: Tích hợp AI cho giáo dục
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Hệ thống quản lý trường học thông minh tích hợp AI" [level=1] [ref=e28]
+        - paragraph [ref=e29]: Nền tảng quản trị giáo dục hiện đại, bảo mật và tối ưu hóa cho đội ngũ cán bộ Trường THCS CMC.
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: 🛡️
+            - heading "Bảo mật RBAC" [level=3] [ref=e33]
+            - paragraph [ref=e34]: Mã hóa dữ liệu 256-bit
+          - generic [ref=e35]:
+            - generic [ref=e36]: 📊
+            - heading "AI Analytics" [level=3] [ref=e37]
+            - paragraph [ref=e38]: Phân tích hành vi ứng dụng thực
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - img "CMC Secondary School Logo" [ref=e42]
+          - heading "TRƯỜNG THCS CMC" [level=2] [ref=e43]
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]: EMAIL QUẢN TRỊ
+            - generic [ref=e47]: Đang tải tài khoản...
+          - generic [ref=e48]:
+            - generic [ref=e49]: MẬT KHẨU
+            - generic [ref=e50]:
+              - generic [ref=e51]: 🔒
+              - textbox "••••••••" [ref=e52]: 12345a
+              - button "👁️‍🗨️" [ref=e53]
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - checkbox "Ghi nhớ đăng nhập" [ref=e56]
+              - generic [ref=e57]: Ghi nhớ đăng nhập
+            - link "Quên mật khẩu?" [ref=e58] [cursor=pointer]:
+              - /url: "#"
+          - button "Đăng nhập với vai trò Quản trị viên →" [ref=e59]:
+            - text: Đăng nhập với vai trò Quản trị viên
+            - generic [ref=e60]: →
+        - paragraph [ref=e62]: 🔒 Hệ thống được bảo mật bằng cơ chế mã hóa JWT & Phân quyền RBAC
+  - button "Open Next.js Dev Tools" [ref=e68] [cursor=pointer]

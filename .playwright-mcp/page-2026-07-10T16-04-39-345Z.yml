@@ -1,0 +1,53 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - generic [ref=f5e3]:
+      - generic [ref=f5e8]: 📚
+      - generic [ref=f5e9]: 🎓
+      - generic [ref=f5e10]: ✏️
+      - generic [ref=f5e11]: 🔬
+      - generic [ref=f5e12]: 🏫
+      - generic [ref=f5e13]: 💡
+      - generic [ref=f5e14]: 🎨
+    - generic [ref=f5e19]:
+      - generic [ref=f5e20]: ✨
+      - text: Tích hợp AI cho giáo dục
+    - generic [ref=f5e21]:
+      - generic [ref=f5e22]:
+        - heading "Hệ thống quản lý trường học thông minh tích hợp AI" [level=1] [ref=f5e23]
+        - paragraph [ref=f5e24]: Nền tảng quản trị giáo dục hiện đại, bảo mật và tối ưu hóa cho đội ngũ cán bộ Trường THCS CMC.
+        - generic [ref=f5e25]:
+          - generic [ref=f5e26]:
+            - generic [ref=f5e27]: 🛡️
+            - heading "Bảo mật RBAC" [level=3] [ref=f5e28]
+            - paragraph [ref=f5e29]: Mã hóa dữ liệu 256-bit
+          - generic [ref=f5e30]:
+            - generic [ref=f5e31]: 📊
+            - heading "AI Analytics" [level=3] [ref=f5e32]
+            - paragraph [ref=f5e33]: Phân tích hành vi ứng dụng thực
+      - generic [ref=f5e34]:
+        - generic [ref=f5e35]:
+          - img "CMC Secondary School Logo" [ref=f5e37]
+          - heading "TRƯỜNG THCS CMC" [level=2] [ref=f5e38]
+        - generic [ref=f5e39]:
+          - generic [ref=f5e40]:
+            - generic [ref=f5e41]: TÊN ĐĂNG NHẬP HOẶC EMAIL
+            - generic [ref=f5e42]:
+              - generic [ref=f5e43]: 👤
+              - textbox "username@cmc.edu.vn" [ref=f5e44]
+          - generic [ref=f5e45]:
+            - generic [ref=f5e46]: MẬT KHẨU
+            - generic [ref=f5e47]:
+              - generic [ref=f5e48]: 🔒
+              - textbox "••••••••" [ref=f5e49]
+              - button "👁️‍🗨️" [ref=f5e50]
+          - generic [ref=f5e51]:
+            - generic [ref=f5e52]:
+              - checkbox "Ghi nhớ đăng nhập" [ref=f5e53]
+              - generic [ref=f5e54]: Ghi nhớ đăng nhập
+            - link "Quên mật khẩu?" [ref=f5e55] [cursor=pointer]:
+              - /url: "#"
+          - button "Đăng nhập →" [ref=f5e56]:
+            - text: Đăng nhập
+            - generic [ref=f5e57]: →
+        - paragraph [ref=f5e59]: 🔒 Hệ thống được bảo mật bằng cơ chế mã hóa JWT & Phân quyền RBAC
+  - button "Open Next.js Dev Tools" [ref=f5e65] [cursor=pointer]
