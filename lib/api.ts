@@ -2,7 +2,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('token');
+  return sessionStorage.getItem('token');
 }
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
@@ -16,7 +16,7 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
 
   if (res.status === 401) {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     window.location.href = '/login';
     throw new Error('Unauthorized');
   }
@@ -53,11 +53,13 @@ export async function loginApi(email: string, password: string) {
   return res.json() as Promise<AuthResponse | ApiError>;
 }
 
-export async function getMe() {
+export async function getMe(): Promise<{ id: number; email: string; role: string; name: string } | null> {
   const res = await apiFetch('/api/auth/me');
   if (!res.ok) return null;
-  const json = (await res.json()) as AuthResponse;
-  return json.success ? json.data as any : null;
+  const json = await res.json();
+  if (!json?.success || !json?.data?.id) return null;
+  const u = json.data;
+  return { id: u.id, email: u.email, role: u.role, name: u.name };
 }
 
 export async function getUsers(params?: { search?: string; role?: string; page?: number; limit?: number }) {
@@ -85,6 +87,13 @@ export async function updateUser(id: number, data: Record<string, any>) {
     body: JSON.stringify(data),
   });
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
+export async function deleteUser(id: number) {
+  const res = await apiFetch(`/api/users/${id}`, {
+    method: 'DELETE',
+  });
+  return res.json() as Promise<{ success: boolean; error?: string }>;
 }
 
 export async function createUser(data: Record<string, any>) {

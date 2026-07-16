@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useAuth } from '@/lib/auth-context'
 import { getUsers, getStudents, getTeachers, updateUser, deleteUser, getClasses, createUser, getStudentCodePreview, getSchoolYears } from '@/lib/api'
 
@@ -539,7 +540,6 @@ className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-9
 {loading ? (
 <div className="p-8 text-center text-gray-500">Dang tai...</div>
 ) : (
-<div className="overflow-x-auto">
 <table className="w-full text-xs md:text-sm min-w-[700px]">
 <thead className="bg-gray-50 border-b border-gray-200">
 <tr>
@@ -576,17 +576,15 @@ className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-9
 </span>
 </td>
 <td className="px-3 md:px-6 py-2 md:py-4">
-<div className="relative">
+{openMenuId === u.user_id && createPortal((<>,
 <button
 onClick={() => setOpenMenuId(openMenuId === u.user_id ? null : u.user_id)}
 className="text-gray-600 hover:text-gray-900 text-sm md:text-lg p-1"
 >
 &#8943;
 </button>
-{openMenuId === u.user_id && (
-<>
-<div className="fixed inset-0 z-10" onClick={() => setOpenMenuId(null)} />
-<div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[180px] py-1">
+<div className="fixed inset-0 z-[100]" onClick={() => setOpenMenuId(null)} />
+<div className="fixed z-[101] bg-white border border-gray-200 rounded-lg shadow-lg min-w-[180px] py-1">
 <button
 onClick={() => openEditModal(u)}
 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
@@ -647,7 +645,6 @@ Xoa tai khoan
 </div>
 </>
 )}
-</div>
 </td>
 </tr>
 ))}

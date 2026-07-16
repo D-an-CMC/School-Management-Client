@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header'
 import { useIsMobile } from '@/lib/use-media-query'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, loading } = useAuth()
   const router = useRouter()
   const isMobile = useIsMobile()
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -17,10 +17,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const closeSidebar = useCallback(() => setSidebarOpen(false), [])
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!loading && !isLoggedIn) {
       router.push('/login')
     }
-  }, [isLoggedIn, router])
+  }, [isLoggedIn, loading, router])
 
   useEffect(() => {
     if (!isMobile) {
@@ -41,7 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [sidebarOpen, closeSidebar])
 
-  if (!isLoggedIn) {
+  if (loading || !isLoggedIn) {
     return null
   }
 

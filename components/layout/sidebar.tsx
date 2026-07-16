@@ -60,6 +60,7 @@ export function Sidebar({ variant = 'default', onClose }: SidebarProps) {
           <Link href="/dashboard" onClick={handleLinkClick} className="flex items-center">
             <img
               src="/cmc-secondary-logo.png"
+
               alt="CMC Secondary School"
               className="h-28 w-auto"
             />

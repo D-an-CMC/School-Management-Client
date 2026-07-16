@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import Link from 'next/link'
-import { loginApi } from '@/lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -21,19 +20,10 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const res = await loginApi(email, password)
-
-      if ('error' in res || !res.success || !res.data) {
-        setError(res.error || 'Email hoặc mật khẩu không chính xác')
-        return
-      }
-
-      const { token, user } = res.data
-      localStorage.setItem('token', token)
-      await login(user.email, password, user.role)
+      await login(email, password)
       router.push('/dashboard')
     } catch (err: any) {
-      setError(err.message || 'Lỗi không xác định')
+      setError(err.message || 'Email hoặc mật khẩu không chính xác')
     } finally {
       setIsLoading(false)
     }
