@@ -97,7 +97,9 @@ export default function UserManagementPage() {
   }, [classOptions, formGradeLevel, formSchoolYearId])
 
   useEffect(() => {
-    if (formRole !== 'HocSinh-PhuHuynh') { setFormStudentCode(''); setFormEmail('') }
+    if (formRole === 'HocSinh-PhuHuynh') return
+    setFormStudentCode('')
+    setFormEmail(formRole === 'Admin' ? '@cmc.edu.vn' : '')
   }, [formRole])
 
   useEffect(() => {
@@ -202,6 +204,8 @@ export default function UserManagementPage() {
     if (!formFullName.trim()) errors.fullName = 'Vui long nhap ho ten'
     if (!formPassword) errors.password = 'Vui long nhap mat khau'
     else if (formPassword.length < 6) errors.password = 'Mat khau toi thieu 6 ky tu'
+    if (!formEmail.trim()) errors.email = 'Vui long nhap email'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formEmail)) errors.email = 'Email khong hop le'
     if (formPhone && !/^\d{10}$/.test(formPhone)) errors.phone = 'So dien thoai phai dung 10 chu so'
     if (formRole === 'HocSinh-PhuHuynh') {
       if (!formSchoolYearId && formSchoolYearId !== 0) errors.schoolYearId = 'Vui long chon nam hoc'
@@ -298,7 +302,7 @@ export default function UserManagementPage() {
 
       {changePwSuccess && (
         <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-lg text-sm flex items-center justify-between">
-          <span>{"✓"} {changePwSuccess}</span>
+          <span>{changePwSuccess}</span>
           <button onClick={() => setChangePwSuccess("")} className="text-green-700 hover:text-green-900 font-bold text-lg leading-none">&times;</button>
         </div>
       )}
@@ -320,7 +324,7 @@ export default function UserManagementPage() {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="inline-block mr-1 -mt-0.5"><path d="M3 3h18l-7 8v8l-4 2v-8L3 3z" /></svg>Loc
           </button>
           {showFilter && (
-            <div className="absolute right-full -top-16 mr-2 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-4 w-[320px]">
+            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4 w-[320px]">
               <div className="flex justify-between items-center mb-3"><span className="text-sm font-semibold text-gray-900">Bo loc</span><button onClick={clearFilters} className="text-xs text-red-600 hover:text-red-700">Xoa het</button></div>
               <div className="mb-3"><div className="text-xs font-semibold text-gray-700 mb-1">Vai tro</div>{ROLE_OPTIONS.map(opt => { const label = roleLabel[opt] || ''; const checked = roles.includes(opt); return <label key={opt} className="flex items-center gap-2 py-0.5 cursor-pointer"><input type="checkbox" checked={checked} onChange={e => setRoles(prev => e.target.checked ? [...prev, opt] : prev.filter(r => r !== opt))} className="w-4 h-4 rounded border-gray-300 text-blue-600" /><span className="text-xs text-gray-700">{label}</span></label> })}</div>
               <div className="mb-3 border-t border-gray-100 pt-3"><div className="text-xs font-semibold text-gray-700 mb-1">Trang thai</div>{STATUS_OPTIONS.map(opt => { const label = opt === 'active' ? 'Hoat dong' : 'Bi khoa'; const checked = statuses.includes(opt); return <label key={opt} className="flex items-center gap-2 py-0.5 cursor-pointer"><input type="checkbox" checked={checked} onChange={e => setStatuses(prev => e.target.checked ? [...prev, opt] : prev.filter(s => s !== opt))} className="w-4 h-4 rounded border-gray-300 text-blue-600" /><span className="text-xs text-gray-700">{label}</span></label> })}</div>
@@ -408,6 +412,7 @@ export default function UserManagementPage() {
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               {formError && <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-sm">{formError}</div>}
               <div><label className="block text-xs font-semibold text-gray-700 mb-1">Vai tro</label><select value={formRole} onChange={(e) => setFormRole(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900"><option value="HocSinh-PhuHuynh">Hoc sinh</option><option value="GiaoVien">Giao vien</option><option value="Admin">Quan tri</option></select></div>
+              <div><label className="block text-xs font-semibold text-gray-700 mb-1">Email <span className="text-red-500">*</span></label><input type="email" value={formEmail} onChange={(e) => { setFormEmail(e.target.value); if (fieldErrors.email) setFieldErrors(prev => { const n = { ...prev }; delete n.email; return n }) }} className={"w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 " + (fieldErrors.email ? 'border-red-400' : '')} placeholder="example@email.com" />{fieldErrors.email && <p className="text-red-500 text-xs mt-0.5">{fieldErrors.email}</p>}</div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="block text-xs font-semibold text-gray-700 mb-1">Ho ten</label><input type="text" value={formFullName} onChange={(e) => { setFormFullName(e.target.value); if (fieldErrors.fullName) setFieldErrors(prev => { const n = { ...prev }; delete n.fullName; return n }) }} className={"w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 " + (fieldErrors.fullName ? 'border-red-400' : '')} placeholder="Nguyen Van A" />{fieldErrors.fullName && <p className="text-red-500 text-xs mt-0.5">{fieldErrors.fullName}</p>}</div>
                 <div><label className="block text-xs font-semibold text-gray-700 mb-1">Mat khau <span className="text-red-500">*</span></label><input type="password" value={formPassword} onChange={(e) => { setFormPassword(e.target.value); if (fieldErrors.password) setFieldErrors(prev => { const n = { ...prev }; delete n.password; return n }) }} required className={"w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 " + (fieldErrors.password ? 'border-red-400' : '')} placeholder="It nhat 6 ky tu" />{fieldErrors.password && <p className="text-red-500 text-xs mt-0.5">{fieldErrors.password}</p>}</div>
@@ -425,7 +430,6 @@ export default function UserManagementPage() {
                     <div><label className="block text-xs font-semibold text-gray-700 mb-1">Lop</label><select value={formClassId} onChange={(e) => { setFormClassId(e.target.value ? Number(e.target.value) : ''); if (fieldErrors.classId) setFieldErrors(prev => { const n = { ...prev }; delete n.classId; return n }) }} disabled={formGradeLevel === ''} className={"w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 " + (fieldErrors.classId ? 'border-red-400' : '') + (formGradeLevel === '' ? ' bg-gray-100 text-gray-400' : '')}><option value="">-- Chon lop --</option>{(classesForSelectedGrade || []).map((c: any) => <option key={c.class_id} value={c.class_id}>{c.class_name}</option>)}</select>{fieldErrors.classId && <p className="text-red-500 text-xs mt-0.5">{fieldErrors.classId}</p>}{formGradeLevel === '' && <p className="text-[10px] text-gray-400 mt-1">Chon khoi truoc</p>}</div>
                   </div>
                   <div><label className="block text-xs font-semibold text-gray-700 mb-1">Ma hoc sinh</label><input type="text" value={formStudentCode} readOnly className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 bg-gray-50" /></div>
-                  <div><label className="block text-xs font-semibold text-gray-700 mb-1">Email</label><input type="text" value={formEmail} readOnly className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 bg-gray-50" /></div>
                 </>
               )}
               {formRole === 'GiaoVien' && (
