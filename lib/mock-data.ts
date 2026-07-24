@@ -6,6 +6,8 @@ export interface User {
   avatar?: string
   department?: string
   classCode?: string
+  teacherId?: number
+  studentId?: number
 }
 
 export interface Class {

@@ -53,13 +53,13 @@ export async function loginApi(email: string, password: string) {
   return res.json() as Promise<AuthResponse | ApiError>;
 }
 
-export async function getMe(): Promise<{ id: number; email: string; role: string; name: string } | null> {
+export async function getMe(): Promise<{ id: number; email: string; role: string; name: string; teacherId?: number; studentId?: number } | null> {
   const res = await apiFetch('/api/auth/me');
   if (!res.ok) return null;
   const json = await res.json();
   if (!json?.success || !json?.data?.id) return null;
   const u = json.data;
-  return { id: u.id, email: u.email, role: u.role, name: u.name };
+  return { id: u.id, email: u.email, role: u.role, name: u.name, teacherId: u.teacherId, studentId: u.studentId };
 }
 
 export async function getUsers(params?: { search?: string; role?: string; page?: number; limit?: number }) {
@@ -151,6 +151,12 @@ export async function getTeachers(params?: { search?: string; page?: number; lim
   return json;
 }
 
+export async function getTeacherCodePreview() {
+  const res = await apiFetch('/api/teachers/preview/code');
+  const json = (await res.json()) as { success: boolean; data?: { teacher_code: string; email: string } };
+  return json.success ? json.data : null;
+}
+
 export async function getTeacherStats() {
   const res = await apiFetch('/api/teachers/stats/summary');
   const json = (await res.json()) as any;
@@ -187,6 +193,13 @@ export async function getClassesCount() {
   if (!res.ok) return 0;
   const json = (await res.json()) as PaginatedResponse<any>;
   return json.total || 0;
+}
+
+export async function getRiskStats() {
+  const res = await apiFetch('/api/ai/risk-stats')
+  if (!res.ok) return null
+  const json = (await res.json()) as { success: boolean; data?: any }
+  return json.success ? json.data : null
 }
 
 export async function getGradeStats() {
@@ -254,10 +267,11 @@ export async function getAttendanceSession(sessionId: number) {
   return json.success ? json.data : null;
 }
 
-export async function getTimetables(params?: { teacherId?: number; classId?: number; page?: number; limit?: number }) {
+export async function getTimetables(params?: { teacherId?: number; classId?: number; semesterId?: number; page?: number; limit?: number }) {
   const qs = new URLSearchParams();
   if (params?.teacherId) qs.set('teacherId', String(params.teacherId));
   if (params?.classId) qs.set('classId', String(params.classId));
+  if (params?.semesterId) qs.set('semesterId', String(params.semesterId));
   if (params?.page) qs.set('page', String(params.page));
   if (params?.limit) qs.set('limit', String(params.limit));
   const suffix = qs.toString() ? `?${qs}` : '';
@@ -271,23 +285,7 @@ export async function getExamSchedules(params?: { classId?: number; semesterId?:
   if (params?.classId) qs.set('classId', String(params.classId));
   if (params?.semesterId) qs.set('semesterId', String(params.semesterId));
   const suffix = qs.toString() ? `?${qs}` : '';
-  const res = await apiFetch(`/api/exam-schedules${suffix}`);
-  const json = (await res.json()) as { success: boolean; data?: any[] };
-  return json.success ? json.data : null;
-}
-
-export async function getRiskStats() {
-  const res = await apiFetch('/api/ai/risk-warnings/stats');
-  const json = (await res.json()) as { success: boolean; data?: any };
-  return json.success ? json.data : null;
-}
-
-export async function getRiskWarnings(params?: { classId?: number; studentId?: number }) {
-  const qs = new URLSearchParams();
-  if (params?.classId) qs.set('classId', String(params.classId));
-  if (params?.studentId) qs.set('studentId', String(params.studentId));
-  const suffix = qs.toString() ? `?${qs}` : '';
-  const res = await apiFetch(`/api/ai/risk-warnings${suffix}`);
+  const res = await apiFetch(`/api/timetables/exam-schedules${suffix}`);
   const json = (await res.json()) as { success: boolean; data?: any[] };
   return json.success ? json.data : null;
 }
@@ -352,6 +350,71 @@ export async function updateSchoolYear(id: number, data: { year_name: string; st
 
 export async function deleteSchoolYear(id: number) {
   const res = await apiFetch(`/api/school-years/${id}`, {
+    method: 'DELETE',
+  });
+  return res.json() as Promise<{ success: boolean; error?: string }>;
+}
+
+export async function getSubjects() {
+  const res = await apiFetch('/api/timetables/subjects');
+  const json = (await res.json()) as { success: boolean; data?: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function getSemesters() {
+  const res = await apiFetch('/api/timetables/semesters');
+  const json = (await res.json()) as { success: boolean; data?: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function getMyStudentInfo() {
+  const res = await apiFetch('/api/student-self/my-info');
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data: any };
+  return json.success ? json.data : null;
+}
+
+export async function getMyGrades() {
+  const res = await apiFetch('/api/student-self/my-grades');
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function getMyTimetable(params?: { semesterId?: number }) {
+  const qs = new URLSearchParams();
+  if (params?.semesterId) qs.set('semesterId', String(params.semesterId));
+  const suffix = qs.toString() ? `?${qs}` : '';
+  const res = await apiFetch(`/api/student-self/my-timetable${suffix}`);
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function getMyAttendance() {
+  const res = await apiFetch('/api/student-self/my-attendance');
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function getMyActivities() {
+  const res = await apiFetch('/api/student-self/my-activities');
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function createTimetable(data: Record<string, any>) {
+  const res = await apiFetch('/api/timetables', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
+export async function deleteTimetable(scheduleId: number) {
+  const res = await apiFetch(`/api/timetables/${scheduleId}`, {
     method: 'DELETE',
   });
   return res.json() as Promise<{ success: boolean; error?: string }>;

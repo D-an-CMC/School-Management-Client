@@ -1,0 +1,62 @@
+- generic:
+  - generic [active]:
+    - generic [ref=f4e3]:
+      - generic [ref=f4e4]:
+        - navigation [ref=f4e6]:
+          - button [disabled] [ref=f4e7]:
+            - img "previous" [ref=f4e8]
+          - generic [ref=f4e10]:
+            - generic [ref=f4e11]: 1/
+            - text: "1"
+          - button [disabled] [ref=f4e12]:
+            - img "next" [ref=f4e13]
+        - link "Next.js 16.2.6 (stale) Turbopack" [ref=f4e16] [cursor=pointer]:
+          - /url: https://nextjs.org/docs/messages/version-staleness
+          - generic "There is a newer version (16.2.10) available, upgrade recommended!" [ref=f4e19]: Next.js 16.2.6 (stale)
+          - generic [ref=f4e20]: Turbopack
+      - dialog "Build Error" [ref=f4e22]:
+        - generic [ref=f4e25]:
+          - generic [ref=f4e26]:
+            - generic [ref=f4e27]:
+              - generic [ref=f4e28]: Build Error
+              - generic [ref=f4e30]:
+                - button "Copy Error Info" [ref=f4e31] [cursor=pointer]
+                - button "No related documentation found" [disabled] [ref=f4e34]
+                - button "Attach Node.js inspector" [ref=f4e37] [cursor=pointer]
+            - generic [ref=f4e46]: Expected '</', got 'const'
+          - generic [ref=f4e49]:
+            - generic [ref=f4e51]:
+              - generic [ref=f4e56]: ./app/(app)/timetable/page.tsx (245:21)
+              - button "Open in editor" [ref=f4e57] [cursor=pointer]
+            - generic [ref=f4e62]:
+              - generic [ref=f4e63]: Expected '</', got 'const'
+              - generic [ref=f4e64]: 243 |
+              - generic [ref=f4e65]: "? cell.classes?.class_name || cell.class_name || cell.class_id"
+              - generic [ref=f4e66]: 244 |
+              - generic [ref=f4e67]: ": cell.subjects?.subject_name || cell.subject_name ||"
+              - text: "'' >"
+              - generic [ref=f4e68]: 245 |
+              - text: const
+              - generic [ref=f4e69]: sc = cell && subj ? subjectColor(subj
+              - text: as
+              - generic [ref=f4e70]: "string) :"
+              - text: "null"
+              - generic [ref=f4e71]: "|"
+              - text: ^^^^^
+              - generic [ref=f4e72]: 246 |
+              - text: const
+              - generic [ref=f4e73]: isEmpty = !cell || !subj
+              - generic [ref=f4e74]: 247 |
+              - generic [ref=f4e75]: 248 |
+              - text: return
+              - generic [ref=f4e76]: "( Parsing ecmascript source code failed Import traces: Client Component Browser: ./app/(app)/timetable/page.tsx [Client Component Browser] ./app/(app)/timetable/page.tsx [Server Component] Client Component SSR: ./app/(app)/timetable/page.tsx [Client Component SSR] ./app/(app)/timetable/page.tsx [Server Component]"
+        - generic [ref=f4e77]: "1"
+        - generic [ref=f4e78]: "2"
+    - generic [ref=f4e83] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=f4e84]
+      - button "Open issues overlay" [ref=f4e89]:
+        - generic [ref=f4e90]:
+          - generic [ref=f4e91]: "0"
+          - generic [ref=f4e92]: "1"
+        - generic [ref=f4e93]: Issue
+  - alert [ref=f4e94]

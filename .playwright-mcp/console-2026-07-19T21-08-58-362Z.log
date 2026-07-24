@@ -1,0 +1,2957 @@
+[     123ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     150ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     369ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  145801ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  145883ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login?_rsc=2PWn4eNgFwgEGU5W:0
+[  145921ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login?_rsc=2PWn4eNgFwgEGU5W:0
+[  145986ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[  146101ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[  146166ms] Error: ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(app)/timetable/page.tsx:245:21)
+    at Object.getCompilationErrors (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\base-server.js:1753:26)
+[  146168ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[  146171ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146228ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146288ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146340ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146393ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146447ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146509ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146570ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146632ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146694ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146756ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146802ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146863ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146917ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  146967ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147029ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147093ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147153ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147202ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147262ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147324ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147379ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147431ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147490ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147543ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147597ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147648ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147695ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147748ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147808ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147870ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147933ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  147983ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148044ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148105ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148169ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148234ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148282ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148345ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148405ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148453ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148513ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148575ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148638ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148683ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148743ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148798ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148861ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148917ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  148977ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149031ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149094ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149151ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149213ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149276ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149337ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149386ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149450ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149503ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149564ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149625ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149687ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149749ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149800ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149861ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149922ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  149984ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150038ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150092ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150151ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150212ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150269ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150328ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150372ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150432ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150496ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150546ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150598ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150660ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150708ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150769ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150829ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150882ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  150942ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151005ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151071ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151133ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151194ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151258ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151321ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151367ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151419ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151475ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151535ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151597ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151654ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151705ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151758ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151811ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151860ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151901ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  151961ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152025ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152087ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152139ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152187ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152248ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152309ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152368ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152417ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152470ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152523ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152585ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152646ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152701ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152752ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152814ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152874ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152926ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  152973ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153031ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153094ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153153ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153204ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153265ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153326ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153371ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153418ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153478ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153537ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153588ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153651ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153703ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153765ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153828ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153876ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153937ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  153998ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154059ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154121ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154177ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154240ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154300ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154362ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154411ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  154464ms] [ERROR] ./app/(app)/timetable/page.tsx:245:21
+Expected '</', got 'const'
+  243 |                         ? cell.classes?.class_name || cell.class_name || cell.class_id
+  244 |                         : cell.subjects?.subject_name || cell.subject_name || ''
+> 245 |                     const sc = cell && subj ? subjectColor(subj as string) : null
+      |                     ^^^^^
+  246 |                     const isEmpty = !cell || !subj
+  247 |
+  248 |                     return (
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(app)/timetable/page.tsx [Client Component Browser]
+    ./app/(app)/timetable/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(app)/timetable/page.tsx [Client Component SSR]
+    ./app/(app)/timetable/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945

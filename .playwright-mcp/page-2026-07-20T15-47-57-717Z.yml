@@ -1,0 +1,189 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - link [ref=f5e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=f5e6]
+      - navigation [ref=f5e7]:
+        - link "📊 Bảng điều khiển" [ref=f5e8] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f5e9]: 📊
+          - generic [ref=f5e10]: Bảng điều khiển
+        - link "👩‍🎓 Lớp học của tôi" [ref=f5e11] [cursor=pointer]:
+          - /url: /my-classes
+          - generic [ref=f5e12]: 👩‍🎓
+          - generic [ref=f5e13]: Lớp học của tôi
+        - link "📈 Sổ điểm" [ref=f5e14] [cursor=pointer]:
+          - /url: /gradebook
+          - generic [ref=f5e15]: 📈
+          - generic [ref=f5e16]: Sổ điểm
+        - link "✓ Điểm danh" [ref=f5e17] [cursor=pointer]:
+          - /url: /attendance
+          - generic [ref=f5e18]: ✓
+          - generic [ref=f5e19]: Điểm danh
+        - link "📅 Thời khóa biểu" [ref=f5e20] [cursor=pointer]:
+          - /url: /timetable
+          - generic [ref=f5e21]: 📅
+          - generic [ref=f5e22]: Thời khóa biểu
+      - generic [ref=f5e23]:
+        - button "⚙️ Cài đặt" [ref=f5e24]:
+          - generic [ref=f5e25]: ⚙️
+          - generic [ref=f5e26]: Cài đặt
+        - link "🆒 Đăng xuất" [ref=f5e27] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=f5e28]: 🆒
+          - generic [ref=f5e29]: Đăng xuất
+    - generic [ref=f5e30]:
+      - banner [ref=f5e31]:
+        - generic [ref=f5e34]:
+          - generic [ref=f5e35]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=f5e36]
+        - generic [ref=f5e37]:
+          - button "🔔" [ref=f5e38]
+          - button "❓" [ref=f5e40]
+          - generic [ref=f5e42]:
+            - generic [ref=f5e43]: Người dùng
+            - generic [ref=f5e44]: khách
+      - main [ref=f5e46]:
+        - generic [ref=f5e47]:
+          - generic [ref=f5e48]:
+            - generic [ref=f5e49]:
+              - heading "Sổ điểm học tập" [level=1] [ref=f5e50]
+              - generic [ref=f5e51]:
+                - generic [ref=f5e52]: Trường THPT Chuyên CMC
+                - generic [ref=f5e53]: •
+                - generic [ref=f5e54]:
+                  - combobox [ref=f5e55] [cursor=pointer]:
+                    - option "Học kỳ I" [selected]
+                    - option "Học kỳ II"
+                  - generic: ▼
+                - generic [ref=f5e56]:
+                  - combobox [ref=f5e57] [cursor=pointer]:
+                    - option "2023 - 2024" [selected]
+                    - option "2024 - 2025"
+                  - generic: ▼
+            - generic [ref=f5e58]:
+              - generic [ref=f5e59]:
+                - generic [ref=f5e60]: "Trạng thái:"
+                - generic [ref=f5e61]: Đã công bố
+              - button "📄 Xuất báo cáo" [ref=f5e64]:
+                - generic [ref=f5e65]: 📄
+                - text: Xuất báo cáo
+          - generic [ref=f5e67]:
+            - heading "Sổ điểm cá nhân - CMC Secondary School" [level=2] [ref=f5e68]
+            - paragraph [ref=f5e69]: "Học sinh: Dang Mai|Lớp: 6A1|Năm học: 2023 - 2024"
+          - table [ref=f5e72]:
+            - rowgroup [ref=f5e73]:
+              - row [ref=f5e74]:
+                - columnheader "Môn học" [ref=f5e75]
+                - columnheader "Đánh giá thường xuyên" [ref=f5e76]
+                - columnheader "Giữa kỳ" [ref=f5e77]
+                - columnheader "Cuối kỳ" [ref=f5e78]
+                - columnheader "auto_awesome AI Dự đoán" [ref=f5e79]:
+                  - generic [ref=f5e80]:
+                    - generic [ref=f5e81]: auto_awesome
+                    - text: AI Dự đoán
+                - columnheader "ĐTB" [ref=f5e82]
+            - rowgroup [ref=f5e83]:
+              - row [ref=f5e84]:
+                - cell "TOÁNToán học" [ref=f5e85]
+                - cell "8.5" [ref=f5e86]
+                - cell "9" [ref=f5e87]
+                - cell "8" [ref=f5e88]
+                - cell "8.5" [ref=f5e89]
+                - cell "8.5" [ref=f5e90]
+                - cell "9" [ref=f5e91]
+                - cell "~ 9.2" [ref=f5e92]
+                - cell "8.8" [ref=f5e93]
+              - row [ref=f5e94]:
+                - cell "VĂNNgữ văn" [ref=f5e95]
+                - cell "7.5" [ref=f5e96]
+                - cell "8" [ref=f5e97]
+                - cell "8" [ref=f5e98]
+                - cell "7" [ref=f5e99]
+                - cell "7.5" [ref=f5e100]
+                - cell "8.5" [ref=f5e101]
+                - cell "~ 8.4" [ref=f5e102]
+                - cell "7.9" [ref=f5e103]
+              - row [ref=f5e104]:
+                - cell "ANHTiếng Anh" [ref=f5e105]
+                - cell "9.5" [ref=f5e106]
+                - cell "10" [ref=f5e107]
+                - cell "9.5" [ref=f5e108]
+                - cell "9" [ref=f5e109]
+                - cell "9.5" [ref=f5e110]
+                - cell "9.5" [ref=f5e111]
+                - cell "~ 9.8" [ref=f5e112]
+                - cell "9.6" [ref=f5e113]
+              - row [ref=f5e114]:
+                - cell "VẬTVật lý" [ref=f5e115]
+                - cell "8" [ref=f5e116]
+                - cell "8.5" [ref=f5e117]
+                - cell "7.5" [ref=f5e118]
+                - cell "8" [ref=f5e119]
+                - cell "8" [ref=f5e120]
+                - cell "8" [ref=f5e121]
+                - cell "~ 8.2" [ref=f5e122]
+                - cell "8" [ref=f5e123]
+              - row [ref=f5e124]:
+                - cell "HÓAHóa học" [ref=f5e125]
+                - cell "7" [ref=f5e126]
+                - cell "7.5" [ref=f5e127]
+                - cell "7" [ref=f5e128]
+                - cell "8" [ref=f5e129]
+                - cell "7.5" [ref=f5e130]
+                - cell "7" [ref=f5e131]
+                - cell "~ 7.5" [ref=f5e132]
+                - cell "7.3" [ref=f5e133]
+              - row [ref=f5e134]:
+                - cell "SINHSinh học" [ref=f5e135]
+                - cell "8.5" [ref=f5e136]
+                - cell "8" [ref=f5e137]
+                - cell "9" [ref=f5e138]
+                - cell "8.5" [ref=f5e139]
+                - cell "8.5" [ref=f5e140]
+                - cell "8.5" [ref=f5e141]
+                - cell "~ 8.7" [ref=f5e142]
+                - cell "8.5" [ref=f5e143]
+              - row [ref=f5e144]:
+                - cell "SỬLịch sử" [ref=f5e145]
+                - cell "9" [ref=f5e146]
+                - cell "8.5" [ref=f5e147]
+                - cell "9" [ref=f5e148]
+                - cell "9.5" [ref=f5e149]
+                - cell "9" [ref=f5e150]
+                - cell "9" [ref=f5e151]
+                - cell "~ 9.3" [ref=f5e152]
+                - cell "9.1" [ref=f5e153]
+              - row [ref=f5e154]:
+                - cell "ĐỊAĐịa lý" [ref=f5e155]
+                - cell "8" [ref=f5e156]
+                - cell "8" [ref=f5e157]
+                - cell "8.5" [ref=f5e158]
+                - cell "8" [ref=f5e159]
+                - cell "8" [ref=f5e160]
+                - cell "8" [ref=f5e161]
+                - cell "~ 8.1" [ref=f5e162]
+                - cell "8.1" [ref=f5e163]
+          - generic [ref=f5e164]:
+            - generic [ref=f5e165]:
+              - paragraph [ref=f5e166]: Điểm trung bình học kỳ
+              - generic [ref=f5e167]:
+                - generic [ref=f5e168]: "8.4"
+                - generic [ref=f5e169]: Khá Giỏi
+            - generic [ref=f5e170]:
+              - paragraph [ref=f5e171]: Môn cao nhất
+              - generic [ref=f5e172]:
+                - generic [ref=f5e173]: "9.6"
+                - generic [ref=f5e174]: Tiếng Anh
+            - generic [ref=f5e175]:
+              - paragraph [ref=f5e176]: Xếp hạng lớp
+              - generic [ref=f5e177]:
+                - generic [ref=f5e178]: "05"
+                - generic [ref=f5e179]: Trên 45 HS
+          - generic [ref=f5e180]:
+            - generic [ref=f5e181]: assignment_late
+            - generic [ref=f5e183]:
+              - heading "📋 Ghi chú quan trọng" [level=4] [ref=f5e184]
+              - paragraph [ref=f5e185]: "\"Kết quả học tập được cập nhật tự động từ hệ thống. Nếu có sai sót về điểm số hoặc đánh giá, vui lòng liên hệ giáo viên chủ nhiệm trong vòng 03 ngày làm việc kể từ ngày công bố.\""
+  - button "Open Next.js Dev Tools" [ref=f5e191] [cursor=pointer]

@@ -1,0 +1,162 @@
+- generic [active] [ref=f3e11]:
+  - button "Open Next.js Dev Tools" [ref=f3e6] [cursor=pointer]
+  - alert [ref=f3e10]
+  - generic [ref=f3e12]:
+    - complementary [ref=f3e13]:
+      - link [ref=f3e15] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=f3e16]
+      - navigation [ref=f3e17]:
+        - link "📊 Tổng quan" [ref=f3e18] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f3e19]: 📊
+          - generic [ref=f3e20]: Tổng quan
+        - link "👥 Quản lý người dùng" [ref=f3e21] [cursor=pointer]:
+          - /url: /user-management
+          - generic [ref=f3e22]: 👥
+          - generic [ref=f3e23]: Quản lý người dùng
+        - link "📅 Quản lý năm học" [ref=f3e24] [cursor=pointer]:
+          - /url: /school-years
+          - generic [ref=f3e25]: 📅
+          - generic [ref=f3e26]: Quản lý năm học
+        - link "🔐 Quyền hệ thống" [ref=f3e27] [cursor=pointer]:
+          - /url: /system-permissions
+          - generic [ref=f3e28]: 🔐
+          - generic [ref=f3e29]: Quyền hệ thống
+        - link "⚙️ Cấu hình AI" [ref=f3e30] [cursor=pointer]:
+          - /url: /ai-configuration
+          - generic [ref=f3e31]: ⚙️
+          - generic [ref=f3e32]: Cấu hình AI
+        - link "🔑 Nhật ký bảo mật" [ref=f3e33] [cursor=pointer]:
+          - /url: /security-logs
+          - generic [ref=f3e34]: 🔑
+          - generic [ref=f3e35]: Nhật ký bảo mật
+        - link "📅 Thời khóa biểu" [ref=f3e36] [cursor=pointer]:
+          - /url: /timetable
+          - generic [ref=f3e37]: 📅
+          - generic [ref=f3e38]: Thời khóa biểu
+      - generic [ref=f3e39]:
+        - button "⚙️ Cài đặt" [ref=f3e40]:
+          - generic [ref=f3e41]: ⚙️
+          - generic [ref=f3e42]: Cài đặt
+        - link "🆒 Đăng xuất" [ref=f3e43] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=f3e44]: 🆒
+          - generic [ref=f3e45]: Đăng xuất
+    - generic [ref=f3e46]:
+      - banner [ref=f3e47]:
+        - generic [ref=f3e50]:
+          - generic [ref=f3e51]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=f3e52]
+        - generic [ref=f3e53]:
+          - button "🔔" [ref=f3e54]
+          - button "❓" [ref=f3e56]
+          - generic [ref=f3e57]:
+            - generic [ref=f3e58]:
+              - generic [ref=f3e59]: admin_test
+              - generic [ref=f3e60]: admin
+            - generic [ref=f3e61]: A
+      - main [ref=f3e62]:
+        - generic [ref=f3e63]:
+          - generic [ref=f3e64]:
+            - button "← Chọn lớp khác" [ref=f3e65]
+            - heading "THỜI KHÓA BIỂU" [level=1] [ref=f3e67]
+            - generic [ref=f3e68]: — 6A1
+          - generic [ref=f3e69]:
+            - generic [ref=f3e70]:
+              - generic [ref=f3e71]: Buổi
+              - generic [ref=f3e72]: Tiết
+              - generic [ref=f3e73]: Thứ 2
+              - generic [ref=f3e74]: Thứ 3
+              - generic [ref=f3e75]: Thứ 4
+              - generic [ref=f3e76]: Thứ 5
+              - generic [ref=f3e77]: Thứ 6
+              - generic [ref=f3e78]: Thứ 7
+              - generic [ref=f3e79]: CN
+            - generic [ref=f3e80]:
+              - generic [ref=f3e82]: Tiết 1
+              - button "+" [ref=f3e84]
+              - button "+" [ref=f3e88]
+              - button "+" [ref=f3e92]
+              - button "+" [ref=f3e96]
+              - button "+" [ref=f3e100]
+              - button "+" [ref=f3e104]
+              - button "+" [ref=f3e108]
+              - generic [ref=f3e112]: Tiết 2
+              - button "+" [ref=f3e114]
+              - button "+" [ref=f3e118]
+              - button "+" [ref=f3e122]
+              - button "+" [ref=f3e126]
+              - button "+" [ref=f3e130]
+              - button "+" [ref=f3e134]
+              - button "+" [ref=f3e138]
+              - generic [ref=f3e141]:
+                - generic [ref=f3e142]: ☀️
+                - generic [ref=f3e143]: SÁNG
+              - generic [ref=f3e144]: Tiết 3
+              - button "+" [ref=f3e146]
+              - button "+" [ref=f3e150]
+              - button "+" [ref=f3e154]
+              - button "+" [ref=f3e158]
+              - button "+" [ref=f3e162]
+              - button "+" [ref=f3e166]
+              - button "+" [ref=f3e170]
+              - generic [ref=f3e174]: Tiết 4
+              - button "+" [ref=f3e176]
+              - button "+" [ref=f3e180]
+              - button "+" [ref=f3e184]
+              - button "+" [ref=f3e188]
+              - button "+" [ref=f3e192]
+              - button "+" [ref=f3e196]
+              - button "+" [ref=f3e200]
+              - generic [ref=f3e204]: Tiết 5
+              - button "+" [ref=f3e206]
+              - button "+" [ref=f3e210]
+              - button "+" [ref=f3e214]
+              - button "+" [ref=f3e218]
+              - button "+" [ref=f3e222]
+              - button "+" [ref=f3e226]
+              - button "+" [ref=f3e230]
+              - generic [ref=f3e235]: Tiết 6
+              - button "+" [ref=f3e237]
+              - button "+" [ref=f3e241]
+              - button "+" [ref=f3e245]
+              - button "+" [ref=f3e249]
+              - button "+" [ref=f3e253]
+              - button "+" [ref=f3e257]
+              - button "+" [ref=f3e261]
+              - generic [ref=f3e265]: Tiết 7
+              - button "+" [ref=f3e267]
+              - button "+" [ref=f3e271]
+              - button "+" [ref=f3e275]
+              - button "+" [ref=f3e279]
+              - button "+" [ref=f3e283]
+              - button "+" [ref=f3e287]
+              - button "+" [ref=f3e291]
+              - generic [ref=f3e294]:
+                - generic [ref=f3e295]: 🌙
+                - generic [ref=f3e296]: CHIỀU
+              - generic [ref=f3e297]: Tiết 8
+              - button "+" [ref=f3e299]
+              - button "+" [ref=f3e303]
+              - button "+" [ref=f3e307]
+              - button "+" [ref=f3e311]
+              - button "+" [ref=f3e315]
+              - button "+" [ref=f3e319]
+              - button "+" [ref=f3e323]
+              - generic [ref=f3e327]: Tiết 9
+              - button "+" [ref=f3e329]
+              - button "+" [ref=f3e333]
+              - button "+" [ref=f3e337]
+              - button "+" [ref=f3e341]
+              - button "+" [ref=f3e345]
+              - button "+" [ref=f3e349]
+              - button "+" [ref=f3e353]
+              - generic [ref=f3e357]: Tiết 10
+              - button "+" [ref=f3e359]
+              - button "+" [ref=f3e363]
+              - button "+" [ref=f3e367]
+              - button "+" [ref=f3e371]
+              - button "+" [ref=f3e375]
+              - button "+" [ref=f3e379]
+              - button "+" [ref=f3e383]

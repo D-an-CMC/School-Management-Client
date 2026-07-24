@@ -1,0 +1,114 @@
+- generic [ref=f3e1]:
+  - button "Open Next.js Dev Tools" [ref=f3e7] [cursor=pointer]
+  - alert [ref=f3e11]
+  - generic [ref=f3e12]:
+    - complementary [ref=f3e13]:
+      - link [ref=f3e15] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=f3e16]
+      - navigation [ref=f3e17]:
+        - link "📊 Tổng quan" [ref=f3e18] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f3e19]: 📊
+          - generic [ref=f3e20]: Tổng quan
+        - link "👥 Quản lý người dùng" [ref=f3e21] [cursor=pointer]:
+          - /url: /user-management
+          - generic [ref=f3e22]: 👥
+          - generic [ref=f3e23]: Quản lý người dùng
+        - link "📅 Quản lý năm học" [ref=f3e24] [cursor=pointer]:
+          - /url: /school-years
+          - generic [ref=f3e25]: 📅
+          - generic [ref=f3e26]: Quản lý năm học
+        - link "🔐 Quyền hệ thống" [ref=f3e27] [cursor=pointer]:
+          - /url: /system-permissions
+          - generic [ref=f3e28]: 🔐
+          - generic [ref=f3e29]: Quyền hệ thống
+        - link "⚙️ Cấu hình AI" [ref=f3e30] [cursor=pointer]:
+          - /url: /ai-configuration
+          - generic [ref=f3e31]: ⚙️
+          - generic [ref=f3e32]: Cấu hình AI
+        - link "🔑 Nhật ký bảo mật" [ref=f3e33] [cursor=pointer]:
+          - /url: /security-logs
+          - generic [ref=f3e34]: 🔑
+          - generic [ref=f3e35]: Nhật ký bảo mật
+        - link "📅 Thời khóa biểu" [ref=f3e36] [cursor=pointer]:
+          - /url: /timetable
+          - generic [ref=f3e37]: 📅
+          - generic [ref=f3e38]: Thời khóa biểu
+      - generic [ref=f3e39]:
+        - button "⚙️ Cài đặt" [ref=f3e40]:
+          - generic [ref=f3e41]: ⚙️
+          - generic [ref=f3e42]: Cài đặt
+        - link "🆒 Đăng xuất" [ref=f3e43] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=f3e44]: 🆒
+          - generic [ref=f3e45]: Đăng xuất
+    - generic [ref=f3e46]:
+      - banner [ref=f3e47]:
+        - generic [ref=f3e50]:
+          - generic [ref=f3e51]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=f3e52]
+        - generic [ref=f3e53]:
+          - button "🔔" [ref=f3e54]
+          - button "❓" [ref=f3e56]
+          - generic [ref=f3e57]:
+            - generic [ref=f3e58]:
+              - generic [ref=f3e59]: admin_test
+              - generic [ref=f3e60]: admin
+            - generic [ref=f3e61]: A
+      - main [ref=f3e62]:
+        - generic [ref=f3e63]:
+          - generic [ref=f3e64]:
+            - heading "THỜI KHÓA BIỂU" [level=1] [ref=f3e65]
+            - paragraph [ref=f3e66]: Chọn khối và lớp để xem thời khóa biểu
+          - generic [ref=f3e67]:
+            - button "Khối 6" [active] [ref=f3e68]
+            - button "Khối 7" [ref=f3e69]
+            - button "Khối 8" [ref=f3e70]
+            - button "Khối 9" [ref=f3e71]
+          - generic [ref=f3e72]:
+            - 'button "📚 6A1 Khối 6 GVCN: Tran Minh Anh 5 học sinh" [ref=f3e73]':
+              - generic [ref=f3e74]:
+                - generic [ref=f3e75]: 📚
+                - generic [ref=f3e76]:
+                  - heading "6A1" [level=3] [ref=f3e77]
+                  - text: Khối 6
+              - generic [ref=f3e78]:
+                - paragraph [ref=f3e79]: "GVCN: Tran Minh Anh"
+                - paragraph [ref=f3e80]: 5 học sinh
+            - 'button "📚 6A2 Khối 6 GVCN: Nguyen Van Hung 5 học sinh" [ref=f3e81]':
+              - generic [ref=f3e82]:
+                - generic [ref=f3e83]: 📚
+                - generic [ref=f3e84]:
+                  - heading "6A2" [level=3] [ref=f3e85]
+                  - text: Khối 6
+              - generic [ref=f3e86]:
+                - paragraph [ref=f3e87]: "GVCN: Nguyen Van Hung"
+                - paragraph [ref=f3e88]: 5 học sinh
+            - 'button "📚 6A3 Khối 6 GVCN: Le Thi Mai 5 học sinh" [ref=f3e89]':
+              - generic [ref=f3e90]:
+                - generic [ref=f3e91]: 📚
+                - generic [ref=f3e92]:
+                  - heading "6A3" [level=3] [ref=f3e93]
+                  - text: Khối 6
+              - generic [ref=f3e94]:
+                - paragraph [ref=f3e95]: "GVCN: Le Thi Mai"
+                - paragraph [ref=f3e96]: 5 học sinh
+            - 'button "📚 6A4 Khối 6 GVCN: Pham Tuan Kiet 5 học sinh" [ref=f3e97]':
+              - generic [ref=f3e98]:
+                - generic [ref=f3e99]: 📚
+                - generic [ref=f3e100]:
+                  - heading "6A4" [level=3] [ref=f3e101]
+                  - text: Khối 6
+              - generic [ref=f3e102]:
+                - paragraph [ref=f3e103]: "GVCN: Pham Tuan Kiet"
+                - paragraph [ref=f3e104]: 5 học sinh
+            - 'button "📚 6A5 Khối 6 GVCN: Nguyễn Thị Hương 5 học sinh" [ref=f3e105]':
+              - generic [ref=f3e106]:
+                - generic [ref=f3e107]: 📚
+                - generic [ref=f3e108]:
+                  - heading "6A5" [level=3] [ref=f3e109]
+                  - text: Khối 6
+              - generic [ref=f3e110]:
+                - paragraph [ref=f3e111]: "GVCN: Nguyễn Thị Hương"
+                - paragraph [ref=f3e112]: 5 học sinh

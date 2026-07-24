@@ -1,4 +1,5 @@
 {
+  "enabledMcpjsonServers": ["stitch"],
   "permissions": {
     "allow": [
       "Bash(sed -i \"s/label: 'Dashboard'/label: 'Bảng điều khiển'/\" components/layout/sidebar.tsx)",

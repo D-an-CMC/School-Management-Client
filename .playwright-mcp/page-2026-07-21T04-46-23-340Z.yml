@@ -1,0 +1,214 @@
+- generic [ref=f10e10]:
+  - button "Open Next.js Dev Tools" [ref=f10e6] [cursor=pointer]
+  - alert [ref=f10e11]
+  - generic [ref=f10e12]:
+    - complementary [ref=f10e13]:
+      - link [ref=f10e15] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=f10e16]
+      - navigation [ref=f10e17]:
+        - link "📊 Tổng quan" [ref=f10e18] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f10e19]: 📊
+          - generic [ref=f10e20]: Tổng quan
+        - link "👥 Quản lý người dùng" [ref=f10e21] [cursor=pointer]:
+          - /url: /user-management
+          - generic [ref=f10e22]: 👥
+          - generic [ref=f10e23]: Quản lý người dùng
+        - link "📅 Quản lý năm học" [ref=f10e24] [cursor=pointer]:
+          - /url: /school-years
+          - generic [ref=f10e25]: 📅
+          - generic [ref=f10e26]: Quản lý năm học
+        - link "🔐 Quyền hệ thống" [ref=f10e27] [cursor=pointer]:
+          - /url: /system-permissions
+          - generic [ref=f10e28]: 🔐
+          - generic [ref=f10e29]: Quyền hệ thống
+        - link "⚙️ Cấu hình AI" [ref=f10e30] [cursor=pointer]:
+          - /url: /ai-configuration
+          - generic [ref=f10e31]: ⚙️
+          - generic [ref=f10e32]: Cấu hình AI
+        - link "🔑 Nhật ký bảo mật" [ref=f10e33] [cursor=pointer]:
+          - /url: /security-logs
+          - generic [ref=f10e34]: 🔑
+          - generic [ref=f10e35]: Nhật ký bảo mật
+        - link "📅 Thời khóa biểu" [ref=f10e36] [cursor=pointer]:
+          - /url: /timetable
+          - generic [ref=f10e37]: 📅
+          - generic [ref=f10e38]: Thời khóa biểu
+      - generic [ref=f10e39]:
+        - button "⚙️ Cài đặt" [ref=f10e40]:
+          - generic [ref=f10e41]: ⚙️
+          - generic [ref=f10e42]: Cài đặt
+        - link "🆒 Đăng xuất" [ref=f10e43] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=f10e44]: 🆒
+          - generic [ref=f10e45]: Đăng xuất
+    - generic [ref=f10e46]:
+      - banner [ref=f10e47]:
+        - generic [ref=f10e50]:
+          - generic [ref=f10e51]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=f10e52]
+        - generic [ref=f10e53]:
+          - button "🔔" [ref=f10e54]
+          - button "❓" [ref=f10e56]
+          - generic [ref=f10e57]:
+            - generic [ref=f10e58]:
+              - generic [ref=f10e59]: admin_test
+              - generic [ref=f10e60]: admin
+            - generic [ref=f10e61]: A
+      - main [ref=f10e62]:
+        - generic [ref=f10e73]:
+          - generic [ref=f10e74]:
+            - button "← Chọn lớp khác" [ref=f10e75]
+            - heading "THỜI KHÓA BIỂU" [level=1] [ref=f10e77]
+            - generic [ref=f10e78]: — 6A1
+          - generic [ref=f10e79]:
+            - generic [ref=f10e80]:
+              - generic [ref=f10e81]: Buổi
+              - generic [ref=f10e82]: Tiết
+              - generic [ref=f10e83]: Thứ 2
+              - generic [ref=f10e84]: Thứ 3
+              - generic [ref=f10e85]: Thứ 4
+              - generic [ref=f10e86]: Thứ 5
+              - generic [ref=f10e87]: Thứ 6
+              - generic [ref=f10e88]: Thứ 7
+              - generic [ref=f10e89]: CN
+            - generic [ref=f10e90]:
+              - generic [ref=f10e92]: Tiết 1
+              - button "+" [active] [ref=f10e94]
+              - button "+" [ref=f10e98]
+              - button "+" [ref=f10e102]
+              - button "+" [ref=f10e106]
+              - button "+" [ref=f10e110]
+              - button "+" [ref=f10e114]
+              - button "+" [ref=f10e118]
+              - generic [ref=f10e122]: Tiết 2
+              - button "+" [ref=f10e124]
+              - button "+" [ref=f10e128]
+              - button "+" [ref=f10e132]
+              - button "+" [ref=f10e136]
+              - button "+" [ref=f10e140]
+              - button "+" [ref=f10e144]
+              - button "+" [ref=f10e148]
+              - generic [ref=f10e151]:
+                - generic [ref=f10e152]: ☀️
+                - generic [ref=f10e153]: SÁNG
+              - generic [ref=f10e154]: Tiết 3
+              - button "+" [ref=f10e156]
+              - button "+" [ref=f10e160]
+              - button "+" [ref=f10e164]
+              - button "+" [ref=f10e168]
+              - button "+" [ref=f10e172]
+              - button "+" [ref=f10e176]
+              - button "+" [ref=f10e180]
+              - generic [ref=f10e184]: Tiết 4
+              - button "+" [ref=f10e186]
+              - button "+" [ref=f10e190]
+              - button "+" [ref=f10e194]
+              - button "+" [ref=f10e198]
+              - button "+" [ref=f10e202]
+              - button "+" [ref=f10e206]
+              - button "+" [ref=f10e210]
+              - generic [ref=f10e214]: Tiết 5
+              - button "+" [ref=f10e216]
+              - button "+" [ref=f10e220]
+              - button "+" [ref=f10e224]
+              - button "+" [ref=f10e228]
+              - button "+" [ref=f10e232]
+              - button "+" [ref=f10e236]
+              - button "+" [ref=f10e240]
+              - generic [ref=f10e245]: Tiết 6
+              - button "+" [ref=f10e247]
+              - button "+" [ref=f10e251]
+              - button "+" [ref=f10e255]
+              - button "+" [ref=f10e259]
+              - button "+" [ref=f10e263]
+              - button "+" [ref=f10e267]
+              - button "+" [ref=f10e271]
+              - generic [ref=f10e275]: Tiết 7
+              - button "+" [ref=f10e277]
+              - button "+" [ref=f10e281]
+              - button "+" [ref=f10e285]
+              - button "+" [ref=f10e289]
+              - button "+" [ref=f10e293]
+              - button "+" [ref=f10e297]
+              - button "+" [ref=f10e301]
+              - generic [ref=f10e304]:
+                - generic [ref=f10e305]: 🌙
+                - generic [ref=f10e306]: CHIỀU
+              - generic [ref=f10e307]: Tiết 8
+              - button "+" [ref=f10e309]
+              - button "+" [ref=f10e313]
+              - button "+" [ref=f10e317]
+              - button "+" [ref=f10e321]
+              - button "+" [ref=f10e325]
+              - button "+" [ref=f10e329]
+              - button "+" [ref=f10e333]
+              - generic [ref=f10e337]: Tiết 9
+              - button "+" [ref=f10e339]
+              - button "+" [ref=f10e343]
+              - button "+" [ref=f10e347]
+              - button "+" [ref=f10e351]
+              - button "+" [ref=f10e355]
+              - button "+" [ref=f10e359]
+              - button "+" [ref=f10e363]
+              - generic [ref=f10e367]: Tiết 10
+              - button "+" [ref=f10e369]
+              - button "+" [ref=f10e373]
+              - button "+" [ref=f10e377]
+              - button "+" [ref=f10e381]
+              - button "+" [ref=f10e385]
+              - button "+" [ref=f10e389]
+              - button "+" [ref=f10e393]
+          - generic [ref=f10e453]:
+            - generic [ref=f10e454]:
+              - generic [ref=f10e455]:
+                - heading "Chọn môn học" [level=2] [ref=f10e456]
+                - paragraph [ref=f10e457]: Thứ 2 — Tiết 1
+              - button "×" [ref=f10e458]
+            - generic [ref=f10e460]:
+              - button "Chào cờ CC" [ref=f10e461]:
+                - generic [ref=f10e462]: Chào cờ
+                - generic [ref=f10e463]: CC
+              - button "Công nghệ CN" [ref=f10e464]:
+                - generic [ref=f10e465]: Công nghệ
+                - generic [ref=f10e466]: CN
+              - button "Địa Lý LSDL-D" [ref=f10e467]:
+                - generic [ref=f10e468]: Địa Lý
+                - generic [ref=f10e469]: LSDL-D
+              - button "Giáo dục công dân GDCD" [ref=f10e470]:
+                - generic [ref=f10e471]: Giáo dục công dân
+                - generic [ref=f10e472]: GDCD
+              - button "Hoạt động trải nghiệm hướng nghiệp HD-TN" [ref=f10e473]:
+                - generic [ref=f10e474]: Hoạt động trải nghiệm hướng nghiệp
+                - generic [ref=f10e475]: HD-TN
+              - button "KHTN Hóa KHTN-H" [ref=f10e476]:
+                - generic [ref=f10e477]: KHTN Hóa
+                - generic [ref=f10e478]: KHTN-H
+              - button "KHTN Lý KHTN-L" [ref=f10e479]:
+                - generic [ref=f10e480]: KHTN Lý
+                - generic [ref=f10e481]: KHTN-L
+              - button "KHTN Sinh KHTN-S" [ref=f10e482]:
+                - generic [ref=f10e483]: KHTN Sinh
+                - generic [ref=f10e484]: KHTN-S
+              - button "Lịch sử LSDL-S" [ref=f10e485]:
+                - generic [ref=f10e486]: Lịch sử
+                - generic [ref=f10e487]: LSDL-S
+              - button "Mỹ thuật NT-MT" [ref=f10e488]:
+                - generic [ref=f10e489]: Mỹ thuật
+                - generic [ref=f10e490]: NT-MT
+              - button "Ngoại ngữ 1 NN1" [ref=f10e491]:
+                - generic [ref=f10e492]: Ngoại ngữ 1
+                - generic [ref=f10e493]: NN1
+              - button "Ngữ Văn NV" [ref=f10e494]:
+                - generic [ref=f10e495]: Ngữ Văn
+                - generic [ref=f10e496]: NV
+              - button "Tiếng Anh TA" [ref=f10e497]:
+                - generic [ref=f10e498]: Tiếng Anh
+                - generic [ref=f10e499]: TA
+              - button "Tin học TH" [ref=f10e500]:
+                - generic [ref=f10e501]: Tin học
+                - generic [ref=f10e502]: TH
+              - button "Toán TO" [ref=f10e503]:
+                - generic [ref=f10e504]: Toán
+                - generic [ref=f10e505]: TO

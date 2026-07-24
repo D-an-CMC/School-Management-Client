@@ -1,0 +1,41 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e16]:
+    - generic [ref=f5e17]:
+      - heading "Hệ thống quản lý trường học thông minh tích hợp AI" [level=1] [ref=f5e18]
+      - paragraph [ref=f5e19]: Nền tảng quản trị giáo dục hiện đại, bảo mật và tối ưu hóa cho đội ngũ cần bộ Trường THCS CMC.
+      - generic [ref=f5e20]:
+        - generic [ref=f5e21]:
+          - generic [ref=f5e22]: 🛡️
+          - heading "Bảo mật RBAC" [level=3] [ref=f5e23]
+          - paragraph [ref=f5e24]: Mã hóa dữ liệu 256-bit
+        - generic [ref=f5e25]:
+          - generic [ref=f5e26]: 📊
+          - heading "AI Analytics" [level=3] [ref=f5e27]
+          - paragraph [ref=f5e28]: Phân tích hành vi ứng dụng thực
+    - generic [ref=f5e29]:
+      - generic [ref=f5e30]:
+        - img "CMC Secondary School Logo" [ref=f5e32]
+        - heading "TRƯỜNG THCS CMC" [level=2] [ref=f5e33]
+      - generic [ref=f5e34]:
+        - generic [ref=f5e35]:
+          - generic [ref=f5e36]: TÊN ĐĂNG NHẬP HOẶC EMAIL
+          - generic [ref=f5e37]:
+            - generic [ref=f5e38]: 👤
+            - textbox "username@truong.edu.vn" [ref=f5e39]
+        - generic [ref=f5e40]:
+          - generic [ref=f5e41]: MẬT KHẨU
+          - generic [ref=f5e42]:
+            - generic [ref=f5e43]: 🔒
+            - textbox "••••••••" [ref=f5e44]
+            - button "👁️‍🗨️" [ref=f5e45]
+        - generic [ref=f5e46]:
+          - generic [ref=f5e47]:
+            - checkbox "Ghi nhớ đăng nhập" [ref=f5e48]
+            - generic [ref=f5e49]: Ghi nhớ đăng nhập
+          - link "Quên mật khẩu?" [ref=f5e50] [cursor=pointer]:
+            - /url: "#"
+        - button "ĐĂNG NHẬP →" [ref=f5e51]:
+          - text: ĐĂNG NHẬP
+          - generic [ref=f5e52]: →
+      - paragraph [ref=f5e54]: 🔒 Hệ thống được bảo mật bằng cơ chế mã hóa JWT & Phân quyền RBAC
+  - button "Open Next.js Dev Tools" [ref=f5e60] [cursor=pointer]

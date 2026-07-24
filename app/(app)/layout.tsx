@@ -2,10 +2,10 @@
 
 import { useAuth } from '@/lib/auth-context'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useCallback } from 'react'
+import { useIsMobile } from '@/lib/use-media-query'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Header } from '@/components/layout/header'
-import { useIsMobile } from '@/lib/use-media-query'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { isLoggedIn, loading } = useAuth()

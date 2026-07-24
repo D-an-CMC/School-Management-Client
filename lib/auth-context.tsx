@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then((me) => {
         if (me) {
           const role = ROLE_MAP[me.role] || 'student'
-          setUser({ id: String(me.id), name: me.name, email: me.email, role })
+          setUser({ id: String(me.id), name: me.name, email: me.email, role, teacherId: (me as any).teacherId, studentId: (me as any).studentId } as any)
           setIsLoggedIn(true)
         }
       })
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { token, user: u } = result.data
     sessionStorage.setItem('token', token)
     const role = ROLE_MAP[u.role] || 'student'
-    setUser({ id: String(u.id), name: u.name, email: u.email, role })
+    setUser({ id: String(u.id), name: u.name, email: u.email, role, teacherId: (u as any).teacherId, studentId: (u as any).studentId })
     setIsLoggedIn(true)
   }
 

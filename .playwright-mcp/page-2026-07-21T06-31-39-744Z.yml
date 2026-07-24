@@ -1,0 +1,234 @@
+- generic [active] [ref=e11]:
+  - button "Open Next.js Dev Tools" [ref=e6] [cursor=pointer]
+  - alert [ref=e10]
+  - generic [ref=e64]:
+    - complementary [ref=e65]:
+      - link [ref=e67] [cursor=pointer]:
+        - /url: /dashboard
+        - img "CMC Secondary School" [ref=e68]
+      - navigation [ref=e69]:
+        - link "📊 Tổng quan" [ref=e70] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e71]: 📊
+          - generic [ref=e72]: Tổng quan
+        - link "👥 Quản lý người dùng" [ref=e73] [cursor=pointer]:
+          - /url: /user-management
+          - generic [ref=e74]: 👥
+          - generic [ref=e75]: Quản lý người dùng
+        - link "📅 Quản lý năm học" [ref=e76] [cursor=pointer]:
+          - /url: /school-years
+          - generic [ref=e77]: 📅
+          - generic [ref=e78]: Quản lý năm học
+        - link "🔐 Quyền hệ thống" [ref=e79] [cursor=pointer]:
+          - /url: /system-permissions
+          - generic [ref=e80]: 🔐
+          - generic [ref=e81]: Quyền hệ thống
+        - link "⚙️ Cấu hình AI" [ref=e82] [cursor=pointer]:
+          - /url: /ai-configuration
+          - generic [ref=e83]: ⚙️
+          - generic [ref=e84]: Cấu hình AI
+        - link "🔑 Nhật ký bảo mật" [ref=e85] [cursor=pointer]:
+          - /url: /security-logs
+          - generic [ref=e86]: 🔑
+          - generic [ref=e87]: Nhật ký bảo mật
+        - link "📅 Thời khóa biểu" [ref=e88] [cursor=pointer]:
+          - /url: /timetable
+          - generic [ref=e89]: 📅
+          - generic [ref=e90]: Thời khóa biểu
+      - generic [ref=e91]:
+        - button "⚙️ Cài đặt" [ref=e92]:
+          - generic [ref=e93]: ⚙️
+          - generic [ref=e94]: Cài đặt
+        - link "🆒 Đăng xuất" [ref=e95] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=e96]: 🆒
+          - generic [ref=e97]: Đăng xuất
+    - generic [ref=e98]:
+      - banner [ref=e99]:
+        - generic [ref=e102]:
+          - generic [ref=e103]: 🔍
+          - textbox "Tìm kiếm học sinh, lớp, giáo viên..." [ref=e104]
+        - generic [ref=e105]:
+          - button "🔔" [ref=e106]
+          - button "❓" [ref=e108]
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]: admin_test
+              - generic [ref=e112]: admin
+            - generic [ref=e113]: A
+      - main [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - button "← Chọn lớp khác" [ref=e117]
+            - heading "THỜI KHÓA BIỂU" [level=1] [ref=e119]
+            - generic [ref=e120]: — 6A1
+          - generic [ref=e121]:
+            - generic [ref=e122]:
+              - generic [ref=e123]: Buổi
+              - generic [ref=e124]: Tiết
+              - generic [ref=e125]: Thứ 2
+              - generic [ref=e126]: Thứ 3
+              - generic [ref=e127]: Thứ 4
+              - generic [ref=e128]: Thứ 5
+              - generic [ref=e129]: Thứ 6
+              - generic [ref=e130]: Thứ 7
+              - generic [ref=e131]: CN
+            - generic [ref=e132]:
+              - generic [ref=e134]: Tiết 1
+              - button [ref=e136]:
+                - generic [ref=e137] [cursor=pointer]:
+                  - heading "Chào cờ" [level=4] [ref=e138]
+                  - paragraph [ref=e139]: CC
+                  - paragraph [ref=e140]: Chào cờ
+              - button "+" [ref=e142]
+              - button [ref=e146]:
+                - generic [ref=e147] [cursor=pointer]:
+                  - heading "Công nghệ" [level=4] [ref=e148]
+                  - paragraph [ref=e149]: CN
+                  - paragraph [ref=e150]: Công nghệ
+              - button [ref=e152]:
+                - generic [ref=e153] [cursor=pointer]:
+                  - heading "Địa Lý" [level=4] [ref=e154]
+                  - paragraph [ref=e155]: LSDL-D
+                  - paragraph [ref=e156]: Địa Lý
+              - button "+" [ref=e158]
+              - button "+" [ref=e162]
+              - button "+" [ref=e166]
+              - generic [ref=e170]: Tiết 2
+              - button "+" [ref=e172]
+              - button "+" [ref=e176]
+              - button [ref=e180]:
+                - generic [ref=e181] [cursor=pointer]:
+                  - heading "KHTN Hóa" [level=4] [ref=e182]
+                  - paragraph [ref=e183]: KHTN-H
+                  - paragraph [ref=e184]: KHTN Hóa
+              - button "+" [ref=e186]
+              - button "+" [ref=e190]
+              - button "+" [ref=e194]
+              - button "+" [ref=e198]
+              - generic [ref=e201]:
+                - generic [ref=e202]: ☀️
+                - generic [ref=e203]: SÁNG
+              - generic [ref=e204]: Tiết 3
+              - button "+" [ref=e206]
+              - button "+" [ref=e210]
+              - button "+" [ref=e214]
+              - button "+" [ref=e218]
+              - button "+" [ref=e222]
+              - button "+" [ref=e226]
+              - button "+" [ref=e230]
+              - generic [ref=e234]: Tiết 4
+              - button [ref=e556]:
+                - generic [ref=e557] [cursor=pointer]:
+                  - heading "Chào cờ" [level=4] [ref=e558]
+                  - paragraph [ref=e559]: CC
+                  - paragraph [ref=e560]: Chào cờ
+              - button "+" [ref=e240]
+              - button "+" [ref=e244]
+              - button "+" [ref=e248]
+              - button "+" [ref=e252]
+              - button "+" [ref=e256]
+              - button "+" [ref=e260]
+              - generic [ref=e264]: Tiết 5
+              - button "+" [ref=e266]
+              - button "+" [ref=e270]
+              - button "+" [ref=e274]
+              - button "+" [ref=e278]
+              - button "+" [ref=e282]
+              - button "+" [ref=e286]
+              - button "+" [ref=e290]
+              - generic [ref=e295]: Tiết 6
+              - button "+" [ref=e297]
+              - button "+" [ref=e301]
+              - button "+" [ref=e305]
+              - button "+" [ref=e309]
+              - button "+" [ref=e313]
+              - button "+" [ref=e317]
+              - button "+" [ref=e321]
+              - generic [ref=e325]: Tiết 7
+              - button "+" [ref=e327]
+              - button "+" [ref=e331]
+              - button "+" [ref=e335]
+              - button "+" [ref=e339]
+              - button "+" [ref=e343]
+              - button "+" [ref=e347]
+              - button "+" [ref=e351]
+              - generic [ref=e354]:
+                - generic [ref=e355]: 🌙
+                - generic [ref=e356]: CHIỀU
+              - generic [ref=e357]: Tiết 8
+              - button "+" [ref=e359]
+              - button "+" [ref=e363]
+              - button "+" [ref=e367]
+              - button "+" [ref=e371]
+              - button "+" [ref=e375]
+              - button "+" [ref=e379]
+              - button "+" [ref=e383]
+              - generic [ref=e387]: Tiết 9
+              - button "+" [ref=e389]
+              - button "+" [ref=e393]
+              - button "+" [ref=e397]
+              - button "+" [ref=e401]
+              - button "+" [ref=e405]
+              - button "+" [ref=e409]
+              - button "+" [ref=e413]
+              - generic [ref=e417]: Tiết 10
+              - button "+" [ref=e419]
+              - button "+" [ref=e423]
+              - button "+" [ref=e427]
+              - button "+" [ref=e431]
+              - button "+" [ref=e435]
+              - button "+" [ref=e439]
+              - button "+" [ref=e443]
+          - generic [ref=e563]:
+            - generic [ref=e564]:
+              - generic [ref=e565]:
+                - heading "Chọn môn học" [level=2] [ref=e566]
+                - paragraph [ref=e567]: Thứ 2 — Tiết 6
+              - button "×" [ref=e568]
+            - generic [ref=e570]:
+              - button "Chào cờ CC" [ref=e571]:
+                - generic [ref=e572]: Chào cờ
+                - generic [ref=e573]: CC
+              - button "Công nghệ CN" [ref=e574]:
+                - generic [ref=e575]: Công nghệ
+                - generic [ref=e576]: CN
+              - button "Địa Lý LSDL-D" [ref=e577]:
+                - generic [ref=e578]: Địa Lý
+                - generic [ref=e579]: LSDL-D
+              - button "Giáo dục công dân GDCD" [ref=e580]:
+                - generic [ref=e581]: Giáo dục công dân
+                - generic [ref=e582]: GDCD
+              - button "Hoạt động trải nghiệm hướng nghiệp HD-TN" [ref=e583]:
+                - generic [ref=e584]: Hoạt động trải nghiệm hướng nghiệp
+                - generic [ref=e585]: HD-TN
+              - button "KHTN Hóa KHTN-H" [ref=e586]:
+                - generic [ref=e587]: KHTN Hóa
+                - generic [ref=e588]: KHTN-H
+              - button "KHTN Lý KHTN-L" [ref=e589]:
+                - generic [ref=e590]: KHTN Lý
+                - generic [ref=e591]: KHTN-L
+              - button "KHTN Sinh KHTN-S" [ref=e592]:
+                - generic [ref=e593]: KHTN Sinh
+                - generic [ref=e594]: KHTN-S
+              - button "Lịch sử LSDL-S" [ref=e595]:
+                - generic [ref=e596]: Lịch sử
+                - generic [ref=e597]: LSDL-S
+              - button "Mỹ thuật NT-MT" [ref=e598]:
+                - generic [ref=e599]: Mỹ thuật
+                - generic [ref=e600]: NT-MT
+              - button "Ngoại ngữ 1 NN1" [ref=e601]:
+                - generic [ref=e602]: Ngoại ngữ 1
+                - generic [ref=e603]: NN1
+              - button "Ngữ Văn NV" [ref=e604]:
+                - generic [ref=e605]: Ngữ Văn
+                - generic [ref=e606]: NV
+              - button "Tiếng Anh TA" [ref=e607]:
+                - generic [ref=e608]: Tiếng Anh
+                - generic [ref=e609]: TA
+              - button "Tin học TH" [ref=e610]:
+                - generic [ref=e611]: Tin học
+                - generic [ref=e612]: TH
+              - button "Toán TO" [ref=e613]:
+                - generic [ref=e614]: Toán
+                - generic [ref=e615]: TO

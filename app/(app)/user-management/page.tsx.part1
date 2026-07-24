@@ -1,0 +1,53 @@
+'use client'
+
+import { useEffect, useMemo, useRef, useCallback, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { useAuth } from '@/lib/auth-context'
+import {
+  getUsers,
+  getStudents,
+  getTeachers,
+  updateUser,
+  deleteUser,
+  getClasses,
+  createUser,
+  getStudentCodePreview,
+  getSchoolYears,
+} from '@/lib/api'
+
+interface UserRow {
+  user_id: number
+  email: string
+  username: string
+  phone?: string
+  is_active: boolean
+  role_id?: number
+  role_name?: string
+  class_name?: string
+  class_id?: number
+  full_name?: string
+  student_code?: string
+  gender?: string
+  date_of_birth?: string
+  department?: string
+}
+
+const ROLE_OPTIONS = ['HocSinh-PhuHuynh', 'GiaoVien', 'Admin'] as const
+const STATUS_OPTIONS = ['active', 'inactive'] as const
+
+export default function UserManagementPage() {
+  const { user } = useAuth()
+  const [allUsers, setAllUsers] = useState<UserRow[]>([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
+  const [showFilter, setShowFilter] = useState(false)
+  const [roles, setRoles] = useState<string[]>([])
+  const [statuses, setStatuses] = useState<string[]>([])
+  const [selectedGrade, setSelectedGrade] = useState<number | null>(null)
+  const [selectedClass, setSelectedClass] = useState<number | null>(null)
+  const filterRef = useRef<HTMLDivElement>(null)
+  const [classOptions, setClassOptions] = useState<{ class_id: number; class_name: string; grade_level: number; school_year_id?: number }[]>([])
+  const [schoolYears, setSchoolYears] = useState<{ school_year_id: number; year_name: string }[]>([])
+  const pageSize = 10
+  const [activeTab, setActiveTab] = useState<'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin'>('GiaoVien')

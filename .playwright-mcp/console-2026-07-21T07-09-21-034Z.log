@@ -1,0 +1,1631 @@
+[     184ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     205ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     426ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  307242ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  307361ms] [LOG] [Fast Refresh] done in 105ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  347160ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  347267ms] [LOG] [Fast Refresh] done in 73ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  611956ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  612119ms] [LOG] [Fast Refresh] done in 89ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  634948ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  634948ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  669941ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  670095ms] [LOG] [Fast Refresh] done in 66ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  899822ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  900010ms] [LOG] [Fast Refresh] done in 293ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  900112ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  900177ms] [LOG] [Fast Refresh] done in 167ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  900447ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  900466ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  900473ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  984403ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  984557ms] [LOG] [Fast Refresh] done in 254ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  984660ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  984711ms] [LOG] [Fast Refresh] done in 154ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  984974ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  985069ms] [LOG] [Fast Refresh] done in 198ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1007083ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1007180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login?_rsc=2PWn4eNgFwgEGU5W:0
+[ 1007192ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 1007248ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[ 1007338ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 1007424ms] Error: ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component]
+
+
+    at <unknown> (Error: ./components/layout/sidebar.tsx:4:8)
+    at Object.getCompilationErrors (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\phucn\Desktop\School-Management-Client\node_modules\next\dist\server\base-server.js:1753:26)
+[ 1007424ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 1007429ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007429ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007429ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007429ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007430ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007430ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007430ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007430ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007430ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007434ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[ 1007508ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007563ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007612ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007675ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007723ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007779ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007832ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007890ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007939ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1007989ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008033ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008078ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008130ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008186ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008238ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008282ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008338ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008393ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008441ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008490ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008542ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008593ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008642ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008697ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008757ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008819ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008863ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008919ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1008974ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009047ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009098ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009147ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009211ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009256ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009306ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009361ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009410ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009470ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009522ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009578ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009638ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009698ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009744ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009793ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009838ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009885ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009938ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1009984ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010038ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010089ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010138ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010183ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010238ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010295ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010357ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010421ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010482ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010541ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010590ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010644ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010709ms] [ERROR] ./components/layout/sidebar.tsx:4:8
+the name `Link` is defined multiple times
+  2 |
+  3 | import Link from 'next/link'
+> 4 | import Link from 'next/link'
+    |        ^^^^
+  5 | import { usePathname } from 'next/navigation'
+  6 | import { useAuth } from '@/lib/auth-context'
+  7 | import { cn } from '@/lib/utils'
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./components/layout/sidebar.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Client Component Browser]
+    ./app/(app)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/layout/sidebar.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Client Component SSR]
+    ./app/(app)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 1010762ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 1010838ms] [LOG] [Fast Refresh] done in 62ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 1010973ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 1011076ms] [LOG] [Fast Refresh] done in 213ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 1011265ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[ 1011274ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1011298ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
