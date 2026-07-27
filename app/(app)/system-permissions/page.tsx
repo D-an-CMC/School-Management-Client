@@ -148,7 +148,7 @@ const INITIAL_ROLES: RoleData[] = [
   },
   {
     id: 'student',
-    name: 'Học sinh / Sinh viên',
+    name: 'Học sinh ',
     roleCode: 'ROLE_003',
     icon: 'person',
     headerIcon: 'person',
@@ -205,65 +205,7 @@ const INITIAL_ROLES: RoleData[] = [
       },
     ],
   },
-  {
-    id: 'parent',
-    name: 'Phụ huynh',
-    roleCode: 'ROLE_004',
-    icon: 'family_restroom',
-    headerIcon: 'family_restroom',
-    note: 'Nhóm Phụ huynh theo dõi kết quả học tập, điểm danh và nộp học phí cho con em.',
-    lastUpdated: '01/10/2023 11:20 bởi Admin_01',
-    modules: [
-      {
-        id: 'grading',
-        title: 'Quản lý điểm số',
-        icon: 'grade',
-        enabled: true,
-        items: [
-          { id: 'g1', label: 'Xem bảng điểm thành phần', enabled: true },
-          { id: 'g2', label: 'Nhận báo cáo tổng kết học kỳ', enabled: true },
-          { id: 'g3', label: 'Phản hồi điểm số với nhà trường', enabled: true },
-          { id: 'g4', label: 'Xuất báo cáo học thuật', enabled: false },
-        ],
-      },
-      {
-        id: 'attendance',
-        title: 'Điểm danh & Chuyên cần',
-        icon: 'fact_check',
-        enabled: true,
-        items: [
-          { id: 'a1', label: 'Xem lịch sử điểm danh của con', enabled: true },
-          { id: 'a2', label: 'Tạo đơn xin nghỉ phép', enabled: true },
-          { id: 'a3', label: 'Nhận SMS thông báo vắng mặt', enabled: true },
-          { id: 'a4', label: 'Truy xuất lịch sử quét thẻ', enabled: true },
-        ],
-      },
-      {
-        id: 'finance',
-        title: 'Báo cáo tài chính & Học phí',
-        icon: 'analytics',
-        enabled: true,
-        items: [
-          { id: 'f1', label: 'Xem biên lai học phí', enabled: true },
-          { id: 'f2', label: 'Thanh toán học phí trực tuyến', enabled: true },
-          { id: 'f3', label: 'Đăng ký miễn giảm học phí', enabled: true },
-          { id: 'f4', label: 'Xóa hóa đơn đã phát hành', enabled: false },
-        ],
-      },
-      {
-        id: 'iot',
-        title: 'Cấu hình thiết bị IoT',
-        icon: 'settings_input_component',
-        enabled: false,
-        items: [
-          { id: 'i1', label: 'Đăng ký thiết bị mới', enabled: false },
-          { id: 'i2', label: 'Cập nhật Firmware từ xa', enabled: false },
-          { id: 'i3', label: 'Thiết lập ngưỡng cảnh báo', enabled: false },
-          { id: 'i4', label: 'Reset cấu hình mạng', enabled: false },
-        ],
-      },
-    ],
-  },
+
   {
     id: 'medical',
     name: 'Nhân viên Y tế',
@@ -515,11 +457,10 @@ export default function SystemPermissionsPage() {
                     <button
                       key={r.id}
                       onClick={() => setActiveRoleId(r.id)}
-                      className={`w-full flex items-center justify-between p-4 text-left transition-all border-l-4 ${
-                        isActive
-                          ? 'bg-[#003d64]/5 border-[#003d64] text-[#003d64] font-bold'
-                          : 'border-transparent text-gray-700 hover:bg-gray-50'
-                      }`}
+                      className={`w-full flex items-center justify-between p-4 text-left transition-all border-l-4 ${isActive
+                        ? 'bg-[#003d64]/5 border-[#003d64] text-[#003d64] font-bold'
+                        : 'border-transparent text-gray-700 hover:bg-gray-50'
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className={`material-symbols-outlined text-[20px] ${isActive ? 'text-[#003d64]' : 'text-gray-500'}`}>
@@ -637,11 +578,10 @@ export default function SystemPermissionsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className={`px-10 py-2.5 text-white rounded-lg text-xs font-bold shadow-sm transition-all flex items-center gap-2 ${
-                    saveSuccess
-                      ? 'bg-green-600 hover:bg-green-700'
-                      : 'bg-[#003d64] hover:bg-[#002d4b]'
-                  }`}
+                  className={`px-10 py-2.5 text-white rounded-lg text-xs font-bold shadow-sm transition-all flex items-center gap-2 ${saveSuccess
+                    ? 'bg-green-600 hover:bg-green-700'
+                    : 'bg-[#003d64] hover:bg-[#002d4b]'
+                    }`}
                 >
                   {saving ? (
                     <>

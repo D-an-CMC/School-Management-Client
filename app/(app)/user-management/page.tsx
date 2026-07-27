@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useAuth } from '@/lib/auth-context'
+import { CustomDatePicker } from '@/components/ui/custom-date-picker'
 import {
   getUsers,
   getStudents,
@@ -440,7 +441,7 @@ export default function UserManagementPage() {
       getStudents({ page: 1, limit: 500 }),
       getTeachers({ page: 1, limit: 500 })
     ])
-    
+
     const studentRows: UserRow[] = (sRes.data || []).filter((s: any) => s.user_id).map((s: any, idx: number) => ({
       user_id: s.user_id,
       email: s.email || `${(s.full_name || 'student').toLowerCase().replace(/\s+/g, '')}@student.cmc.edu.vn`,
@@ -539,17 +540,17 @@ export default function UserManagementPage() {
   }, [filtered, activeTab])
 
   // Teacher Stats
-  const totalTeachers = useMemo(() => allUsers.filter(u => u.role_name === 'GiaoVien').length || 50, [allUsers])
+  const totalTeachers = useMemo(() => allUsers.filter(u => u.role_name === 'GiaoVien').length || 0, [allUsers])
   const activeTeachingCount = useMemo(() => Math.round(totalTeachers * 0.7), [totalTeachers])
   const idleTeachingCount = useMemo(() => totalTeachers - activeTeachingCount, [totalTeachers, activeTeachingCount])
 
   // Student Stats (matching hsg/code.html)
   const totalStudents = 615
   const presentStudents = 600
-  const grade10Stats = { present: 198, total: 200, percent: '99.0%' }
-  const grade11Stats = { present: 202, total: 205, percent: '98.5%' }
-  const grade12Stats = { present: 200, total: 210, status: 'Cảnh báo vắng' }
-
+  const grade6Stats = { present: 198, total: 200, percent: '99.0%' }
+  const grade7Stats = { present: 202, total: 205, percent: '98.5%' }
+  const grade8Stats = { present: 200, total: 210, status: 'Cảnh báo vắng' }
+  const grade9Stats = { present: 202, total: 205, percent: '98.5%' }
   const totalPagesTab = Math.max(1, Math.ceil(tabFiltered.length / pageSize))
   const safePageTab = Math.min(page, totalPagesTab)
   const pageItems = tabFiltered.slice((safePageTab - 1) * pageSize, safePageTab * pageSize)
@@ -628,7 +629,7 @@ export default function UserManagementPage() {
         )}
 
         {activeTab === 'HocSinh-PhuHuynh' && (
-          <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" data-purpose="stats-overview">
+          <section className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
             {/* Total Students */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
               <p className="text-sm font-medium text-gray-600">Tổng số học sinh</p>
@@ -637,28 +638,35 @@ export default function UserManagementPage() {
                 <span className="text-xs font-semibold text-green-500">97.5% có mặt</span>
               </div>
             </div>
-            {/* Grade 10 */}
+            {/* Grade 6 */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-              <p className="text-sm font-medium text-gray-600">Học sinh khối 10</p>
+              <p className="text-sm font-medium text-gray-600">Học sinh khối 6</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-blue-900">{grade10Stats.present}/{grade10Stats.total}</span>
-                <span className="text-xs font-semibold text-gray-500">{grade10Stats.percent} hiện diện</span>
+                <span className="text-2xl font-bold text-blue-900">{grade6Stats.present}/{grade6Stats.total}</span>
+                <span className="text-xs font-semibold text-gray-500">{grade6Stats.percent} hiện diện</span>
               </div>
             </div>
-            {/* Grade 11 */}
+            {/* Grade 7 */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-              <p className="text-sm font-medium text-gray-600">Học sinh khối 11</p>
+              <p className="text-sm font-medium text-gray-600">Học sinh khối 7</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-blue-900">{grade11Stats.present}/{grade11Stats.total}</span>
-                <span className="text-xs font-semibold text-gray-500">{grade11Stats.percent} hiện diện</span>
+                <span className="text-2xl font-bold text-blue-900">{grade7Stats.present}/{grade7Stats.total}</span>
+                <span className="text-xs font-semibold text-gray-500">{grade7Stats.percent} hiện diện</span>
               </div>
             </div>
-            {/* Grade 12 (Warning) */}
+            {/* Grade 8 (Warning) */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-              <p className="text-sm font-medium text-gray-600">Học sinh khối 12</p>
+              <p className="text-sm font-medium text-gray-600">Học sinh khối 8</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-red-600">{grade12Stats.present}/{grade12Stats.total}</span>
-                <span className="text-xs font-semibold text-red-500">{grade12Stats.status}</span>
+                <span className="text-2xl font-bold text-red-600">{grade8Stats.present}/{grade8Stats.total}</span>
+                <span className="text-xs font-semibold text-red-500">{grade8Stats.status}</span>
+              </div>
+            </div>
+            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
+              <p className="text-sm font-medium text-gray-600">Học sinh khối 9</p>
+              <div className="flex items-baseline justify-between mt-2">
+                <span className="text-2xl font-bold text-red-600">{grade9Stats.present}/{grade9Stats.total}</span>
+                <span className="text-xs font-semibold text-red-500">{grade9Stats.percent}</span>
               </div>
             </div>
           </section>
@@ -1456,11 +1464,12 @@ export default function UserManagementPage() {
                     {/* DOB */}
                     <div className="flex flex-col gap-1.5">
                       <label className="text-xs font-semibold text-gray-700">Ngày sinh</label>
-                      <input
-                        type="date"
+                      <CustomDatePicker
                         value={formDob}
-                        onChange={(e) => setFormDob(e.target.value)}
-                        className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#001d36] transition-all"
+                        onChange={(val) => setFormDob(val)}
+                        placeholder="Chọn ngày sinh (dd/mm/yyyy)"
+                        minYear={1950}
+                        maxYear={2026}
                       />
                     </div>
 
@@ -1695,11 +1704,16 @@ export default function UserManagementPage() {
                   {/* DOB */}
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-semibold text-gray-700">Ngày sinh</label>
-                    <input
-                      type="date"
+                    <CustomDatePicker
                       value={editDob}
-                      onChange={(e) => { setEditDob(e.target.value); if (editFieldErrors.dob) setEditFieldErrors(prev => { const n = { ...prev }; delete n.dob; return n }) }}
-                      className={`w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#001d36] transition-all ${editFieldErrors.dob ? 'border-red-400' : ''}`}
+                      onChange={(val) => {
+                        setEditDob(val)
+                        if (editFieldErrors.dob) setEditFieldErrors(prev => { const n = { ...prev }; delete n.dob; return n })
+                      }}
+                      placeholder="Chọn ngày sinh (dd/mm/yyyy)"
+                      minYear={1950}
+                      maxYear={2026}
+                      hasError={!!editFieldErrors.dob}
                     />
                     {editFieldErrors.dob && <p className="text-red-500 text-[11px]">{editFieldErrors.dob}</p>}
                   </div>
