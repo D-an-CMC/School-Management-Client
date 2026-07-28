@@ -20,7 +20,7 @@ export const TEACHER_MOCK_CLASS = {
   subject: 'Toán học',
   semester: 'Học kỳ I',
   year: '2023 - 2024',
-  school: 'Trường THPT Chuyên CMC',
+  school: 'Trường THCS CMC',
 }
 
 export const TEACHER_MOCK_STUDENTS: StudentGradeRow[] = [

@@ -372,7 +372,7 @@ export default function GradebookPage() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900">Sổ điểm Học thuật</h2>
             <div className="flex items-center gap-3 text-gray-500 text-sm">
-              <span className="font-medium text-gray-700">Trường THPT Chuyên CMC</span>
+              <span className="font-medium text-gray-700">Trường THCS CMC</span>
               <span className="w-1 h-1 rounded-full bg-gray-300"></span>
               <span>Học kỳ II</span>
               <span className="w-1 h-1 rounded-full bg-gray-300"></span>
@@ -508,9 +508,8 @@ export default function GradebookPage() {
                             type="text"
                             value={val}
                             onChange={e => handleScoreChange(row.id, 'freq', idx, e.target.value)}
-                            className={`w-8 h-8 text-center rounded border border-gray-200 text-xs font-bold focus:outline-none focus:border-[#003366] ${
-                              row.warning ? 'text-red-600 bg-red-50' : 'text-gray-900 bg-gray-50'
-                            }`}
+                            className={`w-8 h-8 text-center rounded border border-gray-200 text-xs font-bold focus:outline-none focus:border-[#003366] ${row.warning ? 'text-red-600 bg-red-50' : 'text-gray-900 bg-gray-50'
+                              }`}
                           />
                         ))}
                       </div>
@@ -538,9 +537,8 @@ export default function GradebookPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold ${
-                        row.warning ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-[#003366]'
-                      }`}>
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold ${row.warning ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-[#003366]'
+                        }`}>
                         {row.average}
                       </span>
                     </td>

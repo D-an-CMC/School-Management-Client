@@ -13,7 +13,7 @@
       "type": "http",
       "url": "https://stitch.googleapis.com/mcp",
       "headers": {
-        "X-Goog-Api-Key": "YOUR_stitch_TOKEN"
+        "X-Goog-Api-Key": "YOUR_GCP_API_KEY"
       }
     }
   }
