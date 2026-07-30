@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useMemo, useRef, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -35,6 +35,10 @@ interface UserRow {
   title?: string
   emergency_phone?: string
   schedule_slot?: string
+  address?: string
+  enrollment_date?: string
+  parent_full_name?: string
+  parent_phone?: string
 }
 
 export default function UserManagementPage() {
@@ -459,7 +463,11 @@ export default function UserManagementPage() {
       gender: s.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
       department: 'Học sinh',
       title: 'Học sinh',
-      schedule_slot: studentSlots[idx % studentSlots.length]
+  schedule_slot: studentSlots[idx % studentSlots.length],
+  address: s.address,
+  enrollment_date: s.enrollment_date,
+  parent_full_name: s.parent_full_name,
+  parent_phone: s.parent_phone,
     }))
 
     const teacherRows: UserRow[] = (tRes.data || []).filter((t: any) => t.user_id).map((t: any, idx: number) => ({
@@ -658,15 +666,15 @@ export default function UserManagementPage() {
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
               <p className="text-sm font-medium text-gray-600">Học sinh khối 8</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-red-600">{grade8Stats.present}/{grade8Stats.total}</span>
-                <span className="text-xs font-semibold text-red-500">{grade8Stats.status}</span>
+                <span className="text-2xl font-bold text-blue-900">{grade8Stats.present}/{grade8Stats.total}</span>
+                <span className="text-xs font-semibold text-gray-500">{grade8Stats.status}</span>
               </div>
             </div>
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
               <p className="text-sm font-medium text-gray-600">Học sinh khối 9</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-red-600">{grade9Stats.present}/{grade9Stats.total}</span>
-                <span className="text-xs font-semibold text-red-500">{grade9Stats.percent}</span>
+                <span className="text-2xl font-bold text-blue-900">{grade9Stats.present}/{grade9Stats.total}</span>
+                <span className="text-xs font-semibold text-gray-500">{grade9Stats.percent}</span>
               </div>
             </div>
           </section>
@@ -1298,10 +1306,32 @@ export default function UserManagementPage() {
                   <span className="text-sm font-semibold text-gray-900">{detailUser.title || detailUser.role_name || 'Thành viên'}</span>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
-                  <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Lịch làm việc / Tiết dạy</span>
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Lịch làm việc / Tiết học</span>
                   <span className="text-sm font-semibold text-gray-900">{detailUser.schedule_slot || 'Tiết 1 - 4'}</span>
+</div>
+
+{detailUser.role_name === 'HocSinh-PhuHuynh' && (
+<>
+<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Địa chỉ</span>
+<span className="text-sm font-semibold text-gray-900">{detailUser.address || 'Chưa cập nhật'}</span>
+</div>
+<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Ngày nhập học</span>
+<span className="text-sm font-semibold text-gray-900">{detailUser.enrollment_date || 'Chưa cập nhật'}</span>
+</div>
+<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Họ tên phụ huynh</span>
+<span className="text-sm font-semibold text-gray-900">{detailUser.parent_full_name || 'Chưa cập nhật'}</span>
+</div>
+<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">SĐT phụ huynh</span>
+<span className="text-sm font-semibold text-gray-900">{detailUser.parent_phone || 'Chưa cập nhật'}</span>
+</div>
+</>
+)}
                 </div>
-              </div>
+
             </div>
 
             <div className="px-8 py-5 border-t border-gray-200 bg-white flex justify-end gap-3">
