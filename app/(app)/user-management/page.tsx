@@ -14,7 +14,8 @@ import {
   createUser,
   getStudentCodePreview,
   getSchoolYears,
-  getStudentAttendanceStats
+  getStudentStats,
+  getTeacherStats
 } from '@/lib/api'
 
 interface UserRow {
@@ -58,8 +59,8 @@ export default function UserManagementPage() {
   const [schoolYears, setSchoolYears] = useState<{ school_year_id: number; year_name: string }[]>([])
   const pageSize = 10
   const [activeTab, setActiveTab] = useState<'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin'>('GiaoVien')
-  const [attendanceStats, setAttendanceStats] = useState<{ total: number; present: number; grades: { grade_level: number; total: number; present: number; percent: string }[] } | null>(null)
-  const [statsLoading, setStatsLoading] = useState(true)
+    const [studentStats, setStudentStats] = useState<{totalStudents: number} | null>(null)
+const [statsLoading, setStatsLoading] = useState(true)
 
   const handleTabChange = (tab: 'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin') => {
     setActiveTab(tab)
@@ -402,8 +403,8 @@ export default function UserManagementPage() {
   useEffect(() => { loadUsers() }, [])
 
   useEffect(() => {
-    getStudentAttendanceStats().then(data => {
-      setAttendanceStats(data)
+    getStudentStats().then(data => {
+      setStudentStats(data)
       setStatsLoading(false)
     }).catch(() => setStatsLoading(false))
   }, [])
@@ -568,33 +569,35 @@ export default function UserManagementPage() {
   }, [allUsers])
 
   // Student Stats (matching hsg/code.html)
-  const totalStudents = attendanceStats?.total ?? 0
-  const presentStudents = attendanceStats?.present ?? 0
-  const gradeStatsList = attendanceStats?.grades ?? []
+  const totalStudents = studentStats?.totalStudents ?? 0
+  const presentStudents = totalStudents
+  const gradeStatsMap = useMemo(() => {
+ const map = new Map<number, { total: number; present: number }>()
+ for (const u of allUsers) {
+ if ((u as any).role_name !== "HocSinh-PhuHuynh") continue
+ const gl = (u as any).grade_level as number | undefined
+ if (!gl) continue
+ const cur = map.get(gl) || { total: 0, present: 0 }
+ cur.total += 1
+ cur.present += 1
+ map.set(gl, cur)
+ }
+ return map
+ }, [allUsers])
 
-  const gradeStats = useMemo(() => {
-    const map = new Map<number, { total: number; present: number; percent: string }>()
-    for (const g of gradeStatsList) {
-      map.set(g.grade_level, { total: g.total, present: g.present, percent: g.percent })
-    }
-    return map
-  }, [gradeStatsList])
-
-  function getGradeStat(gradeLevel: number) {
-    const s = gradeStats.get(gradeLevel)
-    return {
-      total: s?.total ?? 0,
-      present: s?.present ?? 0,
-      percent: s?.percent ?? '0%',
-      status: 'Đủ'
-    }
-  }
-
-  const grade6Stats = useMemo(() => getGradeStat(6), [gradeStats])
-  const grade7Stats = useMemo(() => getGradeStat(7), [gradeStats])
-  const grade8Stats = useMemo(() => getGradeStat(8), [gradeStats])
-  const grade9Stats = useMemo(() => getGradeStat(9), [gradeStats])
-  const totalPagesTab = Math.max(1, Math.ceil(tabFiltered.length / pageSize))
+ function getGradeStat(gradeLevel: number) {
+ const s = gradeStatsMap.get(gradeLevel)
+ return {
+ total: s?.total ?? 0,
+ present: s?.present ?? 0,
+ percent: s?.total ? ((s.present / s.total) * 100).toFixed(1) + '%' : '0%'
+ }
+ }
+const grade6Stats = useMemo(() => getGradeStat(6), [gradeStatsMap])
+const grade7Stats = useMemo(() => getGradeStat(7), [gradeStatsMap])
+const grade8Stats = useMemo(() => getGradeStat(8), [gradeStatsMap])
+const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
+ const totalPagesTab = Math.max(1, Math.ceil(tabFiltered.length / pageSize))
   const safePageTab = Math.min(page, totalPagesTab)
   const pageItems = tabFiltered.slice((safePageTab - 1) * pageSize, safePageTab * pageSize)
 
@@ -702,7 +705,7 @@ export default function UserManagementPage() {
               <p className="text-sm font-medium text-gray-600">Học sinh khối 8</p>
               <div className="flex items-baseline justify-between mt-2">
                 <span className="text-2xl font-bold text-blue-900">{grade8Stats.present}/{grade8Stats.total}</span>
-                <span className="text-xs font-semibold text-gray-500">{grade8Stats.status}</span>
+                <span className="text-xs font-semibold text-gray-500">{grade8Stats.percent}</span>
               </div>
             </div>
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
@@ -1151,15 +1154,23 @@ export default function UserManagementPage() {
                   <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
                 </svg>
               </button>
-              {Array.from({ length: Math.min(totalPagesTab, 10) }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={`px-3 py-1 rounded text-xs ${p === safePageTab ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}
-                >
-                  {p}
-                </button>
-              ))}
+{(() => {
+        const total = totalPagesTab
+        const current = safePageTab
+        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1).map((p) => (
+          <button key={p} onClick={() => setPage(p)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
+        ))
+        const pages: (number | string)[] = [1]
+        if (current > 3) pages.push('...')
+        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i)
+        if (current < total - 2) pages.push('...')
+        if (total > 1) pages.push(total)
+        return pages.map((p, idx) => p === '...' ? (
+          <span key={`e-${idx}`} className="px-2 py-1 text-xs text-gray-400">...</span>
+        ) : (
+          <button key={p} onClick={() => setPage(p)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
+        ))
+      })()}
               <button
                 onClick={() => setPage(p => Math.min(totalPagesTab, p + 1))}
                 disabled={safePageTab >= totalPagesTab}
@@ -1921,3 +1932,4 @@ export default function UserManagementPage() {
     </div>
   )
 }
+
