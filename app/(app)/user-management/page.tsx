@@ -1159,7 +1159,7 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
         const total = totalPagesTab
         const current = safePageTab
         if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1).map((p) => (
-          <button key={p} onClick={() => setPage(p)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
+          <button key={p} onClick={() => setPage(p as number)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
         ))
         const pages: (number | string)[] = [1]
         if (current > 3) pages.push('...')
@@ -1169,7 +1169,7 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
         return pages.map((p, idx) => p === '...' ? (
           <span key={`e-${idx}`} className="px-2 py-1 text-xs text-gray-400">...</span>
         ) : (
-          <button key={p} onClick={() => setPage(p)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
+          <button key={p} onClick={() => setPage(p as number)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
         ))
       })()}
               <button
