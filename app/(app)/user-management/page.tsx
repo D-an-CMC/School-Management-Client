@@ -13,7 +13,8 @@ import {
   getClasses,
   createUser,
   getStudentCodePreview,
-  getSchoolYears
+  getSchoolYears,
+  getStudentAttendanceStats
 } from '@/lib/api'
 
 interface UserRow {
@@ -57,6 +58,8 @@ export default function UserManagementPage() {
   const [schoolYears, setSchoolYears] = useState<{ school_year_id: number; year_name: string }[]>([])
   const pageSize = 10
   const [activeTab, setActiveTab] = useState<'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin'>('GiaoVien')
+  const [attendanceStats, setAttendanceStats] = useState<{ total: number; present: number; grades: { grade_level: number; total: number; present: number; percent: string }[] } | null>(null)
+  const [statsLoading, setStatsLoading] = useState(true)
 
   const handleTabChange = (tab: 'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin') => {
     setActiveTab(tab)
@@ -399,6 +402,13 @@ export default function UserManagementPage() {
   useEffect(() => { loadUsers() }, [])
 
   useEffect(() => {
+    getStudentAttendanceStats().then(data => {
+      setAttendanceStats(data)
+      setStatsLoading(false)
+    }).catch(() => setStatsLoading(false))
+  }, [])
+
+  useEffect(() => {
     getClasses().then(r => {
       const list = (r.data || []).map((c: any) => ({
         class_id: c.class_id,
@@ -441,8 +451,8 @@ export default function UserManagementPage() {
   async function loadUsers() {
     setLoading(true)
     const [uRes, sRes, tRes] = await Promise.all([
-      getUsers({ page: 1, limit: 500 }),
-      getStudents({ page: 1, limit: 500 }),
+      getUsers({ page: 1, limit: 1000 }),
+      getStudents({ page: 1, limit: 1000 }),
       getTeachers({ page: 1, limit: 500 })
     ])
 
@@ -463,11 +473,11 @@ export default function UserManagementPage() {
       gender: s.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
       department: 'Học sinh',
       title: 'Học sinh',
-  schedule_slot: studentSlots[idx % studentSlots.length],
-  address: s.address,
-  enrollment_date: s.enrollment_date,
-  parent_full_name: s.parent_full_name,
-  parent_phone: s.parent_phone,
+      schedule_slot: studentSlots[idx % studentSlots.length],
+      address: s.address,
+      enrollment_date: s.enrollment_date,
+      parent_full_name: s.parent_full_name,
+      parent_phone: s.parent_phone,
     }))
 
     const teacherRows: UserRow[] = (tRes.data || []).filter((t: any) => t.user_id).map((t: any, idx: number) => ({
@@ -488,7 +498,7 @@ export default function UserManagementPage() {
       schedule_slot: defaultSlots[idx % defaultSlots.length]
     }))
 
-    const userRows: UserRow[] = (uRes.data || []).filter((u: any) => (u.role_name || '') === 'Admin' || (u.role_name || '') === 'Staff').filter((u: any) => u.user_id).map((u: any, idx: number) => {
+    const adminUsers: UserRow[] = (uRes.data || []).filter((u: any) => u.role_id == 1 || (u.role_name || '') === 'Admin').filter((u: any) => u.user_id).map((u: any, idx: number) => {
       const mock = staffSample[idx % staffSample.length]
       return {
         user_id: u.user_id,
@@ -510,7 +520,7 @@ export default function UserManagementPage() {
       }
     })
 
-    setAllUsers([...teacherRows, ...studentRows, ...userRows])
+    setAllUsers([...teacherRows, ...studentRows, ...adminUsers])
     setPage(1)
     setLoading(false)
   }
@@ -543,7 +553,7 @@ export default function UserManagementPage() {
   const tabFiltered = useMemo(() => {
     if (activeTab === 'GiaoVien') return filtered.filter((u) => (u.role_name || '') === 'GiaoVien')
     if (activeTab === 'HocSinh-PhuHuynh') return filtered.filter((u) => (u.role_name || '') === 'HocSinh-PhuHuynh')
-    if (activeTab === 'Admin') return filtered.filter((u) => (u.role_name || '') === 'Admin')
+    if (activeTab === 'Admin') return filtered.filter((u) => u.role_id == 1)
     return filtered
   }, [filtered, activeTab])
 
@@ -552,13 +562,38 @@ export default function UserManagementPage() {
   const activeTeachingCount = useMemo(() => Math.round(totalTeachers * 0.7), [totalTeachers])
   const idleTeachingCount = useMemo(() => totalTeachers - activeTeachingCount, [totalTeachers, activeTeachingCount])
 
+  // Admin Users: role_id=1 (Admin)
+  const adminUsers = useMemo(() => {
+    return allUsers.filter(u => u.role_id == 1)
+  }, [allUsers])
+
   // Student Stats (matching hsg/code.html)
-  const totalStudents = 615
-  const presentStudents = 600
-  const grade6Stats = { present: 198, total: 200, percent: '99.0%' }
-  const grade7Stats = { present: 202, total: 205, percent: '98.5%' }
-  const grade8Stats = { present: 200, total: 210, status: 'Cảnh báo vắng' }
-  const grade9Stats = { present: 202, total: 205, percent: '98.5%' }
+  const totalStudents = attendanceStats?.total ?? 0
+  const presentStudents = attendanceStats?.present ?? 0
+  const gradeStatsList = attendanceStats?.grades ?? []
+
+  const gradeStats = useMemo(() => {
+    const map = new Map<number, { total: number; present: number; percent: string }>()
+    for (const g of gradeStatsList) {
+      map.set(g.grade_level, { total: g.total, present: g.present, percent: g.percent })
+    }
+    return map
+  }, [gradeStatsList])
+
+  function getGradeStat(gradeLevel: number) {
+    const s = gradeStats.get(gradeLevel)
+    return {
+      total: s?.total ?? 0,
+      present: s?.present ?? 0,
+      percent: s?.percent ?? '0%',
+      status: 'Đủ'
+    }
+  }
+
+  const grade6Stats = useMemo(() => getGradeStat(6), [gradeStats])
+  const grade7Stats = useMemo(() => getGradeStat(7), [gradeStats])
+  const grade8Stats = useMemo(() => getGradeStat(8), [gradeStats])
+  const grade9Stats = useMemo(() => getGradeStat(9), [gradeStats])
   const totalPagesTab = Math.max(1, Math.ceil(tabFiltered.length / pageSize))
   const safePageTab = Math.min(page, totalPagesTab)
   const pageItems = tabFiltered.slice((safePageTab - 1) * pageSize, safePageTab * pageSize)
@@ -643,7 +678,7 @@ export default function UserManagementPage() {
               <p className="text-sm font-medium text-gray-600">Tổng số học sinh</p>
               <div className="flex items-baseline justify-between mt-2">
                 <span className="text-2xl font-bold text-blue-900">{presentStudents}/{totalStudents}</span>
-                <span className="text-xs font-semibold text-green-500">97.5% có mặt</span>
+                <span className="text-xs font-semibold text-green-500">{totalStudents > 0 ? Math.round((presentStudents / totalStudents) * 100) : 0}% có mặt</span>
               </div>
             </div>
             {/* Grade 6 */}
@@ -686,32 +721,32 @@ export default function UserManagementPage() {
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
               <p className="text-sm font-medium text-gray-600">Tổng số nhân sự</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-blue-900">124</span>
-                <span className="text-xs font-semibold text-green-500">+12% có mặt</span>
+                <span className="text-2xl font-bold text-blue-900">{adminUsers.length}</span>
+                <span className="text-xs font-semibold text-green-500">Nhân viên</span>
               </div>
             </div>
             {/* Card 2: Medical Department */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-              <p className="text-sm font-medium text-gray-600">Phòng Y tế</p>
+              <p className="text-sm font-medium text-gray-600">Đang trực</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-blue-900">18</span>
-                <span className="text-xs font-semibold text-gray-500">Ổn định</span>
+                <span className="text-2xl font-bold text-blue-900">{adminUsers.filter((u: any) => u.is_active).length}</span>
+                <span className="text-xs font-semibold text-gray-500">Hoạt động</span>
               </div>
             </div>
             {/* Card 3: Finance Department */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-              <p className="text-sm font-medium text-gray-600">Phòng Tài chính</p>
+              <p className="text-sm font-medium text-gray-600">Tạm nghỉ</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-blue-900">24</span>
-                <span className="text-xs font-semibold text-gray-500">100% nhân sự</span>
+                <span className="text-2xl font-bold text-blue-900">{adminUsers.filter((u: any) => !u.is_active).length}</span>
+                <span className="text-xs font-semibold text-yellow-500">{adminUsers.length > 0 ? Math.round((adminUsers.filter((u: any) => !u.is_active).length / adminUsers.length) * 100) : 0}%</span>
               </div>
             </div>
             {/* Card 4: Equipment Department (Warning) */}
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-              <p className="text-sm font-medium text-gray-600">Phòng Thiết bị</p>
+              <p className="text-sm font-medium text-gray-600">Phòng ban</p>
               <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl font-bold text-blue-900">42</span>
-                <span className="text-xs font-semibold text-red-500">-2% thiết bị</span>
+                <span className="text-2xl font-bold text-blue-900">{new Set(adminUsers.map(u => u.department).filter(Boolean)).size}</span>
+                <span className="text-xs font-semibold text-green-500">Đơn vị</span>
               </div>
             </div>
           </section>
@@ -1101,7 +1136,7 @@ export default function UserManagementPage() {
           <div className="px-6 py-4 bg-white flex items-center justify-between border-t border-gray-200">
             <p className="text-[10px] text-gray-500">
               {activeTab === 'Admin'
-                ? `Đang hiển thị ${tabFiltered.length > 0 ? (safePageTab - 1) * pageSize + 1 : 0}-${Math.min(safePageTab * pageSize, tabFiltered.length)} của 124 nhân sự`
+                ? `Đang hiển thị ${tabFiltered.length > 0 ? (safePageTab - 1) * pageSize + 1 : 0}-${Math.min(safePageTab * pageSize, tabFiltered.length)} của ${adminUsers.length} nhân sự`
                 : activeTab === 'HocSinh-PhuHuynh'
                   ? `Hiển thị ${tabFiltered.length > 0 ? (safePageTab - 1) * pageSize + 1 : 0}-${Math.min(safePageTab * pageSize, tabFiltered.length)} trên ${tabFiltered.length || 615} học sinh`
                   : `Hiển thị ${tabFiltered.length > 0 ? (safePageTab - 1) * pageSize + 1 : 0}-${Math.min(safePageTab * pageSize, tabFiltered.length)} trên tổng số ${tabFiltered.length} ${tabTitle}`}
@@ -1308,29 +1343,29 @@ export default function UserManagementPage() {
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
                   <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Lịch làm việc / Tiết học</span>
                   <span className="text-sm font-semibold text-gray-900">{detailUser.schedule_slot || 'Tiết 1 - 4'}</span>
-</div>
-
-{detailUser.role_name === 'HocSinh-PhuHuynh' && (
-<>
-<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
-<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Địa chỉ</span>
-<span className="text-sm font-semibold text-gray-900">{detailUser.address || 'Chưa cập nhật'}</span>
-</div>
-<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
-<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Ngày nhập học</span>
-<span className="text-sm font-semibold text-gray-900">{detailUser.enrollment_date || 'Chưa cập nhật'}</span>
-</div>
-<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
-<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Họ tên phụ huynh</span>
-<span className="text-sm font-semibold text-gray-900">{detailUser.parent_full_name || 'Chưa cập nhật'}</span>
-</div>
-<div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
-<span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">SĐT phụ huynh</span>
-<span className="text-sm font-semibold text-gray-900">{detailUser.parent_phone || 'Chưa cập nhật'}</span>
-</div>
-</>
-)}
                 </div>
+
+                {detailUser.role_name === 'HocSinh-PhuHuynh' && (
+                  <>
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+                      <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Địa chỉ</span>
+                      <span className="text-sm font-semibold text-gray-900">{detailUser.address || 'Chưa cập nhật'}</span>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+                      <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Ngày nhập học</span>
+                      <span className="text-sm font-semibold text-gray-900">{detailUser.enrollment_date || 'Chưa cập nhật'}</span>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+                      <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">Họ tên phụ huynh</span>
+                      <span className="text-sm font-semibold text-gray-900">{detailUser.parent_full_name || 'Chưa cập nhật'}</span>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200/60">
+                      <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">SĐT phụ huynh</span>
+                      <span className="text-sm font-semibold text-gray-900">{detailUser.parent_phone || 'Chưa cập nhật'}</span>
+                    </div>
+                  </>
+                )}
+              </div>
 
             </div>
 

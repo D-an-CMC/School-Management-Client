@@ -208,6 +208,12 @@ export async function getGradeStats() {
   return json.success ? json.data : null;
 }
 
+export async function getStudentAttendanceStats() {
+  const res = await apiFetch('/api/students/stats/attendance');
+  const json = (await res.json()) as { success: boolean; data?: { total: number; present: number; grades: { grade_level: number; total: number; present: number; percent: string }[] } };
+  return json.success ? json.data ?? null : null;
+}
+
 export async function getGradesByClass(classId: number) {
   const res = await apiFetch(`/api/grades/class/${classId}`);
   const json = (await res.json()) as { success: boolean; data?: any[] };
