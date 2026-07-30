@@ -15,7 +15,8 @@ import {
   getStudentCodePreview,
   getSchoolYears,
   getStudentStats,
-  getTeacherStats
+  getTeacherStats,
+  getGradeStats
 } from '@/lib/api'
 
 interface UserRow {
