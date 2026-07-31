@@ -16,7 +16,8 @@ import {
   getSchoolYears,
   getStudentStats,
   getTeacherStats,
-  getGradeStats
+  getGradeStats,
+  getSubjects
 } from '@/lib/api'
 
 interface UserRow {
@@ -58,6 +59,7 @@ export default function UserManagementPage() {
   const filterRef = useRef<HTMLDivElement>(null)
   const [classOptions, setClassOptions] = useState<{ class_id: number; class_name: string; grade_level: number; school_year_id?: number }[]>([])
   const [schoolYears, setSchoolYears] = useState<{ school_year_id: number; year_name: string }[]>([])
+const [subjectOptions, setSubjectOptions] = useState<{ subject_id: number; subject_name: string }[]>([])
   const pageSize = 10
   const [activeTab, setActiveTab] = useState<'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin'>('GiaoVien')
     const [studentStats, setStudentStats] = useState<{totalStudents: number} | null>(null)
@@ -402,6 +404,12 @@ const [statsLoading, setStatsLoading] = useState(true)
   }, [openMenuId, closeMenu])
 
   useEffect(() => { loadUsers() }, [])
+
+useEffect(() => {
+  getSubjects().then(data => {
+    if (Array.isArray(data)) setSubjectOptions(data)
+  }).catch(() => setSubjectOptions([]))
+}, [])
 
   useEffect(() => {
     getStudentStats().then(data => {
@@ -1584,14 +1592,8 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                           onChange={(e) => setFormDepartment(e.target.value)}
                           className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#001d36] transition-all"
                         >
-                          <option value="">Chọn đơn vị...</option>
-                          <option value="Tổ Toán - Tin">Tổ Toán - Tin</option>
-                          <option value="Tổ Vật Lý">Tổ Vật Lý</option>
-                          <option value="Tổ Ngoại Ngữ">Tổ Ngoại Ngữ</option>
-                          <option value="P. Tài Chính">Phòng Tài chính</option>
-                          <option value="P. Y tế">Phòng Y tế</option>
-                          <option value="P. Thiết bị">Phòng Thiết bị</option>
-                          <option value="P. Đào tạo">Phòng Đào tạo</option>
+          <option value="">Chọn môn học...</option>
+          {subjectOptions.map(s => <option key={s.subject_id} value={s.subject_name}>{s.subject_name}</option>)}
                         </select>
                       )}
                     </div>
@@ -1827,14 +1829,8 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                         onChange={(e) => setEditDepartment(e.target.value)}
                         className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#001d36] transition-all"
                       >
-                        <option value="">Chọn đơn vị...</option>
-                        <option value="Toán - Tin">Tổ Toán - Tin</option>
-                        <option value="Vật Lý">Tổ Vật lý</option>
-                        <option value="Ngoại Ngữ">Tổ Ngoại Ngữ</option>
-                        <option value="P. Tài Chính">Phòng Tài chính</option>
-                        <option value="P. Y tế">Phòng Y tế</option>
-                        <option value="P. Thiết bị">Phòng Thiết bị</option>
-                        <option value="P. Đào tạo">Phòng Đào tạo</option>
+          <option value="">Chọn môn học...</option>
+          {subjectOptions.map(s => <option key={s.subject_id} value={s.subject_name}>{s.subject_name}</option>)}
                       </select>
                     )}
                   </div>

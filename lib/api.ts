@@ -163,6 +163,12 @@ export async function getTeacherStats() {
   return json.data ?? json;
 }
 
+export async function getTeacherSubjects(teacherId: number) {
+  const res = await apiFetch(`/api/teachers/${teacherId}/subjects`);
+  const json = (await res.json()) as { success: boolean; data?: { subject_id: number; subject_code: string; subject_name: string }[] };
+  return json.success ? json.data ?? [] : [];
+}
+
 export async function getClasses(params?: { teacherId?: number; page?: number; limit?: number }) {
   const qs = new URLSearchParams();
   if (params?.teacherId) qs.set('teacherId', String(params.teacherId));
