@@ -205,7 +205,7 @@ const [statsLoading, setStatsLoading] = useState(true)
     setEditEmail(u.email)
     setEditFullName(u.full_name || u.username || '')
     setEditUsername(u.username || '')
-    setEditPhone(u.phone || '')
+    setEditPhone(u.emergency_phone || u.phone || '')
     setEditGender(u.gender === 'Nữ' || u.gender === 'female' ? 'female' : 'male')
     setEditDob(u.date_of_birth || '1990-10-12')
     setEditRole(u.role_name || activeTab)
@@ -272,7 +272,7 @@ const [statsLoading, setStatsLoading] = useState(true)
     e.preventDefault()
     if (!editingUser) return
     const errors: Record<string, string> = {}
-    if (editPhone && !/^\d{10}$/.test(editPhone)) errors.phone = 'Số điện thoại phải đúng 10 chữ số'
+    if (editPhone && !/^\d{1,4}( \d{1,4}){1,3}$/.test(editPhone)) errors.phone = 'Số điện thoại phải đúng 10 chữ số'
     if (editDob) {
       const today = new Date()
       const selected = new Date(editDob)
@@ -300,6 +300,9 @@ const [statsLoading, setStatsLoading] = useState(true)
       if (editRole === 'GiaoVien') {
         payload.department = editDepartment || undefined
       }
+    if (editRole === 'Admin') {
+      payload.title = editPosition || undefined
+    }
       const res = await updateUser(editingUser.user_id, payload)
       if (!res.success) {
         setEditError(res.error || 'Cập nhật thất bại')
