@@ -17,7 +17,8 @@ import {
   getStudentStats,
   getTeacherStats,
   getGradeStats,
-  getSubjects
+  getSubjects,
+  getDepartments
 } from '@/lib/api'
 
 interface UserRow {
@@ -36,6 +37,7 @@ interface UserRow {
   gender?: string
   date_of_birth?: string
   department?: string
+  subject?: string
   title?: string
   emergency_phone?: string
   schedule_slot?: string
@@ -59,11 +61,12 @@ export default function UserManagementPage() {
   const filterRef = useRef<HTMLDivElement>(null)
   const [classOptions, setClassOptions] = useState<{ class_id: number; class_name: string; grade_level: number; school_year_id?: number }[]>([])
   const [schoolYears, setSchoolYears] = useState<{ school_year_id: number; year_name: string }[]>([])
-const [subjectOptions, setSubjectOptions] = useState<{ subject_id: number; subject_name: string }[]>([])
+  const [subjectOptions, setSubjectOptions] = useState<{ subject_id: number; subject_name: string }[]>([])
+  const departmentOptions = ['P. Tài Chính', 'P. Y tế', 'P. Thiết bị', 'P. Đào tạo', 'P. Hành chính', 'P. Kế toán']
   const pageSize = 10
   const [activeTab, setActiveTab] = useState<'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin'>('GiaoVien')
-    const [studentStats, setStudentStats] = useState<{totalStudents: number} | null>(null)
-const [statsLoading, setStatsLoading] = useState(true)
+  const [studentStats, setStudentStats] = useState<{ totalStudents: number } | null>(null)
+  const [statsLoading, setStatsLoading] = useState(true)
 
   const handleTabChange = (tab: 'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin') => {
     setActiveTab(tab)
@@ -272,7 +275,7 @@ const [statsLoading, setStatsLoading] = useState(true)
     e.preventDefault()
     if (!editingUser) return
     const errors: Record<string, string> = {}
-    if (editPhone && !/^\d{1,4}( \d{1,4}){1,3}$/.test(editPhone)) errors.phone = 'Số điện thoại phải đúng 10 chữ số'
+    if (editPhone && editPhone !== 'N/A' && !/^\d{10}$/.test(editPhone.replace(/\s/g, ''))) errors.phone = 'Số điện thoại phải đủ 10 chữ số'
     if (editDob) {
       const today = new Date()
       const selected = new Date(editDob)
@@ -300,9 +303,9 @@ const [statsLoading, setStatsLoading] = useState(true)
       if (editRole === 'GiaoVien') {
         payload.department = editDepartment || undefined
       }
-    if (editRole === 'Admin') {
-      payload.title = editPosition || undefined
-    }
+      if (editRole === 'Admin') {
+        payload.title = editPosition || undefined
+      }
       const res = await updateUser(editingUser.user_id, payload)
       if (!res.success) {
         setEditError(res.error || 'Cập nhật thất bại')
@@ -408,11 +411,11 @@ const [statsLoading, setStatsLoading] = useState(true)
 
   useEffect(() => { loadUsers() }, [])
 
-useEffect(() => {
-  getSubjects().then(data => {
-    if (Array.isArray(data)) setSubjectOptions(data)
-  }).catch(() => setSubjectOptions([]))
-}, [])
+  useEffect(() => {
+    getSubjects().then(data => {
+      if (Array.isArray(data)) setSubjectOptions(data)
+    }).catch(() => setSubjectOptions([]))
+  }, [])
 
   useEffect(() => {
     getStudentStats().then(data => {
@@ -506,7 +509,8 @@ useEffect(() => {
       gender: t.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
       class_name: t.homeroom_class_name || (idx % 2 === 0 ? '12A1' : 'Bộ môn'),
       student_code: t.teacher_code || `GV - 2026 - ${String(idx + 1).padStart(3, '0')}`,
-      department: t.department || defaultDepartments[idx % defaultDepartments.length],
+      department: t.subject || t.department || defaultDepartments[idx % defaultDepartments.length],
+      subject: t.subject || t.department || defaultDepartments[idx % defaultDepartments.length],
       title: 'Giảng viên',
       schedule_slot: defaultSlots[idx % defaultSlots.length]
     }))
@@ -584,32 +588,32 @@ useEffect(() => {
   const totalStudents = studentStats?.totalStudents ?? 0
   const presentStudents = totalStudents
   const gradeStatsMap = useMemo(() => {
- const map = new Map<number, { total: number; present: number }>()
- for (const u of allUsers) {
- if ((u as any).role_name !== "HocSinh-PhuHuynh") continue
- const gl = (u as any).grade_level as number | undefined
- if (!gl) continue
- const cur = map.get(gl) || { total: 0, present: 0 }
- cur.total += 1
- cur.present += 1
- map.set(gl, cur)
- }
- return map
- }, [allUsers])
+    const map = new Map<number, { total: number; present: number }>()
+    for (const u of allUsers) {
+      if ((u as any).role_name !== "HocSinh-PhuHuynh") continue
+      const gl = (u as any).grade_level as number | undefined
+      if (!gl) continue
+      const cur = map.get(gl) || { total: 0, present: 0 }
+      cur.total += 1
+      cur.present += 1
+      map.set(gl, cur)
+    }
+    return map
+  }, [allUsers])
 
- function getGradeStat(gradeLevel: number) {
- const s = gradeStatsMap.get(gradeLevel)
- return {
- total: s?.total ?? 0,
- present: s?.present ?? 0,
- percent: s?.total ? ((s.present / s.total) * 100).toFixed(1) + '%' : '0%'
- }
- }
-const grade6Stats = useMemo(() => getGradeStat(6), [gradeStatsMap])
-const grade7Stats = useMemo(() => getGradeStat(7), [gradeStatsMap])
-const grade8Stats = useMemo(() => getGradeStat(8), [gradeStatsMap])
-const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
- const totalPagesTab = Math.max(1, Math.ceil(tabFiltered.length / pageSize))
+  function getGradeStat(gradeLevel: number) {
+    const s = gradeStatsMap.get(gradeLevel)
+    return {
+      total: s?.total ?? 0,
+      present: s?.present ?? 0,
+      percent: s?.total ? ((s.present / s.total) * 100).toFixed(1) + '%' : '0%'
+    }
+  }
+  const grade6Stats = useMemo(() => getGradeStat(6), [gradeStatsMap])
+  const grade7Stats = useMemo(() => getGradeStat(7), [gradeStatsMap])
+  const grade8Stats = useMemo(() => getGradeStat(8), [gradeStatsMap])
+  const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
+  const totalPagesTab = Math.max(1, Math.ceil(tabFiltered.length / pageSize))
   const safePageTab = Math.min(page, totalPagesTab)
   const pageItems = tabFiltered.slice((safePageTab - 1) * pageSize, safePageTab * pageSize)
 
@@ -901,7 +905,7 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                 <tbody className="divide-y divide-gray-100 text-xs">
                   {pageItems.map((u, idx) => {
                     const isTeaching = idx % 2 === 0
-                    const deptColor = (u.department === 'Toán - Tin' || u.department === 'Ngoại Ngữ')
+                    const deptColor = ((u.subject || u.department) === 'Toán - Tin' || (u.subject || u.department) === 'Ngoại Ngữ')
                       ? 'bg-blue-100 text-blue-800'
                       : 'bg-gray-100 text-gray-800'
 
@@ -1072,7 +1076,7 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${deptColor}`}>
-                            {u.department || 'Bộ môn'}
+                            {u.subject || u.department || 'Bộ môn'}
                           </span>
                         </td>
                         <td className="px-6 py-5 text-gray-700 whitespace-nowrap">
@@ -1166,23 +1170,23 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                   <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
                 </svg>
               </button>
-{(() => {
-        const total = totalPagesTab
-        const current = safePageTab
-        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1).map((p) => (
-          <button key={p} onClick={() => setPage(p as number)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
-        ))
-        const pages: (number | string)[] = [1]
-        if (current > 3) pages.push('...')
-        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i)
-        if (current < total - 2) pages.push('...')
-        if (total > 1) pages.push(total)
-        return pages.map((p, idx) => p === '...' ? (
-          <span key={`e-${idx}`} className="px-2 py-1 text-xs text-gray-400">...</span>
-        ) : (
-          <button key={p} onClick={() => setPage(p as number)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
-        ))
-      })()}
+              {(() => {
+                const total = totalPagesTab
+                const current = safePageTab
+                if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1).map((p) => (
+                  <button key={p} onClick={() => setPage(p as number)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
+                ))
+                const pages: (number | string)[] = [1]
+                if (current > 3) pages.push('...')
+                for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i)
+                if (current < total - 2) pages.push('...')
+                if (total > 1) pages.push(total)
+                return pages.map((p, idx) => p === '...' ? (
+                  <span key={`e-${idx}`} className="px-2 py-1 text-xs text-gray-400">...</span>
+                ) : (
+                  <button key={p} onClick={() => setPage(p as number)} className={`px-3 py-1 rounded text-xs ${p === current ? 'bg-blue-900 text-white font-bold' : 'border border-gray-200 text-gray-600 font-medium hover:bg-gray-50'}`}>{p}</button>
+                ))
+              })()}
               <button
                 onClick={() => setPage(p => Math.min(totalPagesTab, p + 1))}
                 disabled={safePageTab >= totalPagesTab}
@@ -1578,7 +1582,7 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                     {/* Department / Class */}
                     <div className="flex flex-col gap-1.5">
                       <label className="text-xs font-semibold text-gray-700">
-                        {formRole === 'HocSinh-PhuHuynh' ? 'Lớp *' : 'Phòng ban / Đơn vị *'}
+                        {formRole === 'HocSinh-PhuHuynh' ? 'Lớp *' : formRole === 'GiaoVien' ? 'Môn học *' : 'Phòng ban *'}
                       </label>
                       {formRole === 'HocSinh-PhuHuynh' ? (
                         <select
@@ -1595,8 +1599,8 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                           onChange={(e) => setFormDepartment(e.target.value)}
                           className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#001d36] transition-all"
                         >
-          <option value="">Chọn môn học...</option>
-          {subjectOptions.map(s => <option key={s.subject_id} value={s.subject_name}>{s.subject_name}</option>)}
+                          <option value="">Chọn môn học...</option>
+                          {subjectOptions.map(s => <option key={s.subject_id} value={s.subject_name}>{s.subject_name}</option>)}
                         </select>
                       )}
                     </div>
@@ -1816,7 +1820,7 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
 
                   {/* Department / Class */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-gray-700">Phòng ban / Lớp <span className="text-red-500">*</span></label>
+                    <label className="text-xs font-semibold text-gray-700">Bộ môn<span className="text-red-500">*</span></label>
                     {editRole === 'HocSinh-PhuHuynh' ? (
                       <select
                         value={editClassId}
@@ -1832,8 +1836,8 @@ const grade9Stats = useMemo(() => getGradeStat(9), [gradeStatsMap])
                         onChange={(e) => setEditDepartment(e.target.value)}
                         className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#001d36] transition-all"
                       >
-          <option value="">Chọn môn học...</option>
-          {subjectOptions.map(s => <option key={s.subject_id} value={s.subject_name}>{s.subject_name}</option>)}
+                        <option value="">Chọn môn học...</option>
+                        {subjectOptions.map(s => <option key={s.subject_id} value={s.subject_name}>{s.subject_name}</option>)}
                       </select>
                     )}
                   </div>

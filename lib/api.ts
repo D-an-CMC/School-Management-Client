@@ -367,6 +367,12 @@ export async function deleteSchoolYear(id: number) {
   return res.json() as Promise<{ success: boolean; error?: string }>;
 }
 
+export async function getDepartments() {
+  const res = await apiFetch('/api/users/departments');
+  const json = (await res.json()) as { success: boolean; data?: string[] };
+  return json.success ? json.data ?? [] : [];
+}
+
 export async function getSubjects() {
   const res = await apiFetch('/api/timetables/subjects');
   const json = (await res.json()) as { success: boolean; data?: any[] };
