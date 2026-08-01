@@ -437,3 +437,20 @@ export async function deleteTimetable(scheduleId: number) {
   });
   return res.json() as Promise<{ success: boolean; error?: string }>;
 }
+
+export async function updateClass(classId: number, data: { homeroom_teacher_id?: number | null; class_name?: string; grade_level?: number }) {
+  const res = await apiFetch(`/api/classes/${classId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+  return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
+export async function addStudentToClass(classId: number, studentData: { full_name: string; student_code?: string; gender?: string; date_of_birth?: string }) {
+  const res = await apiFetch(`/api/classes/${classId}/students`, {
+    method: 'POST',
+    body: JSON.stringify(studentData),
+  });
+  return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
