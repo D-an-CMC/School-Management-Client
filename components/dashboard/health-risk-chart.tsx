@@ -49,7 +49,7 @@ export function HealthRiskChart() {
               borderRadius: '8px',
               fontSize: '12px',
             }}
-            formatter={(value: number) => [value, 'Hiệu suất']}
+            formatter={(value: any) => [value, 'Hiệu suất']}
           />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (

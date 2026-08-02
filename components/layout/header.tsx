@@ -49,7 +49,7 @@ export function Header({ showMenuButton, onMenuClick }: HeaderProps) {
           <div className="w-10 h-10 bg-gradient-to-br from-[#0B3D5C] to-[#0066CC] rounded-full flex items-center justify-center text-white font-bold text-xs">
             {user?.name
               ?.split(' ')
-              .map((n) => n[0])
+              .map((n: string) => n[0])
               .join('')
               .toUpperCase()}
           </div>

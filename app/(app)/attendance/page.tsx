@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth-context'
-import { getClasses, getClassStudents, getAttendanceSessions, getMyAttendance, getAttendanceSession } from '@/lib/api'
+import { apiFetch, getClasses, getClassStudents, getAttendanceSessions, getMyAttendance, getAttendanceSession } from '@/lib/api'
 
 type AttendanceStatus = 'Có mặt' | 'Vắng' | 'Trễ' | 'Phép'
 
@@ -98,9 +98,8 @@ export default function AttendancePage() {
         status,
       }))
 
-      const res = await fetch('/api/attendance/records/batch', {
+      const res = await apiFetch('/api/attendance/records/batch', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ records }),
       })
       if (!res.ok) throw new Error()

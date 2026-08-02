@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { cn } from '@/lib/utils'
+import { logoutApi } from '@/lib/api'
 
 type SidebarVariant = 'default' | 'icon' | 'drawer'
 
@@ -34,6 +35,8 @@ export function Sidebar({ variant = 'default', onClose }: SidebarProps) {
     { href: '/admin-timetable', label: 'Quản lý Thời khóa biểu', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
     { href: '/class-management', label: 'Quản lý lớp', icon: 'M9.663 17h4.674a1 1 0 00.922-.606l7-15A1 1 0 0021.337 0H2.663a1 1 0 00-.922 1.394l7 15a1 1 0 00.922.606zM12 22v-5' },
     { href: '/grade-management', label: 'Quản lý điểm', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+    { href: '/security-logs', label: 'Nhật ký bảo mật', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
+    { href: '/administrative-ai', label: 'AI Trợ lý Quản trị', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
   ]
 
   const teacherNavItems = [
@@ -138,16 +141,18 @@ export function Sidebar({ variant = 'default', onClose }: SidebarProps) {
           </svg>
           {!isIconOnly && <span>Cài đặt</span>}
         </button>
-        <Link
-          href="/login"
-          onClick={handleLinkClick}
-          className={cn('flex items-center rounded-md text-[#A0B4C8] hover:bg-[#004080] hover:text-white transition-colors text-sm font-medium', isIconOnly ? 'w-full justify-center px-2 py-3' : 'gap-3 px-4 py-3')}
+        <button
+          onClick={() => {
+            if (isDrawer && onClose) onClose();
+            logoutApi();
+          }}
+          className={cn('w-full flex items-center rounded-md text-[#A0B4C8] hover:bg-[#004080] hover:text-white transition-colors text-sm font-medium', isIconOnly ? 'justify-center px-2 py-3' : 'gap-3 px-4 py-3')}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           {!isIconOnly && <span>Đăng xuất</span>}
-        </Link>
+        </button>
       </div>
     </aside>
   )

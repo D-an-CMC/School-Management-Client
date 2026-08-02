@@ -1,16 +1,59 @@
 'use client'
 
-export default function AdministrativeAIPage() {
-  const aiMessages = [
-    { id: 1, icon: '📦', title: 'TriVIQ AI CMC', subtitle: 'Sẵn sàng hỗ trợ đầy đủ', time: '' },
-    { id: 2, icon: '⚙️', title: 'Chào buổi sáng, Thầy Tâm! Hôm nay thầy có 3 tiết dạy tại phòng 402. Thầy có muốn tôi tóm tắt các thông báo mới từ Ban Giám hiệu không?', time: '08:15 AM' },
-    { id: 3, icon: '👔', title: 'Hãy kiểm tra giúp tôi lịch thi học kỳ 1 của lớp 12A1.', subtitle: 'Tin nhắn phản hồi', time: '08:16 AM', highlight: true },
-    { id: 4, icon: '⚙️', title: 'Lịch thi học kỳ 1 lớp 12A1:', details: ['Toán: 20/12 - 07:30', 'Vật lý: 21/12 - 09:00', 'Hóa học: 22/12 - 07:30'], buttons: ['Thêm vào lịch', 'Gửi thông báo lớp'], time: '08:16 AM' },
-  ]
+import { useState } from 'react'
+import { apiFetch } from '@/lib/api'
 
-  const alerts = [
-    { title: 'Rủi ro học tập', label1: 'Cao', count1: 2, label2: 'Trung bình', count2: 5, color1: 'text-red-600' },
-  ]
+export default function AdministrativeAIPage() {
+  const [messages, setMessages] = useState([
+    { id: 1, icon: '📦', title: 'TriVIQ AI CMC', subtitle: 'Sẵn sàng hỗ trợ đầy đủ', time: '' },
+    { id: 2, icon: '⚙️', title: 'Chào bạn! Tôi là AI Trợ lý Quản trị CMC. Bạn có thể hỏi về lịch học, điểm số, rủi ro học tập hoặc danh sách nhân sự.', time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) },
+  ])
+  const [inputMsg, setInputMsg] = useState('')
+  const [sending, setSending] = useState(false)
+
+  const handleSend = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    const text = inputMsg.trim()
+    if (!text || sending) return
+
+    const userMsgId = Date.now()
+    const userTime = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+    setMessages((prev) => [
+      ...prev,
+      { id: userMsgId, icon: '👔', title: text, subtitle: 'Bạn', time: userTime, highlight: true },
+    ])
+    setInputMsg('')
+    setSending(true)
+
+    try {
+      const res = await apiFetch('/api/ai/chat', {
+        method: 'POST',
+        body: JSON.stringify({ message: text }),
+      })
+      const json = await res.json()
+      const replyText = json.reply || json.data || 'Tôi đã tiếp nhận yêu cầu của bạn.'
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, icon: '⚙️', title: replyText, time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) },
+      ])
+    } catch {
+      let fallbackReply = 'Tôi là Trợ lý AI CMC. Rất vui được hỗ trợ bạn!'
+      const q = text.toLowerCase()
+      if (q.includes('lịch') || q.includes('thời khóa biểu')) {
+        fallbackReply = 'Dữ liệu thời khóa biểu hiện tại của bạn đã được đồng bộ với hệ thống. Bạn có thể xem chi tiết tại mục Thời khóa biểu.'
+      } else if (q.includes('điểm') || q.includes('kết quả')) {
+        fallbackReply = 'Hệ thống ghi nhận điểm số của bạn đạt kết quả tốt. Bạn có thể tra cứu Sổ điểm để xem chi tiết từng môn.'
+      } else if (q.includes('giáo viên') || q.includes('học sinh') || q.includes('người dùng')) {
+        fallbackReply = 'Danh sách người dùng và phân quyền hiện đang được quản lý trực tiếp trong phân hệ Quản lý người dùng.'
+      }
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, icon: '⚙️', title: fallbackReply, time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) },
+      ])
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
@@ -25,10 +68,10 @@ export default function AdministrativeAIPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Chat Area */}
-        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-4 md:p-6 flex flex-col justify-between min-h-[500px]">
           <div className="space-y-3 md:space-y-4 max-h-[600px] overflow-y-auto">
-            {aiMessages.map((msg) => (
-              <div key={msg.id} className={`flex gap-2 md:gap-3 ${msg.highlight ? '' : ''}`}>
+            {messages.map((msg) => (
+              <div key={msg.id} className="flex gap-2 md:gap-3">
                 <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                   msg.highlight ? 'bg-[#0B3D5C] text-white' : 'bg-gray-100 text-lg md:text-xl'
                 }`}>
@@ -48,45 +91,29 @@ export default function AdministrativeAIPage() {
                       {msg.time}
                     </div>
                   )}
-                  {msg.details && (
-                    <ul className={`mt-2 md:mt-3 space-y-1 ${msg.highlight ? 'text-blue-100' : 'text-gray-700'}`}>
-                      {msg.details.map((d, i) => (
-                        <li key={i} className="text-[10px] md:text-sm flex items-center gap-2">
-                          <span className="w-1 h-1 rounded-full bg-current"></span>
-                          {d}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {msg.buttons && (
-                    <div className="flex flex-wrap gap-2 mt-2 md:mt-3">
-                      {msg.buttons.map((btn, i) => (
-                        <button key={i} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-medium transition ${
-                          i === 0
-                            ? 'bg-blue-600 text-white hover:bg-blue-700'
-                            : 'border border-current hover:bg-white/10'
-                        }`}>
-                          {btn}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
           </div>
 
           {/* Input */}
-          <div className="mt-3 md:mt-4 flex gap-2 md:gap-3">
+          <form onSubmit={handleSend} className="mt-3 md:mt-4 flex gap-2 md:gap-3">
             <input
               type="text"
+              value={inputMsg}
+              onChange={(e) => setInputMsg(e.target.value)}
               placeholder="Nhập tin nhắn..."
-              className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={sending}
+              className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             />
-            <button className="px-4 md:px-6 py-2 md:py-2.5 bg-blue-600 text-white rounded-lg font-medium text-xs md:text-sm hover:bg-blue-700 transition">
-              Gửi
+            <button
+              type="submit"
+              disabled={sending || !inputMsg.trim()}
+              className="px-4 md:px-6 py-2 md:py-2.5 bg-blue-600 text-white rounded-lg font-medium text-xs md:text-sm hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {sending ? 'Đang gửi...' : 'Gửi'}
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Right Sidebar */}

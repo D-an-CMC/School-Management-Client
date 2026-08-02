@@ -1,7 +1,14 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
-import type { User } from './mock-data'
+export interface User {
+  id: number
+  email: string
+  role: string
+  name: string
+  teacherId?: number
+  studentId?: number
+}
 import { loginApi, getMe } from './api'
 
 interface AuthContextType {
@@ -62,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { token, user: u } = result.data
     sessionStorage.setItem('token', token)
     const role = ROLE_MAP[u.role] || 'student'
-    setUser({ id: String(u.id), name: u.name, email: u.email, role, teacherId: (u as any).teacherId, studentId: (u as any).studentId })
+    setUser({ id: Number(u.id), name: u.name, email: u.email, role, teacherId: (u as any).teacherId, studentId: (u as any).studentId })
     setIsLoggedIn(true)
   }
 

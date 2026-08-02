@@ -454,3 +454,35 @@ export async function addStudentToClass(classId: number, studentData: { full_nam
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
+export async function logoutApi() {
+  try {
+    await apiFetch('/api/auth/logout', { method: 'POST' });
+  } catch {}
+  if (typeof window !== 'undefined') {
+    sessionStorage.removeItem('token');
+    window.location.href = '/login';
+  }
+}
+
+export async function getSecurityLogs(params?: { search?: string; action?: string; status?: string; role?: string; page?: number; limit?: number }) {
+  const qs = new URLSearchParams();
+  if (params?.search) qs.set('search', params.search);
+  if (params?.action) qs.set('action', params.action);
+  if (params?.status) qs.set('status', params.status);
+  if (params?.role) qs.set('role', params.role);
+  if (params?.page) qs.set('page', String(params.page));
+  if (params?.limit) qs.set('limit', String(params.limit));
+  const suffix = qs.toString() ? `?${qs}` : '';
+  const res = await apiFetch(`/api/security-logs${suffix}`);
+  const json = (await res.json()) as PaginatedResponse<any>;
+  return json;
+}
+
+export async function getSecurityLogStats() {
+  const res = await apiFetch('/api/security-logs/stats');
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data: any };
+  return json.success ? json.data : null;
+}
+
+

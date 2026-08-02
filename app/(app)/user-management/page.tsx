@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useMemo, useRef, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -62,7 +62,7 @@ export default function UserManagementPage() {
   const [classOptions, setClassOptions] = useState<{ class_id: number; class_name: string; grade_level: number; school_year_id?: number }[]>([])
   const [schoolYears, setSchoolYears] = useState<{ school_year_id: number; year_name: string }[]>([])
   const [subjectOptions, setSubjectOptions] = useState<{ subject_id: number; subject_name: string }[]>([])
-  const departmentOptions = ['P. Tài Chính', 'P. Y tế', 'P. Thiết bị', 'P. Đào tạo', 'P. Hành chính', 'P. Kế toán']
+  const [departments, setDepartments] = useState<string[]>([])
   const pageSize = 10
   const [activeTab, setActiveTab] = useState<'GiaoVien' | 'HocSinh-PhuHuynh' | 'Admin'>('GiaoVien')
   const [studentStats, setStudentStats] = useState<{ totalStudents: number } | null>(null)
@@ -447,23 +447,6 @@ export default function UserManagementPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const defaultSlots = ['Tiết 1 - 4', 'Tiết 5 - 8', 'Tiết 2 - 5', 'Tiết 6 - 9']
-  const studentSlots = ['Tiết 1 - Tiết 5', 'Tiết 1 - Tiết 4', 'Tiết 2 - Tiết 5', 'Tiết 1 - Tiết 5']
-  const defaultDepartments = ['Toán - Tin', 'Vật Lý', 'Xã hội', 'Ngoại Ngữ', 'Hóa Học', 'Ngữ Văn']
-  const studentPhones = ['0912345xxx', '0987654xxx', '0933445xxx', '0945678xxx']
-  const sampleStudentCodes = ['HS-9981', 'HS-9982', 'HS-9983', 'HS-9984', 'HS-9985', 'HS-9986']
-  const sampleStudentClasses = ['12A1', '11B3', '10C1', '12D2', '10A2', '11A1']
-  const sampleStudentGrades = [12, 11, 10, 12, 10, 11]
-
-  // Staff mock data to match nv/screen.png
-  const staffSample = [
-    { code: 'NV-2026', name: 'Trần Thị C', title: 'Kỹ thuật viên', email: 'c.tt@cmc.edu.vn', phone: '0908 123 456', dept: 'P. Tài Chính', active: true },
-    { code: 'NV-2027', name: 'Nguyễn Văn B', title: 'Y sĩ', email: 'b.nv@cmc.edu.vn', phone: '0912 999 888', dept: 'P. Y tế', active: false },
-    { code: 'NV-2028', name: 'Lê Hoàng D', title: 'Quản trị viên', email: 'd.lh@cmc.edu.vn', phone: '0988 555 222', dept: 'P. Thiết bị', active: true },
-    { code: 'NV-2029', name: 'Phạm Minh E', title: 'Chuyên viên đào tạo', email: 'e.pm@cmc.edu.vn', phone: '0977 111 222', dept: 'P. Đào tạo', active: true },
-    { code: 'NV-2030', name: 'Vũ Quốc F', title: 'Hành chính viên', email: 'f.vq@cmc.edu.vn', phone: '0966 333 444', dept: 'P. Hành chính', active: true },
-  ]
-
   async function loadUsers() {
     setLoading(true)
     const [uRes, sRes, tRes] = await Promise.all([
@@ -476,20 +459,20 @@ export default function UserManagementPage() {
       user_id: s.user_id,
       email: s.email || `${(s.full_name || 'student').toLowerCase().replace(/\s+/g, '')}@student.cmc.edu.vn`,
       username: s.full_name || '',
-      phone: s.phone || studentPhones[idx % studentPhones.length],
-      is_active: s.status === 'active' || s.status === undefined || idx !== 1,
+      phone: s.phone || 'N/A',
+      is_active: s.status !== 'inactive',
       role_id: 3,
       role_name: 'HocSinh-PhuHuynh',
       class_id: s.class_id,
-      class_name: s.class_name || sampleStudentClasses[idx % sampleStudentClasses.length],
-      grade_level: s.grade_level || sampleStudentGrades[idx % sampleStudentGrades.length],
+      class_name: s.class_name || 'Chưa phân lớp',
+      grade_level: s.grade_level || undefined,
       full_name: s.full_name,
-      student_code: s.student_code || sampleStudentCodes[idx % sampleStudentCodes.length] || `HS-${9981 + idx}`,
-      date_of_birth: s.date_of_birth || '2008-05-15',
+      student_code: s.student_code || `HS-${String(s.user_id).padStart(4, '0')}`,
+      date_of_birth: s.date_of_birth || '',
       gender: s.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
       department: 'Học sinh',
       title: 'Học sinh',
-      schedule_slot: studentSlots[idx % studentSlots.length],
+      schedule_slot: s.schedule_slot || 'Ca sáng',
       address: s.address,
       enrollment_date: s.enrollment_date,
       parent_full_name: s.parent_full_name,
@@ -505,37 +488,34 @@ export default function UserManagementPage() {
       role_id: 2,
       role_name: 'GiaoVien',
       full_name: t.full_name,
-      date_of_birth: t.date_of_birth || '1985-08-20',
+      date_of_birth: t.date_of_birth || '',
       gender: t.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
-      class_name: t.homeroom_class_name || (idx % 2 === 0 ? '12A1' : 'Bộ môn'),
-      student_code: t.teacher_code || `GV - 2026 - ${String(idx + 1).padStart(3, '0')}`,
-      department: t.subject || t.department || defaultDepartments[idx % defaultDepartments.length],
-      subject: t.subject || t.department || defaultDepartments[idx % defaultDepartments.length],
+      class_name: t.homeroom_class_name || 'Bộ môn',
+      student_code: t.teacher_code || `GV-${String(t.user_id).padStart(4, '0')}`,
+      department: t.subject || t.department || 'Bộ môn chung',
+      subject: t.subject || t.department || 'Bộ môn chung',
       title: 'Giảng viên',
-      schedule_slot: defaultSlots[idx % defaultSlots.length]
+      schedule_slot: t.schedule_slot || 'Ca sáng'
     }))
 
-    const adminUsers: UserRow[] = (uRes.data || []).filter((u: any) => u.role_id == 1 || (u.role_name || '') === 'Admin').filter((u: any) => u.user_id).map((u: any, idx: number) => {
-      const mock = staffSample[idx % staffSample.length]
-      return {
-        user_id: u.user_id,
-        email: u.email || mock.email,
-        username: u.username || u.email,
-        phone: u.phone || 'N/A',
-        emergency_phone: mock.phone,
-        is_active: mock.active,
-        role_id: u.role_id,
-        role_name: 'Admin',
-        date_of_birth: u.date_of_birth || '1990-10-12',
-        gender: idx % 2 === 0 ? 'Nữ' : 'Nam',
-        full_name: u.full_name || mock.name,
-        title: mock.title,
-        student_code: mock.code,
-        class_name: mock.dept,
-        department: mock.dept,
-        schedule_slot: 'Ca hành chính'
-      }
-    })
+    const adminUsers: UserRow[] = (uRes.data || []).filter((u: any) => u.role_id == 1 || (u.role_name || '') === 'Admin').filter((u: any) => u.user_id).map((u: any, idx: number) => ({
+      user_id: u.user_id,
+      email: u.email || '',
+      username: u.username || u.email,
+      phone: u.phone || 'N/A',
+      emergency_phone: u.emergency_phone || 'N/A',
+      is_active: u.is_active !== false,
+      role_id: u.role_id,
+      role_name: 'Admin',
+      date_of_birth: u.date_of_birth || '',
+      gender: u.gender || (idx % 2 === 0 ? 'Nữ' : 'Nam'),
+      full_name: u.full_name || u.username || u.email,
+      title: u.title || 'Quản trị viên',
+      student_code: u.student_code || `NV-${String(u.user_id).padStart(4, '0')}`,
+      class_name: u.department || 'Ban Giám Hiệu',
+      department: u.department || 'Ban Giám Hiệu',
+      schedule_slot: u.schedule_slot || 'Ca hành chính'
+    }))
 
     setAllUsers([...teacherRows, ...studentRows, ...adminUsers])
     setPage(1)
@@ -1936,4 +1916,6 @@ export default function UserManagementPage() {
     </div>
   )
 }
+
+
 
