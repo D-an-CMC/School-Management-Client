@@ -23,7 +23,7 @@ export function Header({ showMenuButton, onMenuClick }: HeaderProps) {
         <input
           type="text"
           placeholder={showMenuButton ? 'Tìm kiếm...' : 'Tìm kiếm nhật ký...'}
-          className="block w-full pl-10 pr-3 py-2 border border-transparent bg-gray-100 rounded-md leading-5 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white sm:text-sm transition-all"
+          className="w-full pl-9 pr-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
         />
       </div>
 

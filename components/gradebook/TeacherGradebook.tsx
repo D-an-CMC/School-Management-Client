@@ -140,7 +140,7 @@ export function TeacherGradebook() {
                         type="text"
                         value={val}
                         onChange={(e) => handleScoreChange(row.id, 'freq', i, e.target.value)}
-                        className="w-10 h-10 text-center bg-white border-2 border-black rounded-md font-bold focus:ring-2 focus:ring-primary focus:outline-none"
+                        className="w-10 h-10 text-center bg-white border-2 border-black rounded-md font-bold text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
                       />
                     </td>
                   ))}
@@ -151,7 +151,7 @@ export function TeacherGradebook() {
                       type="text"
                       value={row.scores.midTerm}
                       onChange={(e) => handleScoreChange(row.id, 'midTerm', undefined, e.target.value)}
-                      className="w-20 h-12 text-center bg-white border-2 border-black rounded-md font-bold text-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                      className="w-20 h-12 text-center bg-white border-2 border-black rounded-md font-bold text-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
                     />
                   </td>
 
@@ -161,7 +161,7 @@ export function TeacherGradebook() {
                       type="text"
                       value={row.scores.finalTerm}
                       onChange={(e) => handleScoreChange(row.id, 'finalTerm', undefined, e.target.value)}
-                      className="w-20 h-12 text-center bg-white border-2 border-black rounded-md font-bold text-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                      className="w-20 h-12 text-center bg-white border-2 border-black rounded-md font-bold text-lg text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
                     />
                   </td>
 

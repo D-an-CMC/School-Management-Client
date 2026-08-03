@@ -154,7 +154,7 @@ export default function SchoolYearsPage() {
                   type="text"
                   value={form.year_name}
                   onChange={(e) => setForm(f => ({ ...f, year_name: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400"
                   placeholder="2024-2025"
                 />
               </div>
@@ -165,7 +165,7 @@ export default function SchoolYearsPage() {
                     type="date"
                     value={form.start_date}
                     onChange={(e) => setForm(f => ({ ...f, start_date: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 text-sm pointer-events-none">&#128197;</span>
                 </div>
@@ -177,7 +177,7 @@ export default function SchoolYearsPage() {
                     type="date"
                     value={form.end_date}
                     onChange={(e) => setForm(f => ({ ...f, end_date: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 text-sm pointer-events-none">&#128197;</span>
                 </div>

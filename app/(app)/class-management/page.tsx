@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { getClasses, getClassStudents, getTeachers, updateClass, addStudentToClass } from '@/lib/api'
+import { getClasses, getClassStudents, getTeachers, updateClass, addStudentToClass, removeStudentFromClass } from '@/lib/api'
 
 interface Student {
   student_id: number
@@ -61,14 +61,22 @@ export default function ClassManagementPage() {
   const [selectedGradeFilter, setSelectedGradeFilter] = useState('ALL')
   const [studentSearchQuery, setStudentSearchQuery] = useState('')
 
-  // Modals
+  // Modals – Teacher
   const [showTeacherModal, setShowTeacherModal] = useState(false)
   const [selectedTeacherId, setSelectedTeacherId] = useState<number | null>(null)
   const [teacherSearchQuery, setTeacherSearchQuery] = useState('')
   const [isUpdatingTeacher, setIsUpdatingTeacher] = useState(false)
+  const [showAllTeachers, setShowAllTeachers] = useState(false)  // false = chưa chủ nhiệm, true = tất cả
 
+  // Modals – Add Student
   const [showAddStudentModal, setShowAddStudentModal] = useState(false)
   const [isAddingStudent, setIsAddingStudent] = useState(false)
+  const [studentModalTab, setStudentModalTab] = useState<'pick' | 'new'>('pick') // 'pick' = chọn từ danh sách, 'new' = nhập mới
+  const [unassignedStudents, setUnassignedStudents] = useState<Student[]>([])
+  const [unassignedSearch, setUnassignedSearch] = useState('')
+  const [selectedUnassignedIds, setSelectedUnassignedIds] = useState<number[]>([])
+  const [loadingUnassigned, setLoadingUnassigned] = useState(false)
+  const [showAllStudents, setShowAllStudents] = useState(false) // true = tất cả, false = chưa có lớp
   const [newStudentForm, setNewStudentForm] = useState({
     full_name: '',
     student_code: '',
@@ -200,11 +208,86 @@ export default function ClassManagementPage() {
     setIsAddingStudent(false)
     setShowAddStudentModal(false)
     setNewStudentForm({ full_name: '', student_code: '', gender: 'Nam', date_of_birth: '' })
+    setSelectedUnassignedIds([])
   }
 
+  // Handle picking existing unassigned students into class
+  const handleAddSelectedStudents = async () => {
+    if (!selectedClass || selectedUnassignedIds.length === 0) return
+    setIsAddingStudent(true)
+    const toAdd = unassignedStudents.filter(s => selectedUnassignedIds.includes(s.student_id))
+    try {
+      await Promise.all(
+        toAdd.map(s =>
+          addStudentToClass(selectedClass.class_id, {
+            student_id: s.student_id,
+            full_name: s.full_name,
+            student_code: s.student_code,
+            gender: s.gender,
+            date_of_birth: s.date_of_birth,
+          })
+        )
+      )
+    } catch (e) {
+      console.warn('Add students fallback to local', e)
+    }
+    // Add to local students list
+    setStudents(prev => [...toAdd.map(s => ({ ...s, status: 'Đang học' })), ...prev])
+    // Remove from unassigned list
+    setUnassignedStudents(prev => prev.filter(s => !selectedUnassignedIds.includes(s.student_id)))
+    // Update count
+    const updatedCount = (selectedClass.student_count || students.length) + toAdd.length
+    const updatedClass = { ...selectedClass, student_count: updatedCount }
+    setSelectedClass(updatedClass)
+    setClasses(prev => prev.map(c => c.class_id === selectedClass.class_id ? updatedClass : c))
+    setIsAddingStudent(false)
+    setShowAddStudentModal(false)
+    setSelectedUnassignedIds([])
+  }
+
+  // Open add student modal and load unassigned students
+  const openAddStudentModal = async () => {
+    setStudentModalTab('pick')
+    setUnassignedSearch('')
+    setSelectedUnassignedIds([])
+    setShowAllStudents(false)
+    setShowAddStudentModal(true)
+    setLoadingUnassigned(true)
+    try {
+      // Get all students (limit high) then filter those without class
+      const { getStudents } = await import('@/lib/api')
+      const res = await getStudents({ limit: 500 })
+      const all: Student[] = (res.data || []).map((s: any) => ({
+        student_id: s.student_id ?? s.user_id,
+        student_code: s.student_code || '',
+        full_name: s.full_name || s.username || '',
+        gender: s.gender || 'Nam',
+        date_of_birth: s.date_of_birth || '',
+        status: s.status || 'Đang học',
+        class_id: s.class_id,
+        class_name: s.class_name,
+      }))
+      // Exclude students already in current class
+      const currentIds = new Set(students.map(s => s.student_id))
+      setUnassignedStudents(all.filter(s => !currentIds.has(s.student_id)))
+    } catch {
+      setUnassignedStudents([])
+    } finally {
+      setLoadingUnassigned(false)
+    }
+  }
+
+
   // Handle Remove Student
-  const handleRemoveStudent = (studentId: number) => {
+  const handleRemoveStudent = async (studentId: number) => {
     if (!confirm('Bạn có chắc chắn muốn gỡ học sinh này khỏi lớp không?')) return
+    if (selectedClass) {
+      try {
+        await removeStudentFromClass(selectedClass.class_id, studentId)
+      } catch (e) {
+        console.warn('Failed to remove student on backend', e)
+      }
+    }
     setStudents(prev => prev.filter(s => s.student_id !== studentId))
     if (selectedClass) {
       const updatedCount = Math.max(0, (selectedClass.student_count || students.length) - 1)
@@ -241,17 +324,24 @@ export default function ClassManagementPage() {
     })
   }, [students, studentSearchQuery])
 
-  // Filtered Teachers in modal
+  // Filtered Teachers in modal: default chỉ GV chưa chủ nhiệm lớp nào, toggle showAll
+  const assignedTeacherIds = useMemo(
+    () => new Set(classes.filter(c => c.homeroom_teacher_id && c.class_id !== selectedClass?.class_id).map(c => c.homeroom_teacher_id)),
+    [classes, selectedClass]
+  )
+
   const filteredModalTeachers = useMemo(() => {
     return teachers.filter(t => {
-      return (
+      const matchSearch =
         !teacherSearchQuery ||
         t.full_name?.toLowerCase().includes(teacherSearchQuery.toLowerCase()) ||
         t.teacher_code?.toLowerCase().includes(teacherSearchQuery.toLowerCase()) ||
         t.department?.toLowerCase().includes(teacherSearchQuery.toLowerCase())
-      )
+      const matchAssigned = showAllTeachers || !assignedTeacherIds.has(t.teacher_id)
+      return matchSearch && matchAssigned
     })
-  }, [teachers, teacherSearchQuery])
+  }, [teachers, teacherSearchQuery, showAllTeachers, assignedTeacherIds])
+
 
   // ---------------------------------------------------------------------------
   // STEP 1: CLASS SELECTION GRID VIEW
@@ -311,7 +401,7 @@ export default function ClassManagementPage() {
         {/* Search & Grade Level Filter */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm space-y-4">
           <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1 max-w-2xl">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -322,30 +412,28 @@ export default function ClassManagementPage() {
                 value={searchClassQuery}
                 onChange={(e) => setSearchClassQuery(e.target.value)}
                 placeholder="Tìm tên lớp, GVCN..."
-                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
+                className="w-full pl-9 pr-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
               />
             </div>
 
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-thin">
               <button
                 onClick={() => setSelectedGradeFilter('ALL')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
-                  selectedGradeFilter === 'ALL'
-                    ? 'bg-[#003366] text-white shadow-sm'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${selectedGradeFilter === 'ALL'
+                  ? 'bg-[#003366] text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 Tất cả các khối
               </button>
-              {['6', '7', '8', '9', '10', '11', '12'].map((g) => (
+              {['6', '7', '8', '9'].map((g) => (
                 <button
                   key={g}
                   onClick={() => setSelectedGradeFilter(g)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
-                    selectedGradeFilter === g
-                      ? 'bg-[#003366] text-white shadow-sm'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${selectedGradeFilter === g
+                    ? 'bg-[#003366] text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                 >
                   Khối {g}
                 </button>
@@ -454,7 +542,7 @@ export default function ClassManagementPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setShowAddStudentModal(true)}
+              onClick={openAddStudentModal}
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -512,7 +600,7 @@ export default function ClassManagementPage() {
               value={studentSearchQuery}
               onChange={(e) => setStudentSearchQuery(e.target.value)}
               placeholder="Tìm tên hoặc mã học sinh..."
-              className="w-full pl-9 pr-4 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
+              className="w-full pl-9 pr-4 py-2 text-xs md:text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
             />
           </div>
         </div>
@@ -577,179 +665,333 @@ export default function ClassManagementPage() {
         </div>
       </div>
 
-      {/* --------------------------------------------------------------------- */}
+      {/* ----------------------------------------------------------------- */}
       {/* MODAL 1: SELECT / CHANGE HOMEROOM TEACHER */}
-      {/* --------------------------------------------------------------------- */}
+      {/* ----------------------------------------------------------------- */}
       {showTeacherModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-200">
-            <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-              <h3 className="text-base font-bold text-gray-900">Chọn Giáo Viên Chủ Nhiệm</h3>
-              <button
-                onClick={() => setShowTeacherModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-lg leading-none font-bold"
-              >
-                ✕
-              </button>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowTeacherModal(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#003366] to-[#0055a5] text-white">
+              <div>
+                <h3 className="text-lg font-bold">Chọn Giáo Viên Chủ Nhiệm</h3>
+                <p className="text-xs text-blue-200 mt-0.5">Lớp: {selectedClass?.class_name} · {selectedClass?.grade_name || `Khối ${selectedClass?.grade_level || ''}`}</p>
+              </div>
+              <button onClick={() => setShowTeacherModal(false)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
             </div>
 
-            <div className="p-5 space-y-4">
-              {/* Teacher Search */}
-              <input
-                type="text"
-                value={teacherSearchQuery}
-                onChange={(e) => setTeacherSearchQuery(e.target.value)}
-                placeholder="Tìm tên giáo viên, mã GV, bộ môn..."
-                className="w-full px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
-              />
-
-              {/* Teacher List Options */}
-              <div className="max-h-60 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
-                {filteredModalTeachers.map((t) => {
-                  const isSelected = selectedTeacherId === t.teacher_id
-
-                  return (
-                    <div
-                      key={t.teacher_id}
-                      onClick={() => setSelectedTeacherId(t.teacher_id)}
-                      className={`p-3 rounded-lg border cursor-pointer transition flex items-center justify-between ${
-                        isSelected
-                          ? 'border-[#003366] bg-blue-50/60 ring-2 ring-[#003366]'
-                          : 'border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#003366] text-white flex items-center justify-center font-bold text-xs">
-                          {t.full_name.charAt(0)}
-                        </div>
-                        <div>
-                          <div className="font-bold text-xs md:text-sm text-gray-900">{t.full_name}</div>
-                          <div className="text-[11px] text-gray-500">{t.department || 'Giáo viên'} • {t.teacher_code || ''}</div>
-                        </div>
-                      </div>
-
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center text-xs font-bold ${
-                        isSelected ? 'border-[#003366] bg-[#003366] text-white' : 'border-gray-300'
-                      }`}>
-                        {isSelected && '✓'}
-                      </div>
-                    </div>
-                  )
-                })}
+            {/* Search + Toggle */}
+            <div className="px-6 py-4 border-b border-gray-100 space-y-3 bg-gray-50">
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </span>
+                <input
+                  type="text"
+                  value={teacherSearchQuery}
+                  onChange={e => setTeacherSearchQuery(e.target.value)}
+                  placeholder="Tìm tên giáo viên, mã GV, bộ môn..."
+                  className="w-full pl-9 pr-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-white"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">
+                  {filteredModalTeachers.length} giáo viên{showAllTeachers ? ' (tất cả)' : ' chưa chủ nhiệm'}
+                </span>
+                <button
+                  onClick={() => setShowAllTeachers(p => !p)}
+                  className={`text-xs font-semibold px-3 py-1 rounded-full border transition ${showAllTeachers
+                    ? 'bg-amber-100 text-amber-700 border-amber-300'
+                    : 'bg-blue-50 text-[#003366] border-blue-200'
+                    }`}
+                >
+                  {showAllTeachers ? '⚠ Đang hiện tất cả GV' : '✓ Chỉ GV chưa chủ nhiệm'}
+                </button>
               </div>
             </div>
 
-            <div className="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
-              <button
-                onClick={() => setShowTeacherModal(false)}
-                className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-xs font-semibold transition"
-              >
-                Hủy bỏ
-              </button>
-              <button
-                onClick={handleSaveHomeroomTeacher}
-                disabled={isUpdatingTeacher}
-                className="px-4 py-2 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 disabled:opacity-50"
-              >
-                {isUpdatingTeacher ? 'Đang lưu...' : 'Xác Nhận Cập Nhật'}
-              </button>
+            {/* Teacher List */}
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              {filteredModalTeachers.length === 0 ? (
+                <div className="py-12 text-center text-gray-400">
+                  <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  <p className="text-sm font-medium">Không tìm thấy giáo viên phù hợp</p>
+                  <button onClick={() => setShowAllTeachers(true)} className="text-xs text-[#003366] underline mt-1">Hiện tất cả giáo viên</button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {filteredModalTeachers.map(t => {
+                    const isSelected = selectedTeacherId === t.teacher_id
+                    const isAlreadyAssigned = assignedTeacherIds.has(t.teacher_id)
+                    return (
+                      <div
+                        key={t.teacher_id}
+                        onClick={() => setSelectedTeacherId(t.teacher_id)}
+                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${isSelected
+                          ? 'border-[#003366] bg-blue-50 shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                      >
+                        <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-[#003366] text-white' : 'bg-gray-100 text-gray-700'
+                          }`}>
+                          {t.full_name.charAt(0)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-sm text-gray-900 truncate">{t.full_name}</div>
+                          <div className="text-xs text-gray-500 truncate">{t.department || 'Giáo viên'} · {t.teacher_code || '—'}</div>
+                          {isAlreadyAssigned && (
+                            <span className="text-[10px] text-amber-600 font-semibold">Đang chủ nhiệm lớp khác</span>
+                          )}
+                        </div>
+                        <div className={`w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-[#003366] bg-[#003366]' : 'border-gray-300'
+                          }`}>
+                          {isSelected && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-3">
+              <div className="text-xs text-gray-500">
+                {selectedTeacherId
+                  ? `Đã chọn: ${teachers.find(t => t.teacher_id === selectedTeacherId)?.full_name || ''}`
+                  : 'Chưa chọn giáo viên'}
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => setShowTeacherModal(false)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy bỏ</button>
+                <button
+                  onClick={handleSaveHomeroomTeacher}
+                  disabled={isUpdatingTeacher || !selectedTeacherId}
+                  className="px-5 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isUpdatingTeacher ? (
+                    <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" /><path fill="currentColor" d="M4 12a8 8 0 018-8v8z" className="opacity-75" /></svg>Đang lưu...</>
+                  ) : 'Xác Nhận Cập Nhật'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* --------------------------------------------------------------------- */}
+      {/* ----------------------------------------------------------------- */}
       {/* MODAL 2: ADD STUDENT TO CLASS */}
-      {/* --------------------------------------------------------------------- */}
+      {/* ----------------------------------------------------------------- */}
       {showAddStudentModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-200">
-            <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-              <h3 className="text-base font-bold text-gray-900">Thêm Học Sinh Vào Lớp {selectedClass.class_name}</h3>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowAddStudentModal(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-emerald-700 to-emerald-500 text-white">
+              <div>
+                <h3 className="text-lg font-bold">Thêm Học Sinh Vào Lớp</h3>
+                <p className="text-xs text-emerald-100 mt-0.5">Lớp: {selectedClass?.class_name} · {selectedClass?.grade_name || `Khối ${selectedClass?.grade_level || ''}`}</p>
+              </div>
+              <button onClick={() => setShowAddStudentModal(false)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+            </div>
+
+            {/* Tab Bar */}
+            <div className="flex border-b border-gray-200 bg-gray-50">
               <button
-                onClick={() => setShowAddStudentModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-lg leading-none font-bold"
+                onClick={() => setStudentModalTab('pick')}
+                className={`flex-1 py-3.5 text-sm font-semibold transition border-b-2 ${studentModalTab === 'pick' ? 'border-emerald-600 text-emerald-700 bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
               >
-                ✕
+                📋 Chọn từ danh sách học sinh
+              </button>
+              <button
+                onClick={() => setStudentModalTab('new')}
+                className={`flex-1 py-3.5 text-sm font-semibold transition border-b-2 ${studentModalTab === 'new' ? 'border-emerald-600 text-emerald-700 bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+              >
+                ✏️ Nhập học sinh mới
               </button>
             </div>
 
-            <form onSubmit={handleAddStudentSubmit} className="p-5 space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                  Họ Và Tên Học Sinh <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newStudentForm.full_name}
-                  onChange={(e) => setNewStudentForm({ ...newStudentForm, full_name: e.target.value })}
-                  placeholder="Ví dụ: Nguyen Van A"
-                  className="w-full px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                  Mã Học Sinh (Tùy chọn)
-                </label>
-                <input
-                  type="text"
-                  value={newStudentForm.student_code}
-                  onChange={(e) => setNewStudentForm({ ...newStudentForm, student_code: e.target.value })}
-                  placeholder="Bỏ trống để tự động tạo (VD: HS202601)"
-                  className="w-full px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                    Giới Tính
-                  </label>
-                  <select
-                    value={newStudentForm.gender}
-                    onChange={(e) => setNewStudentForm({ ...newStudentForm, gender: e.target.value })}
-                    className="w-full px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
-                  >
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                  </select>
+            {/* TAB: Chọn từ danh sách */}
+            {studentModalTab === 'pick' && (
+              <>
+                {/* Search + Toggle */}
+                <div className="px-6 py-4 border-b border-gray-100 space-y-3 bg-gray-50">
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </span>
+                    <input
+                      type="text"
+                      value={unassignedSearch}
+                      onChange={e => setUnassignedSearch(e.target.value)}
+                      placeholder="Tìm tên học sinh, mã học sinh..."
+                      className="w-full pl-9 pr-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500">
+                        {selectedUnassignedIds.length > 0 ? `Đã chọn ${selectedUnassignedIds.length} học sinh` : 'Chưa chọn học sinh nào'}
+                      </span>
+                      {selectedUnassignedIds.length > 0 && (
+                        <button onClick={() => setSelectedUnassignedIds([])} className="text-xs text-red-500 underline">Bỏ chọn tất cả</button>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setShowAllStudents(p => !p)}
+                      className={`text-xs font-semibold px-3 py-1 rounded-full border transition ${showAllStudents
+                        ? 'bg-amber-100 text-amber-700 border-amber-300'
+                        : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        }`}
+                    >
+                      {showAllStudents ? '⚠ Hiện tất cả HS' : '✓ Chỉ HS chưa có lớp'}
+                    </button>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                    Ngày Sinh
-                  </label>
-                  <input
-                    type="date"
-                    value={newStudentForm.date_of_birth}
-                    onChange={(e) => setNewStudentForm({ ...newStudentForm, date_of_birth: e.target.value })}
-                    className="w-full px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
-                  />
+                {/* Student List */}
+                <div className="flex-1 overflow-y-auto px-6 py-4">
+                  {loadingUnassigned ? (
+                    <div className="py-12 text-center text-gray-400 flex flex-col items-center gap-3">
+                      <svg className="w-8 h-8 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" /><path fill="currentColor" d="M4 12a8 8 0 018-8v8z" className="opacity-75" /></svg>
+                      <span className="text-sm">Đang tải danh sách học sinh...</span>
+                    </div>
+                  ) : (() => {
+                    const displayed = unassignedStudents.filter(s => {
+                      const matchSearch = !unassignedSearch ||
+                        s.full_name?.toLowerCase().includes(unassignedSearch.toLowerCase()) ||
+                        s.student_code?.toLowerCase().includes(unassignedSearch.toLowerCase())
+                      const matchFilter = showAllStudents || !(s as any).class_id
+                      return matchSearch && matchFilter
+                    })
+                    return displayed.length === 0 ? (
+                      <div className="py-12 text-center text-gray-400">
+                        <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        <p className="text-sm font-medium">Không có học sinh phù hợp</p>
+                        <button onClick={() => setShowAllStudents(true)} className="text-xs text-emerald-600 underline mt-1">Hiện tất cả học sinh</button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {displayed.map(s => {
+                          const isSelected = selectedUnassignedIds.includes(s.student_id)
+                          const hasClass = !!(s as any).class_id
+                          return (
+                            <div
+                              key={s.student_id}
+                              onClick={() => setSelectedUnassignedIds(prev =>
+                                isSelected ? prev.filter(id => id !== s.student_id) : [...prev, s.student_id]
+                              )}
+                              className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${isSelected
+                                ? 'border-emerald-500 bg-emerald-50 shadow-sm'
+                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                }`}
+                            >
+                              <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600'
+                                }`}>
+                                {s.full_name?.charAt(0)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-sm text-gray-900 truncate">{s.full_name}</div>
+                                <div className="text-xs text-gray-500">{s.student_code || '—'} · {s.gender}</div>
+                                {hasClass && (
+                                  <span className="text-[10px] text-amber-600 font-semibold">Đang ở lớp {(s as any).class_name}</span>
+                                )}
+                              </div>
+                              <div className={`w-5 h-5 shrink-0 rounded border-2 flex items-center justify-center ${isSelected ? 'border-emerald-500 bg-emerald-500' : 'border-gray-300'
+                                }`}>
+                                {isSelected && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })()}
                 </div>
-              </div>
 
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowAddStudentModal(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-xs font-semibold transition"
-                >
-                  Hủy bỏ
-                </button>
-                <button
-                  type="submit"
-                  disabled={isAddingStudent}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 disabled:opacity-50"
-                >
-                  {isAddingStudent ? 'Đang thêm...' : 'Thêm Vào Lớp'}
-                </button>
-              </div>
-            </form>
+                {/* Footer pick */}
+                <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-3">
+                  <span className="text-xs text-gray-500">{selectedUnassignedIds.length} học sinh được chọn để thêm vào lớp</span>
+                  <div className="flex gap-3">
+                    <button onClick={() => setShowAddStudentModal(false)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy bỏ</button>
+                    <button
+                      onClick={handleAddSelectedStudents}
+                      disabled={isAddingStudent || selectedUnassignedIds.length === 0}
+                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      {isAddingStudent ? 'Đang thêm...' : `Thêm ${selectedUnassignedIds.length || ''} Học Sinh`}
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* TAB: Nhập học sinh mới */}
+            {studentModalTab === 'new' && (
+              <form onSubmit={handleAddStudentSubmit} className="flex flex-col flex-1 overflow-hidden">
+                <div className="flex-1 overflow-y-auto px-6 py-6">
+                  <div className="max-w-2xl mx-auto space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      {/* Họ tên */}
+                      <div className="sm:col-span-2">
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Họ Và Tên Học Sinh <span className="text-red-500">*</span></label>
+                        <input
+                          type="text" required
+                          value={newStudentForm.full_name}
+                          onChange={e => setNewStudentForm({ ...newStudentForm, full_name: e.target.value })}
+                          placeholder="Ví dụ: Nguyễn Văn A"
+                          className="w-full px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                      </div>
+                      {/* Mã HS */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Mã Học Sinh</label>
+                        <input
+                          type="text"
+                          value={newStudentForm.student_code}
+                          onChange={e => setNewStudentForm({ ...newStudentForm, student_code: e.target.value })}
+                          placeholder="Tự động tạo nếu bỏ trống"
+                          className="w-full px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                      </div>
+                      {/* Giới tính */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Giới Tính</label>
+                        <select
+                          value={newStudentForm.gender}
+                          onChange={e => setNewStudentForm({ ...newStudentForm, gender: e.target.value })}
+                          className="w-full px-4 py-3 text-sm text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
+                        >
+                          <option value="Nam">Nam</option>
+                          <option value="Nữ">Nữ</option>
+                        </select>
+                      </div>
+                      {/* Ngày sinh */}
+                      <div className="sm:col-span-2">
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Ngày Sinh</label>
+                        <input
+                          type="date"
+                          value={newStudentForm.date_of_birth}
+                          onChange={e => setNewStudentForm({ ...newStudentForm, date_of_birth: e.target.value })}
+                          className="w-full px-4 py-3 text-sm text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Footer new */}
+                <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                  <button type="button" onClick={() => setShowAddStudentModal(false)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy bỏ</button>
+                  <button type="submit" disabled={isAddingStudent} className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold transition disabled:opacity-50 flex items-center gap-2">
+                    {isAddingStudent ? 'Đang thêm...' : 'Thêm Vào Lớp'}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
     </div>
   )
 }
+

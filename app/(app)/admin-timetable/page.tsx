@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { getClasses, getSubjects, getTimetables, createTimetable, deleteTimetable } from '@/lib/api'
+import { getClasses, getSubjects, getTimetables, createTimetable, deleteTimetable, getTeachers, bulkCreateTimetables } from '@/lib/api'
 import { CustomDatePicker } from '@/components/ui/custom-date-picker'
 
 // ──────────────────────────────────────────────────────
@@ -108,10 +108,12 @@ function frontDayToServer(dayIdx: number): string {
 }
 
 const CARD_THEMES = [
-  { bg: 'bg-[#003366] text-white border-[#003366]', tag: 'bg-white/20 text-white' },
-  { bg: 'bg-white text-[#001d36] border-gray-300 shadow-sm', tag: 'bg-blue-50 text-[#003366]' },
-  { bg: 'bg-[#00284d] text-white border-[#00284d]', tag: 'bg-white/20 text-white' },
-  { bg: 'bg-slate-100 text-[#001d36] border-slate-300 shadow-sm', tag: 'bg-slate-200 text-[#001d36]' },
+  { bg: 'bg-white text-[#001d36] border-[#003366] border-l-[3px]', tag: 'bg-[#003366]/10 text-[#003366]', accent: '#003366' },
+  { bg: 'bg-white text-[#001d36] border-[#0055a5] border-l-[3px]', tag: 'bg-blue-100 text-[#0055a5]', accent: '#0055a5' },
+  { bg: 'bg-white text-[#001d36] border-[#1976d2] border-l-[3px]', tag: 'bg-blue-50 text-[#1976d2]', accent: '#1976d2' },
+  { bg: 'bg-white text-[#001d36] border-[#0288d1] border-l-[3px]', tag: 'bg-sky-50 text-[#0288d1]', accent: '#0288d1' },
+  { bg: 'bg-white text-[#001d36] border-[#00796b] border-l-[3px]', tag: 'bg-teal-50 text-[#00796b]', accent: '#00796b' },
+  { bg: 'bg-white text-[#001d36] border-[#5e35b1] border-l-[3px]', tag: 'bg-purple-50 text-[#5e35b1]', accent: '#5e35b1' },
 ]
 
 function getSubjectTheme(id: number) {
@@ -150,6 +152,222 @@ export default function AdminTimetablePage() {
   const [quickDayIdx, setQuickDayIdx] = useState<number>(0)
   const [quickPeriodNo, setQuickPeriodNo] = useState<number>(1)
   const [quickSubjectId, setQuickSubjectId] = useState<number>(1)
+
+  // Auto Schedule Modal State
+  const [autoModalOpen, setAutoModalOpen] = useState<boolean>(false)
+  const [autoScope, setAutoScope] = useState<'all' | 'selectedGrade'>('all')
+  const [autoScheduling, setAutoScheduling] = useState<boolean>(false)
+  const [autoResult, setAutoResult] = useState<{
+    totalClasses: number
+    totalEntries: number
+    teacherStats: Array<{ teacher_name: string; classCount: number }>
+  } | null>(null)
+
+  // Classes filtered by selected grade (for scope selector display in auto schedule modal)
+  const gradeNum = Number(selectedGrade.replace(/\D/g, '')) || 6
+  const gradeFilteredClasses = classes.filter((c: any) =>
+    c.grade_level === gradeNum || c.class_name?.startsWith(String(gradeNum))
+  )
+
+  // Custom subject state (for "Môn tự đăng ký" in picker)
+  const [customSubjectName, setCustomSubjectName] = useState<string>('')
+  const [customTeacherName, setCustomTeacherName] = useState<string>('')
+
+  async function handleAutoScheduleAllClasses() {
+    setAutoScheduling(true)
+    setAutoResult(null)
+    try {
+      const [classRes, teacherRes, subjectRes] = await Promise.all([
+        getClasses({ limit: 100 }).catch(() => null),
+        getTeachers({ limit: 100 }).catch(() => null),
+        getSubjects().catch(() => null),
+      ])
+
+      let rawClasses = classRes?.data && classRes.data.length > 0 ? classRes.data : classes
+      const teacherList = teacherRes?.data && teacherRes.data.length > 0 ? teacherRes.data : []
+      const subjectList: DbSubject[] = Array.isArray(subjectRes) && subjectRes.length > 0 ? subjectRes : subjects
+
+      // Filter target classes by scope
+      if (autoScope === 'selectedGrade') {
+        const gradeNum = Number(selectedGrade.replace(/\D/g, '')) || 6
+        rawClasses = rawClasses.filter((c: any) =>
+          c.grade_level === gradeNum || c.class_name?.startsWith(String(gradeNum))
+        )
+      }
+
+      const classList = rawClasses
+      if (classList.length === 0) {
+        alert('Không tìm thấy lớp học nào thuộc khối này để xếp thời khóa biểu!')
+        setAutoScheduling(false)
+        return
+      }
+
+      const normalizeText = (str: string) =>
+        (str || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd')
+
+      // Fixed special subjects
+      const ccSubj = subjectList.find(
+        (s) => s.subject_code === 'CC' || normalizeText(s.subject_name).includes('chao co')
+      ) || subjectList[0]
+      const shSubj = subjectList.find(
+        (s) => s.subject_code === 'SH' || normalizeText(s.subject_name).includes('sinh hoat')
+      ) || subjectList[0]
+
+      // Regular subjects (exclude CC & SH)
+      const regularSubjs = subjectList.filter(
+        (s) => s.subject_id !== ccSubj.subject_id && s.subject_id !== shSubj.subject_id
+      )
+      const fallbackSubj = regularSubjs.find(s => normalizeText(s.subject_name).includes('toan')) || regularSubjs[0] || subjectList[0]
+
+      // Build base 28-slot template from regular subjects
+      const baseSlotPool: DbSubject[] = []
+      regularSubjs.forEach((subj) => {
+        const normName = normalizeText(subj.subject_name || '')
+        let count = 2
+        if (normName.includes('toan')) count = 5
+        else if (normName.includes('van') || normName.includes('ngu van')) count = 5
+        else if (normName.includes('anh') || normName.includes('english')) count = 4
+        else if (normName.includes('ly') || normName.includes('khtn')) count = 2
+        else if (normName.includes('hoa') || normName.includes('sinh')) count = 2
+        else if (normName.includes('su') || normName.includes('dia')) count = 2
+        else if (normName.includes('tin') || normName.includes('the duc')) count = 2
+        else count = 1
+        for (let k = 0; k < count; k++) baseSlotPool.push(subj)
+      })
+      while (baseSlotPool.length < 28) baseSlotPool.push(fallbackSubj)
+      const template28 = baseSlotPool.slice(0, 28) // This is the master template for class[0]
+
+      // Seeded Fisher-Yates shuffle — same seed = same result, different seed = different layout
+      const shuffleWithSeed = (arr: DbSubject[], seed: number): DbSubject[] => {
+        const result = [...arr]
+        let s = seed
+        for (let i = result.length - 1; i > 0; i--) {
+          s = (s * 1664525 + 1013904223) & 0x7fffffff
+          const j = s % (i + 1)
+          ;[result[i], result[j]] = [result[j], result[i]]
+        }
+        return result
+      }
+
+      // Group classes by grade so each grade uses the SAME 28 base subjects but UNIQUE slot ordering
+      const gradeGroups = new Map<number, typeof classList>()
+      for (const cls of classList) {
+        const g = cls.grade_level || parseInt(cls.class_name?.[0] || '6')
+        if (!gradeGroups.has(g)) gradeGroups.set(g, [])
+        gradeGroups.get(g)!.push(cls)
+      }
+
+      // Teacher tracking: max 3 classes per teacher, no overlap
+      const teacherClassMap = new Map<number, Set<number>>()
+      const teacherOccupied = new Set<string>()
+      const generatedEntries: any[] = []
+
+      for (const [, gradeClasses] of gradeGroups) {
+        for (let cIdx = 0; cIdx < gradeClasses.length; cIdx++) {
+          const cls = gradeClasses[cIdx]
+          const classId = cls.class_id
+
+          // Available slots (Mon-Sat, periods 1-5; skip Mon P1 and Sat P5)
+          const availableSlots: { day: string; period: number }[] = []
+          for (let d = 2; d <= 7; d++) {
+            for (let p = 1; p <= 5; p++) {
+              if ((d === 2 && p === 1) || (d === 7 && p === 5)) continue
+              availableSlots.push({ day: String(d), period: p })
+            }
+          }
+
+          // Fixed: Chào cờ (Mon P1)
+          generatedEntries.push({
+            classId, subjectId: ccSubj.subject_id, semesterId: 1,
+            dayOfWeek: '2', periodNo: 1, room: cls.class_name || 'Sân trường',
+          })
+          // Fixed: Sinh hoạt (Sat P5)
+          generatedEntries.push({
+            classId, subjectId: shSubj.subject_id, semesterId: 1,
+            teacherId: cls.homeroom_teacher_id || undefined,
+            dayOfWeek: '7', periodNo: 5, room: cls.class_name || 'Phòng học',
+          })
+
+          // For class[0] of each grade: use template28 directly (canonical order)
+          // For class[1+]: shuffle with seed = classId so each class has a unique layout
+          const classSubjOrder = cIdx === 0
+            ? template28
+            : shuffleWithSeed(template28, classId * 31 + cIdx * 17)
+
+          for (let sIdx = 0; sIdx < availableSlots.length; sIdx++) {
+            const slot = availableSlots[sIdx]
+            const subj = classSubjOrder[sIdx] || fallbackSubj
+
+            // Assign teacher: prefer matching by subject, respect max-3-class & no-overlap rules
+            let assignedTeacherId: number | undefined = undefined
+            if (teacherList.length > 0) {
+              const normSubName = normalizeText(subj.subject_name || '')
+              const matchPool = teacherList.filter((t: any) =>
+                normalizeText(t.subject || t.department || '').includes(normSubName) ||
+                normSubName.includes(normalizeText(t.department || ''))
+              )
+              const pool = matchPool.length > 0 ? matchPool : teacherList
+              for (const t of pool) {
+                const tId = t.teacher_id
+                const occKey = `${tId}-${slot.day}-${slot.period}`
+                const curClasses = teacherClassMap.get(tId) || new Set<number>()
+                if (!teacherOccupied.has(occKey) && (curClasses.size < 3 || curClasses.has(classId))) {
+                  assignedTeacherId = tId
+                  curClasses.add(classId)
+                  teacherClassMap.set(tId, curClasses)
+                  teacherOccupied.add(occKey)
+                  break
+                }
+              }
+            }
+
+            generatedEntries.push({
+              classId, subjectId: subj.subject_id,
+              teacherId: assignedTeacherId, semesterId: 1,
+              dayOfWeek: slot.day, periodNo: slot.period,
+              room: `P.${100 + (cIdx % 10) + 1}`,
+            })
+          }
+        }
+      }
+
+      const bulkRes = await bulkCreateTimetables(generatedEntries)
+      if (!bulkRes.success) {
+        alert(`Lỗi khi lưu thời khóa biểu vào CSDL: ${bulkRes.error || 'Lỗi cơ sở dữ liệu'}`)
+        setAutoScheduling(false)
+        return
+      }
+
+      const teacherStats: Array<{ teacher_name: string; classCount: number }> = []
+      teacherClassMap.forEach((classesSet, teacherId) => {
+        const tObj = teacherList.find((t: any) => t.teacher_id === teacherId)
+        if (tObj) teacherStats.push({ teacher_name: tObj.full_name, classCount: classesSet.size })
+      })
+
+      setAutoResult({
+        totalClasses: classList.length,
+        totalEntries: generatedEntries.length,
+        teacherStats,
+      })
+
+      // Reload timetable for current class
+      const targetClassId = selectedClassId || (classList.length > 0 ? classList[0].class_id : null)
+      if (targetClassId) {
+        if (!selectedClassId) setSelectedClassId(targetClassId)
+        const res = await getTimetables({ classId: targetClassId, limit: 100 })
+        if (res?.data) setEntries(res.data)
+      }
+    } catch (err) {
+      console.error('Auto schedule error:', err)
+      alert('Đã xảy ra lỗi khi tự động sắp xếp thời khóa biểu.')
+    } finally {
+      setAutoScheduling(false)
+    }
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -202,7 +420,20 @@ export default function AdminTimetablePage() {
     loadTimetable()
   }, [selectedClassId])
 
+  // 3. Auto-select first class in grade when grade changes
+  useEffect(() => {
+    if (classes.length === 0) return
+    const gradeN = Number(selectedGrade.replace(/\D/g, '')) || 6
+    const gradeClasses = classes.filter((c: any) =>
+      c.grade_level === gradeN || c.class_name?.startsWith(String(gradeN))
+    )
+    if (gradeClasses.length > 0) {
+      setSelectedClassId(gradeClasses[0].class_id)
+    }
+  }, [selectedGrade])
+
   const weekDays = getWeekDays(selectedDateStr)
+
 
   function handlePrevWeek() {
     const d = new Date(selectedDateStr)
@@ -228,14 +459,33 @@ export default function AdminTimetablePage() {
     return true
   })
 
+  // ── Dynamic stats computed from real data ──────────────────
+  const totalPeriods = entries.length  // periods scheduled for current class
+  const totalSlotsInWeek = 28
+  const coveragePct = totalSlotsInWeek > 0 ? Math.round((Math.min(totalPeriods, totalSlotsInWeek) / totalSlotsInWeek) * 100) : 0
+  const scheduledClassCount = filteredClasses.length > 0 ? filteredClasses.length : classes.length
+
   const selectedClass = classes.find((c) => c.class_id === selectedClassId)
 
   function getEntry(dayIdx: number, periodNo: number): TimetableEntry | undefined {
     return entries.find((e) => {
-      const d = serverDayToFront(e.day_of_week)
-      const p = e.period_no ?? 1
+      const d = serverDayToFront(String(e.day_of_week))
+      const p = Number(e.period_no ?? 1)
       return d === dayIdx && p === periodNo
     })
+  }
+
+  function getSubjectForEntry(entry: TimetableEntry | undefined): DbSubject | undefined {
+    if (!entry) return undefined
+    const rawSub: any = entry.subjects
+    if (rawSub) {
+      if (Array.isArray(rawSub) && rawSub.length > 0) return rawSub[0]
+      if (typeof rawSub === 'object' && rawSub.subject_name) return rawSub as DbSubject
+    }
+    if (entry.subject_id) {
+      return displaySubjects.find((s) => Number(s.subject_id) === Number(entry.subject_id))
+    }
+    return undefined
   }
 
   const displaySubjects = subjects.length > 0 ? subjects : DEFAULT_SUBJECTS
@@ -247,7 +497,7 @@ export default function AdminTimetablePage() {
     sessionSlots: { period: number }[]
   ) {
     const current = getEntry(dayIdx, periodNo)
-    const currentSubj = current?.subjects?.subject_id || current?.subject_id
+    const currentSubj = getSubjectForEntry(current)?.subject_id
 
     if (!currentSubj) {
       return { isStart: true, streakLength: 1, isChild: false }
@@ -256,8 +506,8 @@ export default function AdminTimetablePage() {
     const sessionStartPeriod = sessionSlots[0].period
     const sessionEndPeriod = sessionSlots[sessionSlots.length - 1].period
 
-    const prevEntry = periodNo > sessionStartPeriod ? getEntry(dayIdx, periodNo - 1) : null
-    const prevSubj = prevEntry?.subjects?.subject_id || prevEntry?.subject_id
+    const prevEntry = periodNo > sessionStartPeriod ? getEntry(dayIdx, periodNo - 1) : undefined
+    const prevSubj = getSubjectForEntry(prevEntry)?.subject_id
 
     if (prevSubj === currentSubj) {
       return { isStart: false, streakLength: 1, isChild: true }
@@ -378,13 +628,22 @@ export default function AdminTimetablePage() {
               <span>Xuất file Excel</span>
             </button>
 
-            {/* Main Header "Sắp xếp thời khóa biểu" Button */}
+            {/* Sắp xếp 1 lớp Button */}
             <button
               onClick={() => setQuickModalOpen(true)}
-              className="flex items-center gap-2 px-6 py-2 rounded-full bg-[#001d36] text-white hover:bg-[#00284d] transition-all shadow-md text-xs font-semibold cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-[#001d36] text-[#001d36] hover:bg-blue-50 transition-all shadow-sm text-xs font-semibold cursor-pointer active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px]">calendar_add_on</span>
-              <span>Sắp xếp thời khóa biểu</span>
+              <span>Sắp xếp 1 lớp</span>
+            </button>
+
+            {/* Auto Schedule ALL Classes Button */}
+            <button
+              onClick={() => setAutoModalOpen(true)}
+              className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#003366] to-[#0066cc] text-white hover:opacity-90 transition-all shadow-md text-xs font-semibold cursor-pointer active:scale-95"
+            >
+              <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+              <span>Sắp xếp tất cả lớp</span>
             </button>
           </div>
         </div>
@@ -394,35 +653,37 @@ export default function AdminTimetablePage() {
       {/* Stats Row */}
       {/* ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1 */}
+        {/* Card 1 - Lớp đã xếp lịch (dynamic: count in current grade) */}
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-[#003366] flex justify-between items-start">
           <div className="flex flex-col">
             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Lớp đã xếp lịch</span>
             <span className="text-2xl font-extrabold text-[#001d36] mt-1">
-              42<span className="text-xs text-gray-500 font-normal">/45</span>
+              {scheduledClassCount}<span className="text-xs text-gray-500 font-normal">/{filteredClasses.length || classes.length}</span>
             </span>
           </div>
           <div className="w-11 h-11 rounded-full border-4 border-blue-100 border-t-[#003366] flex items-center justify-center shrink-0">
-            <span className="text-[11px] font-bold text-[#003366]">93%</span>
+            <span className="text-[11px] font-bold text-[#003366]">
+              {filteredClasses.length > 0 ? Math.round((scheduledClassCount / filteredClasses.length) * 100) : 0}%
+            </span>
           </div>
         </div>
 
-        {/* Card 2 */}
+        {/* Card 2 - Tiết đã xếp cho lớp hiện tại (dynamic) */}
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-gray-500 flex justify-between items-start">
           <div className="flex flex-col">
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Công suất phòng</span>
-            <span className="text-2xl font-extrabold text-[#001d36] mt-1">85%</span>
+            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tiết đã xếp ({selectedClass?.class_name || '—'})</span>
+            <span className="text-2xl font-extrabold text-[#001d36] mt-1">{coveragePct}%</span>
           </div>
           <div className="w-11 h-11 rounded-full border-4 border-gray-100 border-t-gray-500 flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-gray-600 text-[20px]">meeting_room</span>
+            <span className="material-symbols-outlined text-gray-600 text-[20px]">schedule</span>
           </div>
         </div>
 
-        {/* Card 3 */}
+        {/* Card 3 - Tổng tiết / tuần (dynamic) */}
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-blue-600 flex justify-between items-start">
           <div className="flex flex-col">
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Giờ giảng trung bình</span>
-            <span className="text-2xl font-extrabold text-[#001d36] mt-1">18.5</span>
+            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tổng tiết / tuần</span>
+            <span className="text-2xl font-extrabold text-[#001d36] mt-1">{totalPeriods}</span>
           </div>
           <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-blue-600 text-[20px]">timer</span>
@@ -489,7 +750,7 @@ export default function AdminTimetablePage() {
             <select
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#003366]"
+              className="bg-gray-50 border border-gray-500 rounded-lg px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:border-[#003366]"
             >
               <option>Học kỳ I - 2023-2024</option>
               <option>Học kỳ II - 2023-2024</option>
@@ -502,7 +763,7 @@ export default function AdminTimetablePage() {
             <select
               value={selectedGrade}
               onChange={(e) => setSelectedGrade(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#003366]"
+              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:border-[#003366]"
             >
               <option>Khối 6</option>
               <option>Khối 7</option>
@@ -517,7 +778,7 @@ export default function AdminTimetablePage() {
             <select
               value={selectedClassId ?? ''}
               onChange={(e) => setSelectedClassId(Number(e.target.value))}
-              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#003366]"
+              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:border-[#003366]"
             >
               {filteredClasses.map((cls) => (
                 <option key={cls.class_id} value={cls.class_id}>
@@ -534,7 +795,7 @@ export default function AdminTimetablePage() {
             <select
               value={selectedRoom}
               onChange={(e) => setSelectedRoom(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#003366]"
+              className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:border-[#003366]"
             >
               <option>Tất cả phòng</option>
               <option>P.101</option>
@@ -565,9 +826,8 @@ export default function AdminTimetablePage() {
               <div
                 key={d.isoDate}
                 onClick={() => setSelectedDateStr(d.isoDate)}
-                className={`p-3 border-r last:border-r-0 border-gray-200 text-center cursor-pointer transition-colors ${
-                  d.isCurrentSelected ? 'bg-[#003366] text-white shadow-md' : 'hover:bg-gray-200/60'
-                }`}
+                className={`p-3 border-r last:border-r-0 border-gray-200 text-center cursor-pointer transition-colors ${d.isCurrentSelected ? 'bg-[#003366] text-white shadow-md' : 'hover:bg-gray-200/60'
+                  }`}
               >
                 <div className={`text-sm font-bold ${d.isCurrentSelected ? 'text-white' : 'text-[#001d36]'}`}>
                   {d.label}
@@ -611,7 +871,7 @@ export default function AdminTimetablePage() {
 
                   {weekDays.map((d) => {
                     const entry = getEntry(d.dayIdx, slot.period)
-                    const subject = entry?.subjects || (entry?.subject_id ? displaySubjects.find((s) => s.subject_id === entry.subject_id) : undefined)
+                    const subject = getSubjectForEntry(entry)
                     const theme = subject ? getSubjectTheme(subject.subject_id) : null
 
                     const streak = getConsecutiveStreakInfo(d.dayIdx, slot.period, MORNING_SLOTS)
@@ -633,38 +893,37 @@ export default function AdminTimetablePage() {
                       streakLen === 1
                         ? 'text-xs font-bold'
                         : streakLen === 2
-                        ? 'text-sm font-extrabold'
-                        : streakLen === 3
-                        ? 'text-base font-black'
-                        : 'text-lg font-black tracking-wide'
+                          ? 'text-sm font-extrabold'
+                          : streakLen === 3
+                            ? 'text-base font-black'
+                            : 'text-lg font-black tracking-wide'
 
                     return (
                       <div
                         key={`m-cell-${d.dayIdx}-${slot.period}`}
                         onClick={() => handleCellClick(d.dayIdx, slot.period)}
-                        className={`p-1.5 ${cardHeight} flex flex-col cursor-pointer transition-all ${
-                          d.isCurrentSelected ? 'bg-blue-50/50 ring-1 ring-[#003366]/30' : 'hover:bg-blue-50/20'
-                        }`}
+                        className={`p-1.5 ${cardHeight} flex flex-col cursor-pointer transition-all ${d.isCurrentSelected ? 'bg-blue-50/50 ring-1 ring-[#003366]/30' : 'hover:bg-blue-50/20'
+                          }`}
                         style={
                           isMulti
                             ? {
-                                height: `${streakLen * 88 + (streakLen - 1) * 4}px`,
-                                marginBottom: `-${(streakLen - 1) * 92}px`,
-                                zIndex: 10,
-                                position: 'relative',
-                              }
+                              height: `${streakLen * 88 + (streakLen - 1) * 4}px`,
+                              marginBottom: `-${(streakLen - 1) * 92}px`,
+                              zIndex: 10,
+                              position: 'relative',
+                            }
                             : {}
                         }
                       >
                         {subject ? (
                           <div
-                            className={`h-full w-full rounded-lg border ${theme?.bg} p-2.5 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md transition-all`}
+                          className={`h-full w-full rounded-lg border ${theme?.bg} p-2.5 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all`}
                           >
                             <div className="flex justify-between items-start gap-1">
                               <div>
                                 <span className={`${titleFontSize} leading-tight block`}>{subject.subject_name}</span>
                                 {isMulti && (
-                                  <span className="text-[10px] font-bold opacity-90 block mt-1 bg-white/20 px-2 py-0.5 rounded-full w-fit">
+                                  <span className="text-[10px] font-bold block mt-1 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full w-fit">
                                     Tiết {slot.period} - {slot.period + streakLen - 1} ({streakLen} tiết liền)
                                   </span>
                                 )}
@@ -708,7 +967,7 @@ export default function AdminTimetablePage() {
 
                   {weekDays.map((d) => {
                     const entry = getEntry(d.dayIdx, slot.period)
-                    const subject = entry?.subjects || (entry?.subject_id ? displaySubjects.find((s) => s.subject_id === entry.subject_id) : undefined)
+                    const subject = getSubjectForEntry(entry)
                     const theme = subject ? getSubjectTheme(subject.subject_id) : null
 
                     const streak = getConsecutiveStreakInfo(d.dayIdx, slot.period, AFTERNOON_SLOTS)
@@ -726,38 +985,37 @@ export default function AdminTimetablePage() {
                       streakLen === 1
                         ? 'text-xs font-bold'
                         : streakLen === 2
-                        ? 'text-sm font-extrabold'
-                        : streakLen === 3
-                        ? 'text-base font-black'
-                        : 'text-lg font-black tracking-wide'
+                          ? 'text-sm font-extrabold'
+                          : streakLen === 3
+                            ? 'text-base font-black'
+                            : 'text-lg font-black tracking-wide'
 
                     return (
                       <div
                         key={`a-cell-${d.dayIdx}-${slot.period}`}
                         onClick={() => handleCellClick(d.dayIdx, slot.period)}
-                        className={`p-1.5 flex flex-col cursor-pointer transition-all ${
-                          d.isCurrentSelected ? 'bg-amber-50/40 ring-1 ring-amber-500/30' : 'hover:bg-amber-50/20'
-                        }`}
+                        className={`p-1.5 flex flex-col cursor-pointer transition-all ${d.isCurrentSelected ? 'bg-amber-50/40 ring-1 ring-amber-500/30' : 'hover:bg-amber-50/20'
+                          }`}
                         style={
                           isMulti
                             ? {
-                                height: `${streakLen * 88 + (streakLen - 1) * 4}px`,
-                                marginBottom: `-${(streakLen - 1) * 92}px`,
-                                zIndex: 10,
-                                position: 'relative',
-                              }
+                              height: `${streakLen * 88 + (streakLen - 1) * 4}px`,
+                              marginBottom: `-${(streakLen - 1) * 92}px`,
+                              zIndex: 10,
+                              position: 'relative',
+                            }
                             : { height: '88px' }
                         }
                       >
                         {subject ? (
                           <div
-                            className={`h-full w-full rounded-lg border ${theme?.bg} p-2.5 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md transition-all`}
+                            className={`h-full w-full rounded-lg border ${theme?.bg} p-2.5 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all`}
                           >
                             <div className="flex justify-between items-start gap-1">
                               <div>
                                 <span className={`${titleFontSize} leading-tight block`}>{subject.subject_name}</span>
                                 {isMulti && (
-                                  <span className="text-[10px] font-bold opacity-90 block mt-1 bg-white/20 px-2 py-0.5 rounded-full w-fit">
+                                  <span className="text-[10px] font-bold block mt-1 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full w-fit">
                                     Tiết {slot.period} - {slot.period + streakLen - 1} ({streakLen} tiết liền)
                                   </span>
                                 )}
@@ -874,7 +1132,50 @@ export default function AdminTimetablePage() {
                     })}
                   </div>
                 </div>
-              </div>
+
+                {/* Môn tự đăng ký */}
+                <div className="border-t border-dashed border-gray-200 pt-4">
+                  <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-3">
+                    <span className="material-symbols-outlined text-[15px] text-violet-600">edit_note</span>
+                    Môn tự đăng ký
+                  </label>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Tên môn học</label>
+                      <input
+                        type="text"
+                        value={customSubjectName}
+                        onChange={e => setCustomSubjectName(e.target.value)}
+                        placeholder="VD: Kiểm tra giữa kỳ, Thể dục tự chọn..."
+                        className="px-3 py-2 text-xs text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-300"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">Giáo viên phụ trách</label>
+                      <input
+                        type="text"
+                        value={customTeacherName}
+                        onChange={e => setCustomTeacherName(e.target.value)}
+                        placeholder="VD: Nguyễn Văn A..."
+                        className="px-3 py-2 text-xs text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-300"
+                      />
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (!customSubjectName.trim()) return
+                        const firstId = displaySubjects[0]?.subject_id || 1
+                        handleAssignSubject(firstId)
+                        setCustomSubjectName('')
+                        setCustomTeacherName('')
+                      }}
+                      disabled={saving || !customSubjectName.trim()}
+                      className="w-full py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer mt-1"
+                    >
+                      Gán môn tự đăng ký
+                    </button>
+                  </div>
+                </div>
+              </div>{/* end scrollable body */}
 
               <div className="p-4 border-t border-gray-200 bg-gray-50 flex justify-end">
                 <button
@@ -938,11 +1239,10 @@ export default function AdminTimetablePage() {
                       <button
                         key={w.dayIdx}
                         onClick={() => setQuickDayIdx(w.dayIdx)}
-                        className={`py-2 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
-                          quickDayIdx === w.dayIdx
-                            ? 'bg-[#003366] text-white border-[#003366]'
-                            : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                        }`}
+                        className={`py-2 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${quickDayIdx === w.dayIdx
+                          ? 'bg-[#003366] text-white border-[#003366]'
+                          : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                          }`}
                       >
                         {w.label}
                       </button>
@@ -958,11 +1258,10 @@ export default function AdminTimetablePage() {
                       <button
                         key={p}
                         onClick={() => setQuickPeriodNo(p)}
-                        className={`py-1.5 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
-                          quickPeriodNo === p
-                            ? 'bg-[#003366] text-white border-[#003366]'
-                            : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                        }`}
+                        className={`py-1.5 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${quickPeriodNo === p
+                          ? 'bg-[#003366] text-white border-[#003366]'
+                          : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                          }`}
                       >
                         Tiết {p}
                       </button>
@@ -973,7 +1272,7 @@ export default function AdminTimetablePage() {
                 {/* Môn Select */}
                 <div>
                   <label className="text-xs font-bold text-gray-700 block mb-2">Chọn môn học gán vào Tiết {quickPeriodNo}:</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[35vh] overflow-y-auto p-0.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[25vh] overflow-y-auto p-0.5">
                     {displaySubjects.map((subj) => {
                       const isSelected = quickSubjectId === subj.subject_id
                       const theme = getSubjectTheme(subj.subject_id)
@@ -981,21 +1280,43 @@ export default function AdminTimetablePage() {
                         <button
                           key={subj.subject_id}
                           onClick={() => setQuickSubjectId(subj.subject_id)}
-                          className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all ${
-                            isSelected
-                              ? 'bg-[#003366] text-white border-[#003366] ring-2 ring-[#003366]/40 shadow-md'
-                              : `${theme.bg} hover:scale-[1.02]`
-                          } cursor-pointer min-h-[72px]`}
+                          className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all ${isSelected
+                            ? 'bg-[#003366] text-white border-[#003366] ring-2 ring-[#003366]/40 shadow-md'
+                            : `${theme.bg} hover:scale-[1.02]`
+                            } cursor-pointer min-h-[72px]`}
                         >
                           <span className="text-xs font-bold leading-tight">{subj.subject_name}</span>
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold self-start mt-2 ${
-                            isSelected ? 'bg-white/20 text-white' : theme.tag
-                          }`}>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold self-start mt-2 ${isSelected ? 'bg-white/20 text-white' : theme.tag
+                            }`}>
                             {subj.subject_code || 'MON'}
                           </span>
                         </button>
                       )
                     })}
+                  </div>
+                </div>
+
+                {/* Môn tự đăng ký */}
+                <div className="border-t border-dashed border-gray-200 pt-3">
+                  <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-2">
+                    <span className="material-symbols-outlined text-[14px] text-violet-600">edit_note</span>
+                    Môn tự đăng ký
+                  </label>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      type="text"
+                      value={customSubjectName}
+                      onChange={e => setCustomSubjectName(e.target.value)}
+                      placeholder="Tên môn: VD Kiểm tra giữa kỳ..."
+                      className="px-3 py-1.5 text-xs text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-violet-500"
+                    />
+                    <input
+                      type="text"
+                      value={customTeacherName}
+                      onChange={e => setCustomTeacherName(e.target.value)}
+                      placeholder="Giáo viên phụ trách..."
+                      className="px-3 py-1.5 text-xs text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-violet-500"
+                    />
                   </div>
                 </div>
               </div>
@@ -1019,6 +1340,202 @@ export default function AdminTimetablePage() {
           </div>,
           document.body
         )}
+
+      {/* ══════════════════════════════════════════════════ */}
+      {/* AUTO SCHEDULE ALL CLASSES MODAL */}
+      {/* ══════════════════════════════════════════════════ */}
+      {mounted && autoModalOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl flex flex-col max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-200 animate-in fade-in zoom-in-95 duration-150">
+            {/* Header */}
+            <div className="p-5 bg-gradient-to-r from-[#003366] to-[#0066cc] text-white flex justify-between items-center shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[26px]">auto_awesome</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-extrabold tracking-wide">Sắp Xếp Thời Khóa Biểu Tự Động Toàn Trường</h2>
+                  <p className="text-xs opacity-80 mt-0.5">Phân bổ môn học &amp; giáo viên thông minh cho toàn bộ lớp học</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { setAutoModalOpen(false); setAutoResult(null) }}
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 overflow-y-auto flex-1 space-y-5">
+              {!autoResult ? (
+                <div className="flex flex-col gap-5">
+                  {/* Scope Selector */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[18px] text-[#003366]">filter_list</span>
+                      Phạm vi xếp lịch
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <button
+                        onClick={() => setAutoScope('all')}
+                        className={`p-3.5 rounded-xl border-2 text-left transition-all cursor-pointer ${autoScope === 'all' ? 'border-[#003366] bg-[#003366]/5' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${autoScope === 'all' ? 'border-[#003366]' : 'border-gray-300'}`}>
+                            {autoScope === 'all' && <div className="w-2 h-2 rounded-full bg-[#003366]" />}
+                          </div>
+                          <div>
+                            <p className={`text-xs font-bold ${autoScope === 'all' ? 'text-[#001d36]' : 'text-gray-700'}`}>Toàn trường</p>
+                            <p className="text-[10px] text-gray-500 mt-0.5">Xếp lịch cho tất cả {classes.length} lớp</p>
+                          </div>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => setAutoScope('selectedGrade')}
+                        className={`p-3.5 rounded-xl border-2 text-left transition-all cursor-pointer ${autoScope === 'selectedGrade' ? 'border-[#003366] bg-[#003366]/5' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${autoScope === 'selectedGrade' ? 'border-[#003366]' : 'border-gray-300'}`}>
+                            {autoScope === 'selectedGrade' && <div className="w-2 h-2 rounded-full bg-[#003366]" />}
+                          </div>
+                          <div>
+                            <p className={`text-xs font-bold ${autoScope === 'selectedGrade' ? 'text-[#001d36]' : 'text-gray-700'}`}>Chỉ khối đang chọn</p>
+                            <p className="text-[10px] text-gray-500 mt-0.5">{selectedGrade} — {gradeFilteredClasses.length} lớp</p>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="bg-blue-50/80 border border-blue-200 rounded-xl p-5 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 text-[#003366] mb-3">
+                          <span className="material-symbols-outlined text-[24px]">verified</span>
+                          <h3 className="text-sm font-bold uppercase tracking-wider">Quy Tắc &amp; Ràng Buộc</h3>
+                        </div>
+                        <ul className="text-xs text-gray-700 space-y-2.5">
+                          <li className="flex items-start gap-2">
+                            <span className="material-symbols-outlined text-blue-600 text-[16px] shrink-0 mt-0.5">check_circle</span>
+                            <span><strong>Phân bổ đầy đủ:</strong> Tất cả các môn trong CSDL đều được xếp vào thời khóa biểu.</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="material-symbols-outlined text-blue-600 text-[16px] shrink-0 mt-0.5">check_circle</span>
+                            <span><strong>Không lớp nào giống nhau:</strong> Mỗi lớp có thứ tự môn học riêng biệt (seeded shuffle theo class ID).</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="material-symbols-outlined text-blue-600 text-[16px] shrink-0 mt-0.5">check_circle</span>
+                            <span><strong>Ràng buộc GV:</strong> Mỗi giáo viên dạy tối đa 3 lớp, không trùng tiết.</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="material-symbols-outlined text-blue-600 text-[16px] shrink-0 mt-0.5">check_circle</span>
+                            <span><strong>Tiết cố định:</strong> Thứ 2 Tiết 1 (Chào cờ), Thứ 7 Tiết 5 (Sinh hoạt lớp).</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-blue-200/60 text-xs text-blue-900 font-semibold flex items-center justify-between">
+                        <span>Lớp sẽ được xếp:</span>
+                        <span className="px-2.5 py-1 bg-white rounded-lg text-[#003366] font-bold border border-blue-200 shadow-xs">
+                          {autoScope === 'all' ? classes.length : gradeFilteredClasses.length} Lớp học
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 text-amber-900 mb-3">
+                          <span className="material-symbols-outlined text-[24px] text-amber-600">warning</span>
+                          <h3 className="text-sm font-bold uppercase tracking-wider">Cảnh Báo &amp; Xác Nhận</h3>
+                        </div>
+                        <p className="text-xs text-amber-800 leading-relaxed">
+                          Thao tác này sẽ xếp lịch cho <strong>{autoScope === 'all' ? 'toàn trường' : selectedGrade}</strong> ({autoScope === 'all' ? classes.length : gradeFilteredClasses.length} lớp).
+                        </p>
+                        <div className="mt-3 p-3 bg-white/80 rounded-lg border border-amber-200 text-xs text-amber-900 font-medium">
+                          ⚠️ Lịch học hiện tại của các lớp được chọn sẽ bị xóa và tạo lại.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-5">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center shadow-xs">
+                    <span className="material-symbols-outlined text-emerald-500 text-[48px]">check_circle</span>
+                    <p className="text-lg font-extrabold text-emerald-900 mt-2">Đã Sắp Xếp Thời Khóa Biểu Thành Công!</p>
+                    <p className="text-xs text-emerald-700 font-medium mt-1">Toàn bộ các lớp đã được phân công thời khóa biểu hợp lệ và không trùng giờ dạy.</p>
+                    <div className="flex justify-center gap-8 mt-5">
+                      <div className="text-center px-4">
+                        <p className="text-3xl font-black text-[#001d36]">{autoResult.totalClasses}</p>
+                        <p className="text-[11px] text-gray-500 uppercase font-bold mt-0.5">Lớp đã xếp</p>
+                      </div>
+                      <div className="w-px bg-emerald-200" />
+                      <div className="text-center px-4">
+                        <p className="text-3xl font-black text-[#001d36]">{autoResult.totalEntries}</p>
+                        <p className="text-[11px] text-gray-500 uppercase font-bold mt-0.5">Tổng số tiết học</p>
+                      </div>
+                      <div className="w-px bg-emerald-200" />
+                      <div className="text-center px-4">
+                        <p className="text-3xl font-black text-[#001d36]">{autoResult.teacherStats.length}</p>
+                        <p className="text-[11px] text-gray-500 uppercase font-bold mt-0.5">Giáo viên phân công</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {autoResult.teacherStats.length > 0 && (
+                    <div>
+                      <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center justify-between">
+                        <span>Danh Sách Phân Công Giáo Viên (Tối đa 3 lớp/GV):</span>
+                        <span className="text-[11px] font-normal text-gray-500">Tổng: {autoResult.teacherStats.length} GV</span>
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-[300px] overflow-y-auto p-1 bg-gray-50/50 rounded-xl border border-gray-200">
+                        {autoResult.teacherStats.map((stat, i) => (
+                          <div key={i} className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3.5 py-2.5 shadow-xs">
+                            <span className="text-xs font-bold text-[#001d36] truncate mr-2">{stat.teacher_name}</span>
+                            <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md shrink-0 ${stat.classCount >= 3 ? 'bg-orange-100 text-orange-800 border border-orange-200' : 'bg-blue-100 text-blue-800 border border-blue-200'}`}>
+                              {stat.classCount}/3 lớp
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
+              <button
+                onClick={() => { setAutoModalOpen(false); setAutoResult(null) }}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+              >
+                {autoResult ? 'Đóng' : 'Hủy'}
+              </button>
+              {!autoResult && (
+                <button
+                  onClick={handleAutoScheduleAllClasses}
+                  disabled={autoScheduling}
+                  className="px-6 py-2 bg-gradient-to-r from-[#003366] to-[#0066cc] hover:opacity-90 text-white rounded-lg text-xs font-bold transition-all disabled:opacity-60 cursor-pointer shadow-md flex items-center gap-2"
+                >
+                  {autoScheduling ? (
+                    <>
+                      <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white border-t-transparent" />
+                      <span>Đang sắp xếp...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
+                      <span>Bắt đầu sắp xếp</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   )
 }

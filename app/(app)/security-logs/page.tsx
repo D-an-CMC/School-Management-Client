@@ -253,7 +253,7 @@ export default function SecurityLogsPage() {
                 setSearch(e.target.value)
                 setPage(1)
               }}
-              className="w-full pl-9 pr-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-3 py-2 text-xs md:text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <span className="absolute left-3 top-2.5 text-gray-400 text-xs">🔍</span>
           </div>

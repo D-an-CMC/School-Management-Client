@@ -1,544 +1,511 @@
-'use client'
+﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '@/lib/auth-context'
+import {
+  getMyGrades,
+  getMyStudentInfo,
+  getClasses,
+  getClassStudents,
+  getGradesByClass,
+  saveClassGrades,
+  getSubjects,
+  getTeacherSubjects,
+  getMe,
+} from '@/lib/api'
 
-interface TeacherStudentRow {
+interface GradeRow {
   id: string
+  student_id?: number
   name: string
   studentId: string
-  avatar: string
   freq: string[]
   midTerm: string
   finalTerm: string
-  aiPrediction: string
   average: string
   warning?: boolean
 }
 
-const INITIAL_TEACHER_STUDENTS: TeacherStudentRow[] = [
-  {
-    id: '1',
-    name: 'Lê Hải Nam',
-    studentId: '20240801',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-    freq: ['8.0', '8.5', '8.0', '8.3'],
-    midTerm: '8.5',
-    finalTerm: '--',
-    aiPrediction: '8.4',
-    average: '8.3',
-  },
-  {
-    id: '2',
-    name: 'Nguyễn Anh Thư',
-    studentId: '20240802',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-    freq: ['9.5', '9.5', '9.5', '9.5'],
-    midTerm: '9.5',
-    finalTerm: '--',
-    aiPrediction: '9.6',
-    average: '9.5',
-  },
-  {
-    id: '3',
-    name: 'Quách Gia Huy',
-    studentId: '20240805',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-    freq: ['4.5', '5.0', '4.5', '4.8'],
-    midTerm: '5.0',
-    finalTerm: '--',
-    aiPrediction: '4.2',
-    average: '4.8',
-    warning: true,
-  },
-  {
-    id: '4',
-    name: 'Trần Bảo Minh',
-    studentId: '20240806',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
-    freq: ['8.5', '9.0', '8.5', '8.8'],
-    midTerm: '8.5',
-    finalTerm: '--',
-    aiPrediction: '8.7',
-    average: '8.6',
-  },
-  {
-    id: '5',
-    name: 'Phạm Phương Thảo',
-    studentId: '20240808',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=80',
-    freq: ['9.0', '9.0', '8.5', '9.0'],
-    midTerm: '9.0',
-    finalTerm: '--',
-    aiPrediction: '9.1',
-    average: '8.9',
-  },
+interface SubjectGrade {
+  subject_id: number
+  subject_name: string
+  subject_code: string
+  teacher_name?: string
+  freq: string[]
+  midTerm: string
+  finalTerm: string
+  average: string
+}
+
+function calcAverage(freq: string[], mid: string, final: string): string {
+  const validFreqs = freq.map((f) => parseFloat(f)).filter((n) => !isNaN(n))
+  const midNum = parseFloat(mid)
+  const finalNum = parseFloat(final)
+  let totalWeight = validFreqs.length
+  let totalScore = validFreqs.reduce((a, b) => a + b, 0)
+  if (!isNaN(midNum)) { totalScore += midNum * 2; totalWeight += 2 }
+  if (!isNaN(finalNum)) { totalScore += finalNum * 3; totalWeight += 3 }
+  if (totalWeight === 0) return '--'
+  return (totalScore / totalWeight).toFixed(1)
+}
+
+function scoreColor(avg: string) {
+  const n = parseFloat(avg)
+  if (isNaN(n)) return 'text-gray-400'
+  if (n >= 8.5) return 'text-emerald-600'
+  if (n >= 6.5) return 'text-blue-600'
+  if (n >= 5.0) return 'text-amber-600'
+  return 'text-red-600'
+}
+
+const AVATAR_COLORS = [
+  'bg-[#001d36]', 'bg-blue-600', 'bg-violet-600', 'bg-teal-600',
+  'bg-rose-600', 'bg-amber-600', 'bg-indigo-600', 'bg-emerald-600',
 ]
 
-export default function GradebookPage() {
-  const { user } = useAuth()
-  const userRole = (user?.role || '').toLowerCase()
-  const isStudentRole = userRole === 'student' || userRole === 'hocsinh-phuhuynh' || userRole === 'hocsinhphuhuynh'
+function StudentGradebook({ userName }: { userName: string }) {
+  const [subjects, setSubjects] = useState<SubjectGrade[]>([])
+  const [loading, setLoading] = useState(true)
+  const [studentInfo, setStudentInfo] = useState<any>(null)
 
-  // Teacher View State
-  const [students, setStudents] = useState<TeacherStudentRow[]>(INITIAL_TEACHER_STUDENTS)
-  const [selectedClass, setSelectedClass] = useState('Lớp 11B2 - Môn Toán')
-  const [saveStatus, setSaveStatus] = useState<'draft' | 'published'>('draft')
-
-  const handleScoreChange = (id: string, field: 'freq' | 'midTerm' | 'finalTerm', index: number | undefined, value: string) => {
-    setStudents(prev =>
-      prev.map(s => {
-        if (s.id !== id) return s
-        if (field === 'freq' && typeof index === 'number') {
-          const newFreq = [...s.freq]
-          newFreq[index] = value
-          return { ...s, freq: newFreq }
+  useEffect(() => {
+    async function load() {
+      setLoading(true)
+      try {
+        const [gradesRes, infoRes] = await Promise.all([getMyGrades(), getMyStudentInfo()])
+        setStudentInfo(infoRes)
+        if (gradesRes && gradesRes.length > 0) {
+          const subjectMap = new Map<number, SubjectGrade>()
+          for (const g of gradesRes) {
+            const sid = g.subject_id
+            if (!subjectMap.has(sid)) {
+              subjectMap.set(sid, {
+                subject_id: sid,
+                subject_name: g.subject_name || g.subjects?.subject_name || `Mon ${sid}`,
+                subject_code: g.subject_code || g.subjects?.subject_code || '',
+                teacher_name: g.teacher_name,
+                freq: [], midTerm: '--', finalTerm: '--', average: '--',
+              })
+            }
+            const entry = subjectMap.get(sid)!
+            if (g.grade_type === 'TX' || g.grade_type === 'frequent') entry.freq.push(String(g.score ?? ''))
+            else if (g.grade_type === 'GK' || g.grade_type === 'midterm') entry.midTerm = String(g.score ?? '--')
+            else if (g.grade_type === 'CK' || g.grade_type === 'final') entry.finalTerm = String(g.score ?? '--')
+          }
+          subjectMap.forEach((e) => { e.average = calcAverage(e.freq, e.midTerm, e.finalTerm) })
+          setSubjects(Array.from(subjectMap.values()))
         }
-        return { ...s, [field]: value }
-      })
-    )
-  }
+      } catch (err) {
+        console.error('Failed to load student grades', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
 
-  // ---------------------------------------------------------------------------
-  // STUDENT ROLE VIEW (kq/code.html design match)
-  // ---------------------------------------------------------------------------
-  if (isStudentRole) {
+  const overallAvg = useMemo(() => {
+    const avgs = subjects.map((s) => parseFloat(s.average)).filter((n) => !isNaN(n))
+    if (!avgs.length) return '--'
+    return (avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)
+  }, [subjects])
+
+  const className = studentInfo?.class_name || studentInfo?.classes?.class_name || ''
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-between">
-        <div className="p-6 md:p-8 space-y-8 max-w-[1600px] mx-auto w-full">
-          {/* Welcome Section */}
-          <section>
-            <h2 className="text-xl font-bold text-gray-900">Kết quả học tập, {user?.name || 'Minh Anh'}</h2>
-            <p className="text-sm text-gray-500 mt-1">Hệ thống đang phân tích dữ liệu mới nhất. Thứ Hai, ngày 12 tháng 10, 2026.</p>
-          </section>
-
-          {/* AI ANALYSIS HERO CARD */}
-          <section>
-            <div className="bg-white p-8 rounded-lg border border-gray-200 shadow-sm flex flex-col md:flex-row gap-8 items-stretch relative overflow-hidden">
-              <div className="flex-1 space-y-6 relative z-10">
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[11px] font-bold flex items-center gap-1.5 uppercase">
-                    <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                    EXCELLENT PROGRESS
-                  </span>
-                  <h3 className="font-bold text-lg text-[#001d36]">AI Academic Health Analysis</h3>
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed max-w-2xl">
-                  {user?.name || 'Minh Anh'} is maintaining an <span className="font-bold text-[#001d36]">exceptional performance</span> this semester. Based on the latest 4-week data, AI predicts your average score will increase by <span className="text-[#001d36] font-semibold">+0.2</span> by finals. Natural sciences (Math, Physics) show significant breakthroughs; however, focus more on English vocabulary to secure the "Excellent Student" target.
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-2">
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">ĐIỂM TRUNG BÌNH DỰ KIẾN</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl font-bold text-[#001d36]">8.6</span>
-                      <span className="text-green-600 text-xs font-bold flex items-center">
-                        <span className="material-symbols-outlined text-[14px]">trending_up</span>+0.2
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">ATTENDANCE RATE</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl font-bold text-[#001d36]">98%</span>
-                      <span className="text-blue-600 text-[10px] font-bold uppercase tracking-wider">Excellent</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-px bg-gray-100 hidden md:block"></div>
-
-              <div className="md:w-64 flex flex-col items-center justify-center text-center p-4 bg-gray-50/50 rounded-lg">
-                <span className="font-bold text-[#001d36] tracking-tighter text-4xl">XUẤT SẮC</span>
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2 mb-6">THÀNH TÍCH HỌC TẬP</p>
-                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
-                  <div className="h-full bg-[#001d36] w-[88%] rounded-full"></div>
-                </div>
-                <p className="text-xs font-bold text-gray-700">Top 5/45 Students</p>
-              </div>
-            </div>
-          </section>
-
-          {/* SUBJECT PERFORMANCE HEADER */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#001d36]">analytics</span>
-              <h3 className="text-lg font-bold text-gray-900">Detailed Subject Performance</h3>
-            </div>
-            <button className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 transition shadow-sm">
-              <span className="material-symbols-outlined text-sm mr-2">picture_as_pdf</span>
-              Export PDF Report
-            </button>
-          </div>
-
-          {/* SUBJECT CARDS */}
-          <div className="space-y-6">
-            {/* MATH CARD */}
-            <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-              <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#001d36] text-white rounded flex items-center justify-center font-bold text-xl">M</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">Mathematics</h4>
-                    <p className="text-xs text-gray-500">Instructor: Mr. Tran Hoang Nam</p>
-                  </div>
-                </div>
-                <div className="text-right flex flex-col items-end">
-                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subject Average</p>
-                  <span className="text-4xl font-bold text-[#001d36]">9.2</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
-                  <div className="col-span-1 sm:col-span-2 bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">THƯỜNG XUYÊN</p>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">9.5</div>
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">8.0</div>
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">9.0</div>
-                      <div className="bg-gray-100/50 border border-dashed border-gray-300 rounded py-1 text-center text-sm font-semibold text-gray-400">-</div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200 relative">
-                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[8px] px-2 py-0.5 rounded-full font-bold">X2</span>
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Giữa kỳ</p>
-                    <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">9.0</div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Cuối kỳ</p>
-                    <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">9.5</div>
-                  </div>
-                  <div className="bg-blue-50/60 p-3 rounded border border-blue-200 border-dashed">
-                    <p className="text-[10px] font-bold text-[#001d36] uppercase mb-2">Dự báo AI</p>
-                    <div className="bg-white border border-blue-200 rounded py-1 text-center text-sm font-bold text-[#001d36]">9.6</div>
-                  </div>
-                </div>
-                <div className="mt-6 p-4 bg-gray-50 border-l-4 border-[#001d36] rounded-r-lg flex gap-4">
-                  <span className="material-symbols-outlined text-[#001d36] text-xl">lightbulb</span>
-                  <p className="text-sm text-gray-600 italic leading-relaxed">
-                    "Logical thinking ability is currently at a high level. AI predicts that if you maintain focus in the 3D Geometry chapter, your final exam score will reach at least 9.5."
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* LITERATURE CARD */}
-            <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-              <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-500 text-white rounded flex items-center justify-center font-bold text-xl">L</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">Literature</h4>
-                    <p className="text-xs text-gray-500">Instructor: Ms. Nguyen Mai Phuong</p>
-                  </div>
-                </div>
-                <div className="text-right flex flex-col items-end">
-                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subject Average</p>
-                  <span className="text-4xl font-bold text-gray-900">8.4</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
-                  <div className="col-span-1 sm:col-span-2 bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">THƯỜNG XUYÊN</p>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">10</div>
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">7.5</div>
-                      <div className="bg-gray-100/50 border border-dashed border-gray-300 rounded py-1 text-center text-sm font-semibold text-gray-400">-</div>
-                      <div className="bg-gray-100/50 border border-dashed border-gray-300 rounded py-1 text-center text-sm font-semibold text-gray-400">-</div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200 relative">
-                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[8px] px-2 py-0.5 rounded-full font-bold">X2</span>
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Giữa kỳ</p>
-                    <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">8.5</div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Cuối kỳ</p>
-                    <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">8.2</div>
-                  </div>
-                  <div className="bg-blue-50/60 p-3 rounded border border-blue-200 border-dashed">
-                    <p className="text-[10px] font-bold text-[#001d36] uppercase mb-2">Dự báo AI</p>
-                    <div className="bg-white border border-blue-200 rounded py-1 text-center text-sm font-bold text-[#001d36]">8.5</div>
-                  </div>
-                </div>
-                <div className="mt-6 p-4 bg-gray-50 border-l-4 border-[#001d36] rounded-r-lg flex gap-4">
-                  <span className="material-symbols-outlined text-[#001d36] text-xl">auto_awesome</span>
-                  <p className="text-sm text-gray-600 italic leading-relaxed">
-                    "Need to improve writing speed for social discourse essays. Student tends to over-polish which leads to lack of time for the concluding section."
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* ENGLISH CARD */}
-            <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-              <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-500 text-white rounded flex items-center justify-center font-bold text-xl">E</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">English Language</h4>
-                    <p className="text-xs text-gray-500">Instructor: Mr. David Smith</p>
-                  </div>
-                </div>
-                <div className="text-right flex flex-col items-end">
-                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subject Average</p>
-                  <span className="text-4xl font-bold text-gray-900">7.8</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
-                  <div className="col-span-1 sm:col-span-2 bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">THƯỜNG XUYÊN</p>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">9.0</div>
-                      <div className="bg-white border border-red-500 rounded py-1 text-center text-sm font-semibold text-red-600">4.5</div>
-                      <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">7.0</div>
-                      <div className="bg-gray-100/50 border border-dashed border-gray-300 rounded py-1 text-center text-sm font-semibold text-gray-400">-</div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200 relative">
-                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[8px] px-2 py-0.5 rounded-full font-bold">X2</span>
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Giữa kỳ</p>
-                    <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">8.0</div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Cuối kỳ</p>
-                    <div className="bg-white border border-gray-200 rounded py-1 text-center text-sm font-semibold">8.5</div>
-                  </div>
-                  <div className="bg-blue-50/60 p-3 rounded border border-blue-200 border-dashed">
-                    <p className="text-[10px] font-bold text-[#001d36] uppercase mb-2">Dự báo AI</p>
-                    <div className="bg-white border border-blue-200 rounded py-1 text-center text-sm font-bold text-[#001d36]">8.2</div>
-                  </div>
-                </div>
-                <div className="mt-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg flex gap-4">
-                  <span className="material-symbols-outlined text-red-500 text-xl">warning</span>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Action Recommended:</span>
-                    <p className="text-sm text-red-800 italic leading-relaxed">
-                      "Low 15-minute test score indicates knowledge gaps in perfect tenses. AI suggests practice 3 additional intensive grammar exercises on this topic next week."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* ACTION CARDS */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 pb-8">
-              <div className="bg-[#001d36] p-8 rounded-lg flex items-center justify-between cursor-pointer hover:bg-blue-900 transition-all group overflow-hidden relative shadow-sm">
-                <div className="relative z-10">
-                  <h4 className="text-lg font-bold text-white mb-1">Schedule Parent-Teacher Meeting</h4>
-                  <p className="text-blue-200 text-sm">Book a direct consultation with the Form Teacher</p>
-                </div>
-                <span className="material-symbols-outlined text-4xl text-white group-hover:translate-x-2 transition-transform relative z-10">arrow_forward</span>
-                <div className="absolute right-0 top-0 w-48 h-full bg-gradient-to-l from-white/10 to-transparent"></div>
-              </div>
-              <div className="bg-white p-8 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-between cursor-pointer hover:border-[#001d36] hover:bg-gray-50 transition-all group shadow-sm">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-lg font-bold text-[#001d36]">AI Personalized Learning Path</h4>
-                    <span className="material-symbols-outlined text-[#001d36] text-xl animate-pulse">auto_awesome</span>
-                  </div>
-                  <p className="text-gray-500 text-sm">Personalized study roadmap based on current transcript data</p>
-                </div>
-                <span className="material-symbols-outlined text-4xl text-gray-300 group-hover:text-[#001d36] transition-colors">rocket_launch</span>
-              </div>
-            </section>
-          </div>
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#001d36] border-t-transparent" />
+          <p className="text-sm text-gray-500 font-medium">Dang tai ket qua hoc tap...</p>
         </div>
-
-        {/* Footer */}
-        <footer className="bg-white border-t border-gray-200 py-4 px-8 text-center flex-shrink-0 mt-auto">
-          <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium">
-            © 2024 CMC UNIVERSITY SMART SCHOOL MANAGEMENT SYSTEM. BẢO MẬT CẤP ĐỘ DOANH NGHIỆP.
-          </p>
-        </footer>
       </div>
     )
   }
 
-  // ---------------------------------------------------------------------------
-  // TEACHER / ADMIN ROLE VIEW (grade/code.html design match)
-  // ---------------------------------------------------------------------------
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-between">
-      <div className="p-6 md:p-8 space-y-8 max-w-[1600px] mx-auto w-full">
-        {/* Gradebook Context Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2 text-[#003366]">
-              <span className="material-symbols-outlined text-[20px]">menu_book</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">Academic Management</span>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">Sổ điểm Học thuật</h2>
-            <div className="flex items-center gap-3 text-gray-500 text-sm">
-              <span className="font-medium text-gray-700">Trường THCS CMC</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-              <span>Học kỳ II</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-              <span>2023-2024</span>
-            </div>
+    <div className="p-6 md:p-8 space-y-8 max-w-[1400px] mx-auto w-full">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-[#001d36] mb-1">
+            <span className="material-symbols-outlined text-[18px]">school</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">Ket qua hoc tap</span>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSaveStatus('draft')}
-              className="px-4 py-2 rounded-md bg-white border border-gray-300 text-gray-700 text-xs font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[18px]">drafts</span>
-              Lưu bản nháp
-            </button>
-            <button
-              onClick={() => setSaveStatus('published')}
-              className="px-4 py-2 rounded-md bg-[#003366] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#004080] transition-all shadow-sm flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[18px]">publish</span>
-              Công bố điểm
-            </button>
-            <button className="px-4 py-2 rounded-md bg-white border border-gray-300 text-gray-700 text-xs font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">download</span>
-              Xuất báo cáo
-            </button>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900">Bang diem cua {userName}</h2>
+          {className && <p className="text-sm text-gray-500 mt-1">{className}</p>}
         </div>
+        <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
+          <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+          Xuat PDF
+        </button>
+      </div>
 
-        {/* Bento Summary Grid */}
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 lg:col-span-5 bg-white p-6 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-4">Lớp học & Môn học</p>
-            <div className="relative group cursor-pointer">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 group-hover:border-blue-500 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[#003366]">groups</span>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[
+          { label: 'Diem TB tong ket', value: overallAvg, color: scoreColor(overallAvg) },
+          { label: 'So mon hoc', value: String(subjects.length), color: 'text-gray-900' },
+          { label: 'Mon gioi (>=8.5)', value: String(subjects.filter((s) => parseFloat(s.average) >= 8.5).length), color: 'text-emerald-600' },
+          { label: 'Mon yeu (<5.0)', value: String(subjects.filter((s) => parseFloat(s.average) < 5.0).length), color: 'text-red-500' },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">{stat.label}</p>
+            <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {subjects.length === 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
+          <span className="material-symbols-outlined text-4xl text-gray-300 block mb-3">assignment</span>
+          <p className="text-gray-400 font-semibold">Chua co du lieu diem so</p>
+          <p className="text-gray-400 text-sm mt-1">Diem se duoc cap nhat sau khi giao vien nhap</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {subjects.map((subj, idx) => {
+            const colorClass = AVATAR_COLORS[idx % AVATAR_COLORS.length]
+            const avg = parseFloat(subj.average)
+            const isWarn = !isNaN(avg) && avg < 5.0
+            return (
+              <div key={subj.subject_id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-11 h-11 ${colorClass} text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm`}>
+                      {(subj.subject_name || '?').charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900">{subj.subject_name}</h4>
+                      {subj.teacher_name && <p className="text-xs text-gray-500">GV: {subj.teacher_name}</p>}
+                    </div>
                   </div>
-                  <select
-                    value={selectedClass}
-                    onChange={e => setSelectedClass(e.target.value)}
-                    className="bg-transparent text-lg font-bold text-gray-900 border-none focus:outline-none cursor-pointer"
-                  >
-                    <option value="Lớp 11B2 - Môn Toán">Lớp 11B2 - Môn Toán</option>
-                    <option value="Lớp 10A1 - Môn Toán">Lớp 10A1 - Môn Toán</option>
-                    <option value="Lớp 12C3 - Môn Lý">Lớp 12C3 - Môn Lý</option>
-                  </select>
+                  <div className="flex items-center gap-3">
+                    {isWarn && <span className="px-2.5 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase">Can cai thien</span>}
+                    <div className="text-right">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Diem TB</p>
+                      <span className={`text-3xl font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
+                    </div>
+                  </div>
                 </div>
-                <span className="material-symbols-outlined text-gray-400">expand_more</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-span-12 lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Sĩ số */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between relative overflow-hidden">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Sĩ số lớp</p>
-              <div className="flex items-baseline justify-between mt-4">
-                <span className="text-3xl font-bold text-[#003366]">42/42</span>
-                <span className="text-xs font-semibold text-green-500">Đầy đủ</span>
-              </div>
-              <div className="mt-4 w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                <div className="bg-[#003366] h-1.5 rounded-full w-full"></div>
-              </div>
-            </div>
-
-            {/* Hoàn thành */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between relative">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tỷ lệ hoàn thành</p>
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-3xl font-bold text-[#003366]">85%</span>
-                <div className="relative w-10 h-10">
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle className="text-gray-100" cx="20" cy="20" fill="transparent" r="16" stroke="currentColor" strokeWidth="3"></circle>
-                    <circle className="text-[#003366]" cx="20" cy="20" fill="transparent" r="16" stroke="currentColor" strokeDasharray="100" strokeDashoffset="15" strokeWidth="3"></circle>
-                  </svg>
-                </div>
-              </div>
-              <div className="mt-4 w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                <div className="bg-[#003366] h-1.5 rounded-full w-[85%]"></div>
-              </div>
-            </div>
-
-            {/* Dự báo AI */}
-            <div className="bg-[#003366] p-6 rounded-lg shadow-sm flex flex-col justify-between relative overflow-hidden">
-              <p className="text-[10px] font-bold text-white/70 uppercase tracking-wider">Dự báo ĐTB lớp (AI)</p>
-              <div className="flex items-baseline gap-2 mt-4">
-                <span className="text-3xl font-bold text-white">7.4</span>
-                <span className="text-xs text-white/60">Dự báo ổn định</span>
-              </div>
-              <div className="flex items-center gap-1 text-white/50 font-medium text-[10px] mt-4">
-                <span className="material-symbols-outlined text-[14px]">psychology</span>
-                AI ANALYTICS ACTIVE
-              </div>
-              <div className="absolute -right-2 -top-2 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Grade Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Học sinh & Mã số</th>
-                  <th className="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Điểm thường xuyên (1, 2, 3, 4)</th>
-                  <th className="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Điểm giữa kỳ</th>
-                  <th className="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Điểm cuối kỳ</th>
-                  <th className="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Dự báo AI (Cuối kỳ)</th>
-                  <th className="px-6 py-4 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">ĐTB</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {students.map(row => (
-                  <tr key={row.id} className={`transition-colors ${row.warning ? 'hover:bg-red-50/50 bg-red-50/20' : 'hover:bg-gray-50'}`}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100">
-                          <img src={row.avatar} alt={row.name} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-gray-900">{row.name}</span>
-                          <span className="text-[10px] font-semibold text-gray-500">ID: {row.studentId}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-center whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-1.5">
-                        {row.freq.map((val, idx) => (
-                          <input
-                            key={idx}
-                            type="text"
-                            value={val}
-                            onChange={e => handleScoreChange(row.id, 'freq', idx, e.target.value)}
-                            className={`w-8 h-8 text-center rounded border border-gray-200 text-xs font-bold focus:outline-none focus:border-[#003366] ${row.warning ? 'text-red-600 bg-red-50' : 'text-gray-900 bg-gray-50'
-                              }`}
-                          />
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-5 gap-4">
+                  <div className="col-span-1 sm:col-span-2 bg-gray-50 rounded-lg border border-gray-200 p-3">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Thuong xuyen</p>
+                    {subj.freq.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {subj.freq.map((val, i) => (
+                          <span key={i} className={`px-2.5 py-1 rounded-md text-xs font-bold border ${parseFloat(val) < 5 ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-white'}`}>{val || '--'}</span>
                         ))}
                       </div>
-                    </td>
-                    <td className="px-4 py-4 text-center whitespace-nowrap">
-                      <input
-                        type="text"
-                        value={row.midTerm}
-                        onChange={e => handleScoreChange(row.id, 'midTerm', undefined, e.target.value)}
-                        className="w-12 h-8 text-center rounded border border-gray-200 text-sm font-bold text-gray-900 bg-gray-50 focus:outline-none focus:border-[#003366]"
-                      />
-                    </td>
-                    <td className="px-4 py-4 text-center whitespace-nowrap">
-                      <input
-                        type="text"
-                        value={row.finalTerm}
-                        onChange={e => handleScoreChange(row.id, 'finalTerm', undefined, e.target.value)}
-                        className="w-12 h-8 text-center rounded border border-gray-200 text-sm text-gray-400 bg-gray-50 focus:outline-none focus:border-[#003366]"
-                      />
-                    </td>
-                    <td className="px-4 py-4 text-center whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span className={`text-sm font-bold ${row.warning ? 'text-red-600' : 'text-blue-600'}`}>{row.aiPrediction}</span>
-                        <span className={`text-[10px] font-medium ${row.warning ? 'text-red-400/70' : 'text-blue-500/70'}`}>Dự báo</span>
+                    ) : (
+                      <p className="text-xs text-gray-400 italic">Chua co diem</p>
+                    )}
+                  </div>
+                  <div className="bg-gray-50 rounded-lg border border-gray-200 p-3 relative">
+                    <span className="absolute -top-2 left-3 bg-orange-500 text-white text-[8px] px-1.5 py-0.5 rounded font-bold">x2</span>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Giua ky</p>
+                    <span className={`text-lg font-bold ${scoreColor(subj.midTerm)}`}>{subj.midTerm}</span>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg border border-gray-200 p-3 relative">
+                    <span className="absolute -top-2 left-3 bg-red-600 text-white text-[8px] px-1.5 py-0.5 rounded font-bold">x3</span>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Cuoi ky</p>
+                    <span className={`text-lg font-bold ${scoreColor(subj.finalTerm)}`}>{subj.finalTerm}</span>
+                  </div>
+                  <div className={`rounded-lg border p-3 ${isWarn ? 'bg-red-50 border-red-200' : 'bg-blue-50/60 border-blue-200'}`}>
+                    <p className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${isWarn ? 'text-red-500' : 'text-[#001d36]'}`}>Diem TB</p>
+                    <span className={`text-lg font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TeacherGradebook({ userName }: { userName: string }) {
+  const [classes, setClasses] = useState<any[]>([])
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null)
+  const [subjects, setSubjects] = useState<any[]>([])
+  const [selectedSubjectId, setSelectedSubjectId] = useState<number | null>(null)
+  const [rows, setRows] = useState<GradeRow[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saveOk, setSaveOk] = useState(false)
+
+  useEffect(() => {
+    async function init() {
+      setLoading(true)
+      try {
+        const me = await getMe()
+        const tId = me?.teacherId ?? null
+        const [clsRes, subjRes] = await Promise.all([
+          tId ? getClasses({ teacherId: tId, limit: 50 }) : getClasses({ limit: 50 }),
+          tId ? getTeacherSubjects(tId) : getSubjects(),
+        ])
+        const clsList = clsRes?.data ?? []
+        setClasses(clsList)
+        if (clsList.length > 0) setSelectedClassId(clsList[0].class_id)
+        const subjList = Array.isArray(subjRes) ? subjRes : []
+        setSubjects(subjList)
+        if (subjList.length > 0) setSelectedSubjectId(subjList[0].subject_id)
+      } catch (err) {
+        console.error('Failed to init teacher gradebook', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    init()
+  }, [])
+
+  useEffect(() => {
+    if (!selectedClassId) return
+    async function loadGrades() {
+      setLoading(true)
+      try {
+        const [studentsData, gradesData] = await Promise.all([
+          getClassStudents(selectedClassId!),
+          getGradesByClass(selectedClassId!),
+        ])
+        const gradeMap = new Map<number, { freq: string[]; midTerm: string; finalTerm: string }>()
+        if (Array.isArray(gradesData)) {
+          for (const g of gradesData) {
+            if (selectedSubjectId && g.subject_id && g.subject_id !== selectedSubjectId) continue
+            if (!gradeMap.has(g.student_id)) gradeMap.set(g.student_id, { freq: [], midTerm: '', finalTerm: '' })
+            const entry = gradeMap.get(g.student_id)!
+            if (g.grade_type === 'TX' || g.grade_type === 'frequent') entry.freq.push(String(g.score ?? ''))
+            else if (g.grade_type === 'GK' || g.grade_type === 'midterm') entry.midTerm = String(g.score ?? '')
+            else if (g.grade_type === 'CK' || g.grade_type === 'final') entry.finalTerm = String(g.score ?? '')
+          }
+        }
+        const studentList: any[] = studentsData ?? []
+        const mapped: GradeRow[] = studentList.map((s: any) => {
+          const g = gradeMap.get(s.student_id) ?? { freq: [], midTerm: '', finalTerm: '' }
+          const freq = g.freq.length >= 4 ? g.freq.slice(0, 4) : [...g.freq, ...Array(4 - g.freq.length).fill('')]
+          const avg = calcAverage(freq, g.midTerm, g.finalTerm)
+          return {
+            id: String(s.student_id),
+            student_id: s.student_id,
+            name: s.full_name || s.name || 'Unknown',
+            studentId: s.student_code || `HS${s.student_id}`,
+            freq, midTerm: g.midTerm, finalTerm: g.finalTerm, average: avg,
+            warning: parseFloat(avg) < 5.0,
+          }
+        })
+        setRows(mapped)
+      } catch (err) {
+        console.error('Failed to load grades', err)
+        setRows([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadGrades()
+  }, [selectedClassId, selectedSubjectId])
+
+  function handleScoreChange(id: string, field: 'freq' | 'midTerm' | 'finalTerm', index: number | undefined, value: string) {
+    setRows((prev) => prev.map((s) => {
+      if (s.id !== id) return s
+      let updated = { ...s }
+      if (field === 'freq' && typeof index === 'number') { const f = [...s.freq]; f[index] = value; updated.freq = f }
+      else updated = { ...s, [field]: value }
+      const avg = calcAverage(updated.freq, updated.midTerm, updated.finalTerm)
+      return { ...updated, average: avg, warning: parseFloat(avg) < 5.0 }
+    }))
+  }
+
+  async function handleSave() {
+    if (!selectedClassId) return
+    setSaving(true)
+    try {
+      await saveClassGrades(selectedClassId, rows)
+      setSaveOk(true)
+      setTimeout(() => setSaveOk(false), 3000)
+    } catch { alert('Luu diem that bai!') }
+    finally { setSaving(false) }
+  }
+
+  const selectedClass = classes.find((c) => c.class_id === selectedClassId)
+  const selectedSubject = subjects.find((s) => s.subject_id === selectedSubjectId)
+  const classAvg = useMemo(() => {
+    const avgs = rows.map((r) => parseFloat(r.average)).filter((n) => !isNaN(n))
+    if (!avgs.length) return '--'
+    return (avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)
+  }, [rows])
+  const warningCount = rows.filter((r) => r.warning).length
+  const excellentCount = rows.filter((r) => parseFloat(r.average) >= 8.5).length
+  const filledCount = rows.filter((r) => r.average !== '--').length
+
+  if (loading && classes.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#001d36] border-t-transparent" />
+          <p className="text-sm text-gray-500 font-medium">Dang tai so diem...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-6 md:p-8 space-y-6 max-w-[1400px] mx-auto w-full">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-[#001d36] mb-1">
+            <span className="material-symbols-outlined text-[18px]">menu_book</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">Quan ly diem so</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">So diem giao vien</h2>
+          <p className="text-sm text-gray-500 mt-0.5">{userName}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {saveOk && (
+            <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+              Da luu thanh cong
+            </span>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={saving || rows.length === 0}
+            className="px-4 py-2 bg-[#001d36] hover:bg-[#00284d] text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[16px]">{saving ? 'hourglass_top' : 'save'}</span>
+            {saving ? 'Dang luu...' : 'Luu diem'}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Lop hoc</label>
+          {classes.length === 0 ? (
+            <p className="text-sm text-gray-400 italic">Chua co lop nao</p>
+          ) : (
+            <select
+              value={selectedClassId ?? ''}
+              onChange={(e) => setSelectedClassId(Number(e.target.value))}
+              className="w-full bg-transparent text-base font-bold text-gray-900 border-none focus:outline-none cursor-pointer"
+            >
+              {classes.map((cls) => (
+                <option key={cls.class_id} value={cls.class_id}>{cls.class_name}{cls.homeroom_teacher_name ? ` - ${cls.homeroom_teacher_name}` : ''}</option>
+              ))}
+            </select>
+          )}
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Mon hoc</label>
+          {subjects.length === 0 ? (
+            <p className="text-sm text-gray-400 italic">Chua co mon nao</p>
+          ) : (
+            <select
+              value={selectedSubjectId ?? ''}
+              onChange={(e) => setSelectedSubjectId(Number(e.target.value))}
+              className="w-full bg-transparent text-base font-bold text-gray-900 border-none focus:outline-none cursor-pointer"
+            >
+              {subjects.map((s) => (
+                <option key={s.subject_id} value={s.subject_id}>{s.subject_name}</option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[
+          { label: 'Si so', value: String(rows.length), color: 'text-gray-900' },
+          { label: 'DTB lop', value: classAvg, color: scoreColor(classAvg) },
+          { label: 'Hoc sinh gioi', value: String(excellentCount), color: 'text-emerald-600' },
+          { label: 'Can chu y (<5)', value: String(warningCount), color: 'text-red-500' },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{stat.label}</p>
+            <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-gray-900">
+              {selectedClass?.class_name ?? 'Lop hoc'}{selectedSubject ? ` - ${selectedSubject.subject_name}` : ''}
+            </h3>
+            <p className="text-xs text-gray-400 mt-0.5">{filledCount}/{rows.length} hoc sinh da co diem</p>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <div className="animate-spin rounded-full h-8 w-8 border-4 border-[#001d36] border-t-transparent" />
+          </div>
+        ) : rows.length === 0 ? (
+          <div className="text-center py-16">
+            <span className="material-symbols-outlined text-4xl text-gray-300 block mb-2">group</span>
+            <p className="text-gray-400 font-semibold">Chua co hoc sinh trong lop nay</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-100">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-5 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider w-10">#</th>
+                  <th className="px-5 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hoc sinh</th>
+                  {['TX1','TX2','TX3','TX4'].map((h) => (
+                    <th key={h} className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">{h}</th>
+                  ))}
+                  <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">GK <span className="text-[8px] text-orange-500">x2</span></th>
+                  <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">CK <span className="text-[8px] text-red-500">x3</span></th>
+                  <th className="px-5 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">DTB</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-50">
+                {rows.map((row, idx) => (
+                  <tr key={row.id} className={`transition-colors ${row.warning ? 'bg-red-50/30 hover:bg-red-50/60' : 'hover:bg-gray-50/60'}`}>
+                    <td className="px-5 py-3 text-xs text-gray-400 font-semibold">{idx + 1}</td>
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 ${AVATAR_COLORS[idx % AVATAR_COLORS.length]}`}>
+                          {(row.name.split(' ').pop() ?? '?').charAt(0)}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-gray-900">{row.name}</p>
+                          <p className="text-[10px] text-gray-400">{row.studentId}</p>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold ${row.warning ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-[#003366]'
-                        }`}>
+                    {row.freq.map((val, i) => (
+                      <td key={i} className="px-3 py-3 text-center">
+                        <input
+                          type="text"
+                          value={val}
+                          onChange={(e) => handleScoreChange(row.id, 'freq', i, e.target.value)}
+                          placeholder="-"
+                          className={`w-10 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${
+                            parseFloat(val) < 5 && val !== '' ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-gray-50'
+                          }`}
+                        />
+                      </td>
+                    ))}
+                    {(['midTerm', 'finalTerm'] as const).map((field) => (
+                      <td key={field} className="px-3 py-3 text-center">
+                        <input
+                          type="text"
+                          value={row[field]}
+                          onChange={(e) => handleScoreChange(row.id, field, undefined, e.target.value)}
+                          placeholder="-"
+                          className={`w-12 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${
+                            parseFloat(row[field]) < 5 && row[field] !== '' ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-gray-50'
+                          }`}
+                        />
+                      </td>
+                    ))}
+                    <td className="px-5 py-3 text-center">
+                      <span className={`inline-flex items-center justify-center w-14 py-1 rounded-full text-xs font-bold ${
+                        row.warning ? 'bg-red-100 text-red-700' :
+                        parseFloat(row.average) >= 8.5 ? 'bg-emerald-100 text-emerald-700' :
+                        'bg-blue-50 text-[#001d36]'
+                      }`}>
                         {row.average}
                       </span>
                     </td>
@@ -547,100 +514,18 @@ export default function GradebookPage() {
               </tbody>
             </table>
           </div>
-
-          {/* Table Pagination */}
-          <div className="bg-white px-6 py-4 flex items-center justify-between border-t border-gray-200">
-            <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
-              Hiển thị 1-5 trên tổng số 42 học sinh
-            </div>
-            <div className="flex items-center space-x-2">
-              <button className="p-1 rounded border border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-50" disabled>
-                <span className="material-symbols-outlined text-[18px]">chevron_left</span>
-              </button>
-              <button className="px-3 py-1 rounded bg-[#003366] text-white text-xs font-bold">1</button>
-              <button className="px-3 py-1 rounded border border-gray-200 text-gray-600 text-xs font-medium hover:bg-gray-50">2</button>
-              <button className="px-3 py-1 rounded border border-gray-200 text-gray-600 text-xs font-medium hover:bg-gray-50">3</button>
-              <button className="p-1 rounded border border-gray-200 text-gray-400 hover:bg-gray-50">
-                <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Insights Grid Section */}
-        <div className="grid grid-cols-12 gap-6">
-          {/* Chart/Analysis Card */}
-          <div className="col-span-12 lg:col-span-4 bg-[#003366] text-white p-6 rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mb-4">Phân tích Phổ điểm</p>
-              <h3 className="text-lg font-bold mb-4">Mật độ phân bổ</h3>
-              <div className="h-32 flex items-end gap-1 mb-4 flex-shrink-0">
-                <div className="flex-1 bg-white/20 rounded-t h-[20%] transition-all hover:bg-white/40"></div>
-                <div className="flex-1 bg-white/20 rounded-t h-[40%] transition-all hover:bg-white/40"></div>
-                <div className="flex-1 bg-white/40 rounded-t h-[70%] transition-all hover:bg-white/60"></div>
-                <div className="flex-1 bg-white rounded-t h-[100%]"></div>
-                <div className="flex-1 bg-white/60 rounded-t h-[80%] transition-all"></div>
-                <div className="flex-1 bg-white/30 rounded-t h-[50%] transition-all"></div>
-                <div className="flex-1 bg-white/10 rounded-t h-[30%] transition-all"></div>
-              </div>
-            </div>
-            <p className="text-xs text-white/80 leading-relaxed">
-              Phổ điểm đang tập trung ở mức 7.0 - 8.5. Tỉ lệ học sinh khá giỏi chiếm 68% tổng số.
-            </p>
-            <div className="absolute -left-8 -bottom-8 w-24 h-24 bg-white/5 rounded-full border border-white/10"></div>
-          </div>
-
-          {/* Legend Card */}
-          <div className="col-span-12 lg:col-span-4 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-6">Chú giải dữ liệu</p>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-3 h-3 rounded-full bg-gray-900 mt-1 flex-shrink-0"></div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-gray-900">Dữ liệu thực tế</span>
-                  <span className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">Điểm số do giáo viên trực tiếp chấm và nhập hệ thống.</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-3 h-3 rounded-full bg-blue-400 mt-1 flex-shrink-0"></div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-blue-600">Dự báo AI</span>
-                  <span className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">Dựa trên lịch sử học tập, mức độ chuyên cần và xu hướng.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* AI Assistant Card */}
-          <div className="col-span-12 lg:col-span-4 bg-gray-50 p-6 rounded-lg border border-gray-200 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-full bg-[#003366] flex items-center justify-center">
-                  <span className="material-symbols-outlined text-white text-[18px]">psychology</span>
-                </div>
-                <span className="text-sm font-bold text-gray-900">Trợ lý AI CMC</span>
-              </div>
-              <div className="p-4 bg-white rounded-lg border border-red-100 flex gap-3 items-start shadow-sm">
-                <span className="material-symbols-outlined text-red-500 text-[20px]">warning</span>
-                <p className="text-[11px] text-gray-700 leading-relaxed">
-                  Phát hiện <strong>3 học sinh</strong> có nguy cơ tụt hạng trong kỳ thi cuối kỳ sắp tới. Cần có biện pháp hỗ trợ ôn tập kịp thời.
-                </p>
-              </div>
-            </div>
-            <button className="mt-4 w-full py-2.5 rounded-md bg-white border border-gray-200 text-[#003366] text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 transition-all">
-              Xem chi tiết phân tích
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
-          </div>
-        </div>
+        )}
       </div>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-4 px-8 text-center flex-shrink-0 mt-auto">
-        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium">
-          © 2024 CMC UNIVERSITY SMART SCHOOL MANAGEMENT SYSTEM. BẢO MẬT CẤP ĐỘ DOANH NGHIỆP.
-        </p>
-      </footer>
     </div>
   )
+}
+
+export default function GradebookPage() {
+  const { user } = useAuth()
+  const role = (user?.role || '').toLowerCase()
+  const isStudent = role === 'student' || role.includes('hocsinh')
+  const userName = user?.name || 'Nguoi dung'
+
+  if (isStudent) return <div className="min-h-screen bg-gray-50"><StudentGradebook userName={userName} /></div>
+  return <div className="min-h-screen bg-gray-50"><TeacherGradebook userName={userName} /></div>
 }

@@ -208,7 +208,7 @@ export default function UserManagementPage() {
     setEditEmail(u.email)
     setEditFullName(u.full_name || u.username || '')
     setEditUsername(u.username || '')
-    setEditPhone(u.emergency_phone || u.phone || '')
+    setEditPhone(u.phone || '')
     setEditGender(u.gender === 'Nữ' || u.gender === 'female' ? 'female' : 'male')
     setEditDob(u.date_of_birth || '1990-10-12')
     setEditRole(u.role_name || activeTab)
@@ -785,7 +785,7 @@ export default function UserManagementPage() {
                 </svg>
               </span>
               <input
-                className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm bg-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 bg-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder={searchPlaceholder}
                 type="text"
                 value={search}
@@ -856,7 +856,7 @@ export default function UserManagementPage() {
                     <th className="px-6 py-4">Email</th>
                     {activeTab === 'Admin' ? (
                       <>
-                        <th className="px-6 py-4">Liên hệ khẩn cấp</th>
+                        <th className="px-6 py-4">Số điện thoại</th>
                         <th className="px-6 py-4">Phòng ban</th>
                         <th className="px-6 py-4">Trạng thái</th>
                         <th className="px-6 py-4 text-right">Hành động</th>
@@ -909,7 +909,7 @@ export default function UserManagementPage() {
                             {u.email}
                           </td>
                           <td className="px-6 py-5 text-gray-600 whitespace-nowrap">
-                            {u.emergency_phone || u.phone || '0908 123 456'}
+                            {u.phone || '—'}
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap">
                             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${staffDeptColor}`}>
@@ -1899,11 +1899,11 @@ export default function UserManagementPage() {
               {changePwError && <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-sm">{changePwError}</div>}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Mật khẩu mới</label>
-                <input type="password" value={changePwFields.newPassword} onChange={(e) => setChangePwFields(prev => ({ ...prev, newPassword: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900" placeholder="Ít nhất 6 ký tự" />
+                <input type="password" value={changePwFields.newPassword} onChange={(e) => setChangePwFields(prev => ({ ...prev, newPassword: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400" placeholder="Ít nhất 6 ký tự" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Xác nhận mật khẩu mới</label>
-                <input type="password" value={changePwFields.confirmPassword} onChange={(e) => setChangePwFields(prev => ({ ...prev, confirmPassword: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900" placeholder="Nhập lại mật khẩu mới" />
+                <input type="password" value={changePwFields.confirmPassword} onChange={(e) => setChangePwFields(prev => ({ ...prev, confirmPassword: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400" placeholder="Nhập lại mật khẩu mới" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowChangePwModal(false)} disabled={changingPw} className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50">Hủy</button>

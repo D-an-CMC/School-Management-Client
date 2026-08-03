@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
 import { CustomDatePicker } from '@/components/ui/custom-date-picker'
+import { getMyTimetable } from '@/lib/api'
 
 // ──────────────────────────────────────────────────────
 // Types & Helper Functions
@@ -411,14 +412,63 @@ function DynamicEqualTimetableGrid({
 }
 
 // ──────────────────────────────────────────────────────
+// Helpers to convert raw DB timetable entries → schedule map
+// ──────────────────────────────────────────────────────
+
+function buildScheduleFromEntries(
+  entries: any[],
+  labelField: 'teacher' | 'class'
+): Record<string, TimetableSlot> {
+  const map: Record<string, TimetableSlot> = {}
+  entries.forEach((e, i) => {
+    const dayStr = e.day_of_week ?? e.dayOfWeek ?? '2'
+    const dayIdx = Math.max(0, Number(dayStr) - 2)
+    const period = Number(e.period_no ?? e.periodNo ?? 1)
+    const key = `${dayIdx}-${period}`
+    const subj = e.subjects ?? e.subject ?? {}
+    const subjectName = subj.subject_name ?? e.subject_name ?? 'Môn học'
+    const subjectCode = subj.subject_code ?? e.subject_code ?? 'MON'
+    const teacher = e.teachers ?? e.teacher ?? {}
+    const cls = e.classes ?? e.class ?? {}
+    const teacherOrClass =
+      labelField === 'teacher'
+        ? cls.class_name ?? `Lớp ${e.class_id ?? ''}` 
+        : teacher.full_name ?? `GV ${e.teacher_id ?? ''}`
+    map[key] = {
+      periodNo: period,
+      subjectName,
+      subjectCode,
+      teacherOrClass,
+      room: e.room ?? 'P.--',
+      colorThemeIdx: i,
+    }
+  })
+  return map
+}
+
+// ──────────────────────────────────────────────────────
 // Teacher View
 // ──────────────────────────────────────────────────────
 
 function TeacherTimetablePage({ userName }: { userName: string }) {
-  const teacherSchedule = getTeacherMockSchedule()
+  const [schedule, setSchedule] = useState<Record<string, TimetableSlot>>({})
+  const [loadingData, setLoadingData] = useState(true)
+  const [totalPeriods, setTotalPeriods] = useState(0)
+  const [classCount, setClassCount] = useState(0)
   const [selectedDateStr, setSelectedDateStr] = useState<string>(
     new Date().toISOString().split('T')[0]
   )
+
+  useEffect(() => {
+    setLoadingData(true)
+    getMyTimetable().then(res => {
+      const entries = res.data ?? []
+      setSchedule(buildScheduleFromEntries(entries, 'teacher'))
+      setTotalPeriods(entries.length)
+      const uniqueClasses = new Set(entries.map((e: any) => e.class_id).filter(Boolean))
+      setClassCount(uniqueClasses.size)
+    }).catch(console.error).finally(() => setLoadingData(false))
+  }, [])
 
   function handlePrevWeek() {
     const d = new Date(selectedDateStr)
@@ -434,6 +484,15 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
 
   function handleToday() {
     setSelectedDateStr(new Date().toISOString().split('T')[0])
+  }
+
+  if (loadingData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#003366] border-t-transparent" />
+        <p className="mt-4 text-sm font-semibold text-gray-600">Đang tải lịch giảng dạy...</p>
+      </div>
+    )
   }
 
   return (
@@ -460,8 +519,8 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-[#003366] flex justify-between items-start">
           <div>
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tổng giờ dạy/tuần</span>
-            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">18 Tiết</span>
+            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tổng tiết dạy</span>
+            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">{totalPeriods} Tiết</span>
           </div>
           <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#003366]">
             <span className="material-symbols-outlined text-[20px]">menu_book</span>
@@ -471,7 +530,7 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-emerald-600 flex justify-between items-start">
           <div>
             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Lớp phụ trách</span>
-            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">4 Lớp</span>
+            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">{classCount} Lớp</span>
           </div>
           <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700">
             <span className="material-symbols-outlined text-[20px]">groups</span>
@@ -480,12 +539,12 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
 
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-amber-500 flex justify-between items-start">
           <div>
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tiết dạy tiếp theo</span>
-            <span className="text-sm font-bold text-[#001d36] block mt-1">Tiết 2 — Lớp 6A1</span>
-            <span className="text-[10px] text-gray-500 font-medium">Phòng 302 (07:55)</span>
+            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Ràng buộc giảng dạy</span>
+            <span className="text-sm font-bold text-[#001d36] block mt-1">{classCount <= 3 ? 'Hợp lệ' : 'Vượt giới hạn'}</span>
+            <span className="text-[10px] text-gray-500 font-medium">{classCount}/3 lớp tối đa</span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-700">
-            <span className="material-symbols-outlined text-[20px]">schedule</span>
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${classCount <= 3 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-600'}`}>
+            <span className="material-symbols-outlined text-[20px]">{classCount <= 3 ? 'check_circle' : 'warning'}</span>
           </div>
         </div>
 
@@ -540,7 +599,7 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
 
       {/* Dynamic Grid */}
       <DynamicEqualTimetableGrid
-        schedule={teacherSchedule}
+        schedule={schedule}
         selectedDateStr={selectedDateStr}
         onSelectDate={setSelectedDateStr}
       />
@@ -553,10 +612,32 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
 // ──────────────────────────────────────────────────────
 
 function StudentTimetablePage({ userName }: { userName: string }) {
-  const studentSchedule = getStudentMockSchedule()
+  const [schedule, setSchedule] = useState<Record<string, TimetableSlot>>({})
+  const [loadingData, setLoadingData] = useState(true)
+  const [className, setClassName] = useState<string | null>(null)
+  const [subjectCount, setSubjectCount] = useState(0)
   const [selectedDateStr, setSelectedDateStr] = useState<string>(
     new Date().toISOString().split('T')[0]
   )
+
+  useEffect(() => {
+    setLoadingData(true)
+    getMyTimetable().then(res => {
+      const entries = res.data ?? []
+      setSchedule(buildScheduleFromEntries(entries, 'class'))
+      setClassName(res.className ?? null)
+      const uniqueSubjects = new Set(entries.map((e: any) => e.subject_id).filter(Boolean))
+      setSubjectCount(uniqueSubjects.size)
+    }).catch(console.error).finally(() => setLoadingData(false))
+  }, [])
+
+  // Tasks / homework list (placeholder — will be replaced by real data when assignments module is ready)
+  const tasks = [
+    { id: 1, title: 'Bài tập Toán trang 45', subject: 'Toán học', due: 'Thứ 3', urgent: true },
+    { id: 2, title: 'Soạn bài Cô bé bán diêm', subject: 'Ngữ văn', due: 'Thứ 4', urgent: false },
+    { id: 3, title: 'Học từ vựng Unit 3', subject: 'Tiếng Anh', due: 'Thứ 5', urgent: false },
+    { id: 4, title: 'Ôn tập chương 2 Lý', subject: 'Vật lý', due: 'Thứ 6', urgent: true },
+  ]
 
   function handlePrevWeek() {
     const d = new Date(selectedDateStr)
@@ -574,11 +655,17 @@ function StudentTimetablePage({ userName }: { userName: string }) {
     setSelectedDateStr(new Date().toISOString().split('T')[0])
   }
 
-  const tasks = [
-    { id: '1', title: 'Bản thảo bài Văn học (Thứ 4)', subject: 'Ngữ văn', due: '2 ngày còn lại', urgent: true },
-    { id: '2', title: 'Bài tập hình học chương 2', subject: 'Toán học', due: 'Hoàn thành', urgent: false },
-    { id: '3', title: 'Chuẩn bị từ vựng Unit 4', subject: 'Tiếng Anh', due: 'Ngày mai', urgent: true },
-  ]
+  if (loadingData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#003366] border-t-transparent" />
+        <p className="mt-4 text-sm font-semibold text-gray-600">Đang tải thời khóa biểu...</p>
+      </div>
+    )
+  }
+
+  const totalPeriods = Object.keys(schedule).length
+  const completionPct = totalPeriods > 0 ? Math.min(100, Math.round((totalPeriods / 30) * 100)) : 0
 
   return (
     <div className="flex flex-col w-full gap-6 p-6 bg-[#f9f9ff] min-h-screen">
@@ -590,7 +677,9 @@ function StudentTimetablePage({ userName }: { userName: string }) {
             <span className="material-symbols-outlined text-[14px]">chevron_right</span>
             <span className="text-[#001d36]">Thời khóa biểu học tập</span>
           </nav>
-          <h1 className="text-2xl font-bold text-[#111c2d]">Thời Khóa Biểu — Lớp 6A1</h1>
+          <h1 className="text-2xl font-bold text-[#111c2d]">Thời Khóa Biểu
+            {className ? ` — Lớp ${className}` : ''}
+          </h1>
           <p className="text-xs text-gray-500 font-medium mt-0.5">Chúc {userName || 'bạn'} một tuần học tập thật năng lượng!</p>
         </div>
 
@@ -609,7 +698,7 @@ function StudentTimetablePage({ userName }: { userName: string }) {
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-[#003366] flex justify-between items-start">
           <div>
             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tổng số môn học</span>
-            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">11 Môn</span>
+            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">{subjectCount} Môn</span>
           </div>
           <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#003366]">
             <span className="material-symbols-outlined text-[20px]">school</span>
@@ -677,7 +766,7 @@ function StudentTimetablePage({ userName }: { userName: string }) {
 
       {/* Grid View */}
       <DynamicEqualTimetableGrid
-        schedule={studentSchedule}
+        schedule={schedule}
         selectedDateStr={selectedDateStr}
         onSelectDate={setSelectedDateStr}
       />
@@ -718,10 +807,10 @@ function StudentTimetablePage({ userName }: { userName: string }) {
         <div className="bg-[#003366] text-white p-6 rounded-xl shadow-md flex flex-col justify-between relative overflow-hidden">
           <div>
             <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest block">Tiến độ hoàn thành</span>
-            <h3 className="text-3xl font-extrabold mt-1">85% Bài học</h3>
-            <p className="text-xs opacity-90 font-medium mt-2 leading-relaxed">
-              Bạn đã hoàn thành 22/26 tiết học của tuần này. Tiếp tục phát huy nhé!
-            </p>
+            <h3 className="text-3xl font-extrabold mt-1">{completionPct}% Bài học</h3>
+          <p className="text-xs opacity-90 font-medium mt-2 leading-relaxed">
+            Bạn đang có {totalPeriods} tiết học được xếp lịch trong tuần. Hãy tham gia đầy đủ!
+          </p>
           </div>
 
           <div className="mt-6">

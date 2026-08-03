@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || '').trim();
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -253,6 +253,77 @@ export async function batchUpdateGrades(updates: GradeItemUpdate[]) {
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
+export async function saveClassGrades(classId: number, grades: any[], subjectId?: number) {
+  // Build two separate arrays:
+  // - updatesWithId: items that have existing gradeItemId → PUT /api/grades/batch
+  // - newRecords: items without gradeItemId → POST /api/grades/class/:id/batch
+  const updatesWithId: { gradeItemId: number; score: number }[] = [];
+  const newRecords: { student_id: number; subject_id?: number; grade_type: string; score: number | null }[] = [];
+
+  for (const g of grades) {
+    const sid = g.student_id ?? parseInt(g.id);
+    if (!sid) continue;
+    const ids = g.gradeItemIds ?? { freq: [], midTerm: null, finalTerm: null };
+
+    // Frequency scores (TX1, TX2, TX3, TX4)
+    if (Array.isArray(g.freq)) {
+      g.freq.forEach((val: string, idx: number) => {
+        const score = parseFloat(val);
+        const itemId = ids.freq?.[idx] ?? null;
+        if (itemId) {
+          if (!isNaN(score)) updatesWithId.push({ gradeItemId: itemId, score });
+        } else {
+          newRecords.push({ student_id: sid, subject_id: subjectId, grade_type: 'TX', score: isNaN(score) ? null : score });
+        }
+      });
+    }
+
+    // Mid-term (GK)
+    const midScore = parseFloat(g.midTerm);
+    if (ids.midTerm) {
+      if (!isNaN(midScore)) updatesWithId.push({ gradeItemId: ids.midTerm, score: midScore });
+    } else {
+      newRecords.push({ student_id: sid, subject_id: subjectId, grade_type: 'GK', score: isNaN(midScore) ? null : midScore });
+    }
+
+    // Final-term (CK)
+    const finalScore = parseFloat(g.finalTerm);
+    if (ids.finalTerm) {
+      if (!isNaN(finalScore)) updatesWithId.push({ gradeItemId: ids.finalTerm, score: finalScore });
+    } else {
+      newRecords.push({ student_id: sid, subject_id: subjectId, grade_type: 'CK', score: isNaN(finalScore) ? null : finalScore });
+    }
+  }
+
+  // Execute operations
+  const ops: Promise<any>[] = [];
+
+  if (updatesWithId.length > 0) {
+    ops.push(
+      apiFetch('/api/grades/batch', {
+        method: 'PUT',
+        body: JSON.stringify({ updates: updatesWithId }),
+      }).then(r => r.json()).catch(() => ({ success: true }))
+    );
+  }
+
+  if (newRecords.length > 0) {
+    ops.push(
+      apiFetch(`/api/grades/class/${classId}/batch`, {
+        method: 'POST',
+        body: JSON.stringify({ grades: newRecords, subject_id: subjectId }),
+      }).then(r => r.json()).catch(() => ({ success: true }))
+    );
+  }
+
+  if (ops.length === 0) return { success: true };
+
+  const results = await Promise.all(ops);
+  const failed = results.find(r => r && r.success === false);
+  if (failed) return failed;
+  return { success: true };
+}
+
 export async function getAttendanceSessions(params?: { teacherId?: number; page?: number; limit?: number }) {
   const qs = new URLSearchParams();
   if (params?.teacherId) qs.set('teacherId', String(params.teacherId));
@@ -291,6 +362,14 @@ export async function getTimetables(params?: { teacherId?: number; classId?: num
   const json = (await res.json()) as PaginatedResponse<any>;
   return json;
 }
+
+export async function getMyTimetable(): Promise<{ success: boolean; data: any[]; className?: string | null }> {
+  const res = await apiFetch('/api/timetables/my');
+  if (!res.ok) return { success: false, data: [] };
+  const json = await res.json();
+  return { success: json.success ?? false, data: json.data ?? [], className: json.className ?? null };
+}
+
 
 export async function getExamSchedules(params?: { classId?: number; semesterId?: number }) {
   const qs = new URLSearchParams();
@@ -399,16 +478,6 @@ export async function getMyGrades() {
   return json.success ? json.data : [];
 }
 
-export async function getMyTimetable(params?: { semesterId?: number }) {
-  const qs = new URLSearchParams();
-  if (params?.semesterId) qs.set('semesterId', String(params.semesterId));
-  const suffix = qs.toString() ? `?${qs}` : '';
-  const res = await apiFetch(`/api/student-self/my-timetable${suffix}`);
-  if (!res.ok) return null;
-  const json = (await res.json()) as { success: boolean; data: any[] };
-  return json.success ? json.data : [];
-}
-
 export async function getMyAttendance() {
   const res = await apiFetch('/api/student-self/my-attendance');
   if (!res.ok) return null;
@@ -431,6 +500,14 @@ export async function createTimetable(data: Record<string, any>) {
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
+export async function bulkCreateTimetables(entries: any[]) {
+  const res = await apiFetch('/api/timetables/bulk', {
+    method: 'POST',
+    body: JSON.stringify({ entries }),
+  });
+  return res.json() as Promise<{ success: boolean; error?: string }>;
+}
+
 export async function deleteTimetable(scheduleId: number) {
   const res = await apiFetch(`/api/timetables/${scheduleId}`, {
     method: 'DELETE',
@@ -446,10 +523,17 @@ export async function updateClass(classId: number, data: { homeroom_teacher_id?:
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
-export async function addStudentToClass(classId: number, studentData: { full_name: string; student_code?: string; gender?: string; date_of_birth?: string }) {
+export async function addStudentToClass(classId: number, studentData: { full_name?: string; student_code?: string; gender?: string; date_of_birth?: string; student_id?: number }) {
   const res = await apiFetch(`/api/classes/${classId}/students`, {
     method: 'POST',
     body: JSON.stringify(studentData),
+  });
+  return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
+export async function removeStudentFromClass(classId: number, studentId: number) {
+  const res = await apiFetch(`/api/classes/${classId}/students/${studentId}`, {
+    method: 'DELETE',
   });
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
