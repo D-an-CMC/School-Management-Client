@@ -3,8 +3,17 @@
 import { useState } from 'react'
 import { apiFetch } from '@/lib/api'
 
+interface MessageItem {
+  id: number
+  icon: string
+  title: string
+  subtitle?: string
+  time?: string
+  highlight?: boolean
+}
+
 export default function AdministrativeAIPage() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<MessageItem[]>([
     { id: 1, icon: '📦', title: 'TriVIQ AI CMC', subtitle: 'Sẵn sàng hỗ trợ đầy đủ', time: '' },
     { id: 2, icon: '⚙️', title: 'Chào bạn! Tôi là AI Trợ lý Quản trị CMC. Bạn có thể hỏi về lịch học, điểm số, rủi ro học tập hoặc danh sách nhân sự.', time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) },
   ])

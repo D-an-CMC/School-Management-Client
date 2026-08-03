@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { getClasses, getSubjects, getTimetables, createTimetable, deleteTimetable, getTeachers, bulkCreateTimetables } from '@/lib/api'
+import { getClasses, getSubjects, getTimetables, createTimetable, deleteTimetable, getTeachers, bulkCreateTimetables, getSemesters } from '@/lib/api'
 import { CustomDatePicker } from '@/components/ui/custom-date-picker'
 
 // ──────────────────────────────────────────────────────
@@ -23,6 +23,8 @@ interface TimetableEntry {
   period_no?: number
   room?: string
   subjects?: DbSubject
+  teacher_name?: string
+  teachers?: any
 }
 
 const DEFAULT_SUBJECTS: DbSubject[] = [
@@ -132,6 +134,8 @@ export default function AdminTimetablePage() {
   const [selectedGrade, setSelectedGrade] = useState<string>('Khối 6')
   const [selectedClassId, setSelectedClassId] = useState<number | null>(1)
   const [selectedRoom, setSelectedRoom] = useState<string>('Tất cả phòng')
+  const [semesters, setSemesters] = useState<any[]>([])
+  const [selectedSemesterId, setSelectedSemesterId] = useState<number | null>(1)
   const [selectedSemester, setSelectedSemester] = useState<string>('Học kỳ I - 2023-2024')
 
   const [selectedDateStr, setSelectedDateStr] = useState<string>(
@@ -169,9 +173,53 @@ export default function AdminTimetablePage() {
     c.grade_level === gradeNum || c.class_name?.startsWith(String(gradeNum))
   )
 
+  // Teacher selection picker state
+  const [showTeacherPicker, setShowTeacherPicker] = useState<boolean>(false)
+  const [qualifiedTeachers, setQualifiedTeachers] = useState<any[]>([])
+  const [loadingTeachers, setLoadingTeachers] = useState<boolean>(false)
+
   // Custom subject state (for "Môn tự đăng ký" in picker)
   const [customSubjectName, setCustomSubjectName] = useState<string>('')
   const [customTeacherName, setCustomTeacherName] = useState<string>('')
+
+  async function handleAssignTeacherToEntry(teacherId: number, teacherName: string) {
+    if (!activeEntry || !activeCell) return
+    setSaving(true)
+    try {
+      const dayIdx = activeCell.dayIdx
+      const periodNo = activeCell.periodNo
+      const targetClassId = selectedClassId || activeEntry.class_id || 1
+
+      const result = await createTimetable({
+        classId: targetClassId,
+        subjectId: activeEntry.subject_id,
+        teacherId,
+        semesterId: selectedSemesterId || 1,
+        dayOfWeek: frontDayToServer(dayIdx),
+        periodNo,
+      })
+
+      if (result.success) {
+        setEntries((prev) =>
+          prev.map((e) =>
+            e.schedule_id === activeEntry.schedule_id ||
+            (serverDayToFront(e.day_of_week) === dayIdx && e.period_no === periodNo)
+              ? { ...e, teacher_id: teacherId, teachers: { teacher_id: teacherId, full_name: teacherName }, teacher_name: teacherName }
+              : e
+          )
+        )
+        setShowTeacherPicker(false)
+        setModalOpen(false)
+      } else {
+        alert('Lỗi khi gán giáo viên: ' + (result.error || 'Lỗi cơ sở dữ liệu'))
+      }
+    } catch (err) {
+      console.error('Assign teacher error:', err)
+      alert('Đã xảy ra lỗi khi gán giáo viên.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   async function handleAutoScheduleAllClasses() {
     setAutoScheduling(true)
@@ -378,7 +426,7 @@ export default function AdminTimetablePage() {
     async function initData() {
       setLoading(true)
       try {
-        const [clsRes, subjRes] = await Promise.all([getClasses(), getSubjects()])
+        const [clsRes, subjRes, semRes] = await Promise.all([getClasses(), getSubjects(), getSemesters()])
         const clsList = clsRes.success ? (clsRes.data ?? []) : []
         setClasses(clsList)
 
@@ -386,6 +434,13 @@ export default function AdminTimetablePage() {
           setSubjects(subjRes)
         } else {
           setSubjects(DEFAULT_SUBJECTS)
+        }
+
+        const semList = Array.isArray(semRes) ? semRes : []
+        setSemesters(semList)
+        if (semList.length > 0) {
+          const active = semList.find((s: any) => s.is_active) || semList[0]
+          if (active) setSelectedSemesterId(active.semester_id)
         }
 
         if (clsList.length > 0) {
@@ -401,14 +456,14 @@ export default function AdminTimetablePage() {
     initData()
   }, [])
 
-  // 2. Fetch Timetable Entries when Class changes
+  // 2. Fetch Timetable Entries when Class or Semester changes
   useEffect(() => {
     if (!selectedClassId) return
 
     async function loadTimetable() {
       setLoadingGrid(true)
       try {
-        const res = await getTimetables({ classId: selectedClassId ?? undefined })
+        const res = await getTimetables({ classId: selectedClassId ?? undefined, semesterId: selectedSemesterId ?? undefined })
         const raw = res.data ?? []
         setEntries(raw)
       } catch (err) {
@@ -418,7 +473,7 @@ export default function AdminTimetablePage() {
       }
     }
     loadTimetable()
-  }, [selectedClassId])
+  }, [selectedClassId, selectedSemesterId])
 
   // 3. Auto-select first class in grade when grade changes
   useEffect(() => {
@@ -531,6 +586,7 @@ export default function AdminTimetablePage() {
     const existing = getEntry(dayIdx, periodNo)
     setActiveCell({ dayIdx, periodNo })
     setActiveEntry(existing || null)
+    setShowTeacherPicker(false)
     setModalOpen(true)
   }
 
@@ -544,7 +600,7 @@ export default function AdminTimetablePage() {
       const result = await createTimetable({
         classId: targetClassId,
         subjectId,
-        semesterId: 1,
+        semesterId: selectedSemesterId || 1,
         dayOfWeek: frontDayToServer(dayIdx),
         periodNo,
       })
@@ -575,6 +631,63 @@ export default function AdminTimetablePage() {
     } catch (err) {
       console.error(err)
       alert('Đã xảy ra lỗi khi gán môn học.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleAssignCustomSubject() {
+    if (!customSubjectName.trim() || !activeCell) return
+    setSaving(true)
+    try {
+      const dayIdx = activeCell.dayIdx
+      const periodNo = activeCell.periodNo
+      const targetClassId = selectedClassId || 1
+      const name = customSubjectName.trim()
+      const teacher = customTeacherName.trim()
+
+      const existingSubj = displaySubjects.find((s) => s.subject_name?.toLowerCase() === name.toLowerCase())
+      const subjectId = existingSubj ? existingSubj.subject_id : (displaySubjects.find(s => s.subject_name !== 'Chào cờ')?.subject_id || displaySubjects[0]?.subject_id || 1)
+
+      const result = await createTimetable({
+        classId: targetClassId,
+        subjectId,
+        semesterId: selectedSemesterId || 1,
+        dayOfWeek: frontDayToServer(dayIdx),
+        periodNo,
+      })
+
+      const customSubjObj: DbSubject = {
+        subject_id: subjectId,
+        subject_code: existingSubj?.subject_code || 'TDK',
+        subject_name: name,
+      }
+
+      const newEntry: TimetableEntry = {
+        schedule_id: result.success ? result.data?.[0]?.schedule_id || Date.now() : Date.now(),
+        class_id: targetClassId,
+        subject_id: subjectId,
+        day_of_week: frontDayToServer(dayIdx),
+        period_no: periodNo,
+        subjects: customSubjObj,
+        teacher_name: teacher || undefined,
+        teachers: teacher ? { teacher_id: 0, full_name: teacher } : undefined,
+      }
+
+      setEntries((prev) => [
+        ...prev.filter(
+          (e) => !(serverDayToFront(e.day_of_week) === dayIdx && e.period_no === periodNo)
+        ),
+        newEntry,
+      ])
+
+      setCustomSubjectName('')
+      setCustomTeacherName('')
+      setModalOpen(false)
+      setQuickModalOpen(false)
+    } catch (err) {
+      console.error(err)
+      alert('Đã xảy ra lỗi khi gán môn tự đăng ký.')
     } finally {
       setSaving(false)
     }
@@ -748,12 +861,19 @@ export default function AdminTimetablePage() {
           <div className="flex flex-col">
             <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Học kỳ</label>
             <select
-              value={selectedSemester}
-              onChange={(e) => setSelectedSemester(e.target.value)}
+              value={selectedSemesterId ?? ''}
+              onChange={(e) => setSelectedSemesterId(Number(e.target.value))}
               className="bg-gray-50 border border-gray-500 rounded-lg px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:border-[#003366]"
             >
-              <option>Học kỳ I - 2023-2024</option>
-              <option>Học kỳ II - 2023-2024</option>
+              {semesters.map((s: any) => {
+                const yr = s.school_year?.year_name ? ` - ${s.school_year.year_name}` : ''
+                return (
+                  <option key={s.semester_id} value={s.semester_id}>
+                    {s.semester_name}{yr}
+                  </option>
+                )
+              })}
+              {semesters.length === 0 && <option value={1}>Học kỳ I - 2023-2024</option>}
             </select>
           </div>
 
@@ -873,6 +993,7 @@ export default function AdminTimetablePage() {
                     const entry = getEntry(d.dayIdx, slot.period)
                     const subject = getSubjectForEntry(entry)
                     const theme = subject ? getSubjectTheme(subject.subject_id) : null
+                    const teacherName = (entry as any)?.teachers?.full_name || (entry as any)?.teacher_name || (Array.isArray((entry as any)?.teachers) ? (entry as any)?.teachers[0]?.full_name : null) || 'Chưa phân công'
 
                     const streak = getConsecutiveStreakInfo(d.dayIdx, slot.period, MORNING_SLOTS)
 
@@ -933,7 +1054,7 @@ export default function AdminTimetablePage() {
                               </span>
                             </div>
                             <div className="flex justify-between items-end text-[10px] opacity-80 mt-1">
-                              <span className="truncate">GV: {selectedClass?.homeroom_teacher_name || 'Phân công'}</span>
+                              <span className="truncate">GV: {teacherName}</span>
                               <span className="font-semibold">{selectedRoom !== 'Tất cả phòng' ? selectedRoom : 'P.302'}</span>
                             </div>
                           </div>
@@ -969,6 +1090,7 @@ export default function AdminTimetablePage() {
                     const entry = getEntry(d.dayIdx, slot.period)
                     const subject = getSubjectForEntry(entry)
                     const theme = subject ? getSubjectTheme(subject.subject_id) : null
+                    const teacherName = (entry as any)?.teachers?.full_name || (entry as any)?.teacher_name || (Array.isArray((entry as any)?.teachers) ? (entry as any)?.teachers[0]?.full_name : null) || 'Chưa phân công'
 
                     const streak = getConsecutiveStreakInfo(d.dayIdx, slot.period, AFTERNOON_SLOTS)
 
@@ -1025,7 +1147,7 @@ export default function AdminTimetablePage() {
                               </span>
                             </div>
                             <div className="flex justify-between items-end text-[10px] opacity-80 mt-1">
-                              <span className="truncate">GV: {selectedClass?.homeroom_teacher_name || 'Phân công'}</span>
+                              <span className="truncate">GV: {teacherName}</span>
                               <span className="font-semibold">{selectedRoom !== 'Tất cả phòng' ? selectedRoom : 'P.302'}</span>
                             </div>
                           </div>
@@ -1092,20 +1214,99 @@ export default function AdminTimetablePage() {
 
               <div className="p-5 max-h-[65vh] overflow-y-auto space-y-4">
                 {activeEntry && (
-                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold text-red-900">
-                        Môn hiện tại: {activeEntry.subjects?.subject_name || 'Đã xếp môn'}
-                      </p>
-                      <p className="text-[11px] text-red-700 font-medium">Xóa phân công của tiết học này?</p>
+                  <div className="p-4 rounded-xl bg-blue-50/80 border border-blue-200 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-bold text-[#001d36]">
+                          Môn hiện tại: {activeEntry.subjects?.subject_name || getSubjectForEntry(activeEntry)?.subject_name || 'Đã xếp môn'}
+                        </p>
+                        <p className="text-[11px] font-semibold mt-0.5 flex items-center gap-1">
+                          <span className="text-gray-600">Giáo viên bộ môn:</span>
+                          <span className={(activeEntry as any)?.teachers?.full_name || (activeEntry as any)?.teacher_name ? 'text-emerald-700 font-bold' : 'text-amber-700 font-bold'}>
+                            {(activeEntry as any)?.teachers?.full_name || (activeEntry as any)?.teacher_name || 'Chưa phân công'}
+                          </span>
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleDeleteSubject}
+                        disabled={saving}
+                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer"
+                      >
+                        {saving ? 'Đang xóa...' : 'Xóa tiết'}
+                      </button>
                     </div>
-                    <button
-                      onClick={handleDeleteSubject}
-                      disabled={saving}
-                      className="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer"
-                    >
-                      {saving ? 'Đang xóa...' : 'Xóa tiết'}
-                    </button>
+
+                    {/* Teacher Selector Trigger Button */}
+                    <div className="pt-2 border-t border-blue-100 flex flex-col gap-2">
+                      <button
+                        onClick={async () => {
+                          setLoadingTeachers(true)
+                          setShowTeacherPicker(true)
+                          try {
+                            const activeSubjId = activeEntry.subject_id
+                            const tRes = await getTeachers({ subjectId: activeSubjId, limit: 100 })
+                            let matched = tRes.data || []
+                            if (matched.length === 0) {
+                              const allRes = await getTeachers({ limit: 100 })
+                              const allT = allRes.data || []
+                              const currentSubj = activeEntry.subjects?.subject_name || getSubjectForEntry(activeEntry)?.subject_name || ''
+                              matched = allT.filter((t: any) =>
+                                Number(t.subject_id) === Number(activeSubjId) ||
+                                (currentSubj && t.department && t.department.toLowerCase().includes(currentSubj.toLowerCase()))
+                              )
+                              if (matched.length === 0) matched = allT
+                            }
+                            setQualifiedTeachers(matched)
+                          } catch (e) {
+                            console.error(e)
+                          } finally {
+                            setLoadingTeachers(false)
+                          }
+                        }}
+                        className="w-full py-2 bg-gradient-to-r from-[#003366] to-[#0066cc] hover:opacity-90 text-white rounded-lg text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">person_search</span>
+                        <span>Chọn giáo viên phụ trách môn này từ CSDL</span>
+                      </button>
+
+                      {showTeacherPicker && (
+                        <div className="mt-2 p-3 bg-white border border-blue-300 rounded-xl space-y-2 shadow-sm animate-in fade-in duration-150">
+                          <div className="flex justify-between items-center pb-1 border-b border-gray-100">
+                            <span className="text-[11px] font-bold text-[#003366] flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">school</span>
+                              Danh sách Giáo viên CSDL {activeEntry?.subjects?.subject_name ? `(${activeEntry.subjects.subject_name})` : ''}:
+                            </span>
+                            <button onClick={() => setShowTeacherPicker(false)} className="text-[11px] text-gray-500 hover:text-gray-800 font-bold px-1">
+                              ✕ Đóng
+                            </button>
+                          </div>
+
+                          {loadingTeachers ? (
+                            <div className="p-3 text-center text-xs text-gray-500 font-medium">Đang truy vấn giáo viên từ cơ sở dữ liệu...</div>
+                          ) : qualifiedTeachers.length === 0 ? (
+                            <div className="p-3 text-center text-xs text-gray-500 font-medium">Không tìm thấy giáo viên nào trong CSDL</div>
+                          ) : (
+                            <div className="max-h-44 overflow-y-auto divide-y divide-gray-100 rounded-lg border border-gray-200">
+                              {qualifiedTeachers.map((t: any) => (
+                                <div
+                                  key={t.teacher_id}
+                                  onClick={() => handleAssignTeacherToEntry(t.teacher_id, t.full_name)}
+                                  className="p-2 flex items-center justify-between hover:bg-blue-50 cursor-pointer transition-colors"
+                                >
+                                  <div>
+                                    <span className="text-xs font-bold text-gray-900 block">{t.full_name}</span>
+                                    <span className="text-[10px] text-gray-500">Bộ môn: {t.department || 'Chung'} | Mã: {t.teacher_code || `GV${t.teacher_id}`}</span>
+                                  </div>
+                                  <span className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-bold">
+                                    Chọn
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -1161,13 +1362,7 @@ export default function AdminTimetablePage() {
                       />
                     </div>
                     <button
-                      onClick={() => {
-                        if (!customSubjectName.trim()) return
-                        const firstId = displaySubjects[0]?.subject_id || 1
-                        handleAssignSubject(firstId)
-                        setCustomSubjectName('')
-                        setCustomTeacherName('')
-                      }}
+                      onClick={handleAssignCustomSubject}
                       disabled={saving || !customSubjectName.trim()}
                       className="w-full py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer mt-1"
                     >

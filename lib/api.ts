@@ -140,9 +140,10 @@ export function getStudentsCount(): Promise<number> {
   return getStudentStats().then((s) => s.totalStudents ?? 0);
 }
 
-export async function getTeachers(params?: { search?: string; page?: number; limit?: number }) {
+export async function getTeachers(params?: { search?: string; subjectId?: number; page?: number; limit?: number }) {
   const qs = new URLSearchParams();
   if (params?.search) qs.set('search', params.search);
+  if (params?.subjectId) qs.set('subjectId', String(params.subjectId));
   if (params?.page) qs.set('page', String(params.page));
   if (params?.limit) qs.set('limit', String(params.limit));
   const suffix = qs.toString() ? `?${qs}` : '';
@@ -220,8 +221,9 @@ export async function getStudentAttendanceStats() {
   return json.success ? json.data ?? null : null;
 }
 
-export async function getGradesByClass(classId: number) {
-  const res = await apiFetch(`/api/grades/class/${classId}`);
+export async function getGradesByClass(classId: number, subjectId?: number) {
+  const qs = subjectId ? `?subjectId=${subjectId}` : '';
+  const res = await apiFetch(`/api/grades/class/${classId}${qs}`);
   const json = (await res.json()) as { success: boolean; data?: any[] };
   return json.success ? json.data : null;
 }
@@ -253,75 +255,34 @@ export async function batchUpdateGrades(updates: GradeItemUpdate[]) {
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
-export async function saveClassGrades(classId: number, grades: any[], subjectId?: number) {
-  // Build two separate arrays:
-  // - updatesWithId: items that have existing gradeItemId → PUT /api/grades/batch
-  // - newRecords: items without gradeItemId → POST /api/grades/class/:id/batch
-  const updatesWithId: { gradeItemId: number; score: number }[] = [];
-  const newRecords: { student_id: number; subject_id?: number; grade_type: string; score: number | null }[] = [];
+export async function saveClassGrades(classId: number, grades: any[], subjectId?: number, semesterId?: number) {
+  const payload: { student_id: number; freq: (number | null)[]; midTerm: number | null; finalTerm: number | null }[] = [];
 
   for (const g of grades) {
     const sid = g.student_id ?? parseInt(g.id);
     if (!sid) continue;
-    const ids = g.gradeItemIds ?? { freq: [], midTerm: null, finalTerm: null };
 
-    // Frequency scores (TX1, TX2, TX3, TX4)
-    if (Array.isArray(g.freq)) {
-      g.freq.forEach((val: string, idx: number) => {
-        const score = parseFloat(val);
-        const itemId = ids.freq?.[idx] ?? null;
-        if (itemId) {
-          if (!isNaN(score)) updatesWithId.push({ gradeItemId: itemId, score });
-        } else {
-          newRecords.push({ student_id: sid, subject_id: subjectId, grade_type: 'TX', score: isNaN(score) ? null : score });
-        }
-      });
-    }
+    const freq = (Array.isArray(g.freq) ? g.freq : []).map((v: string) => {
+      const n = parseFloat(v);
+      return isNaN(n) ? null : n;
+    });
 
-    // Mid-term (GK)
     const midScore = parseFloat(g.midTerm);
-    if (ids.midTerm) {
-      if (!isNaN(midScore)) updatesWithId.push({ gradeItemId: ids.midTerm, score: midScore });
-    } else {
-      newRecords.push({ student_id: sid, subject_id: subjectId, grade_type: 'GK', score: isNaN(midScore) ? null : midScore });
-    }
-
-    // Final-term (CK)
     const finalScore = parseFloat(g.finalTerm);
-    if (ids.finalTerm) {
-      if (!isNaN(finalScore)) updatesWithId.push({ gradeItemId: ids.finalTerm, score: finalScore });
-    } else {
-      newRecords.push({ student_id: sid, subject_id: subjectId, grade_type: 'CK', score: isNaN(finalScore) ? null : finalScore });
-    }
+
+    payload.push({
+      student_id: sid,
+      freq,
+      midTerm: isNaN(midScore) ? null : midScore,
+      finalTerm: isNaN(finalScore) ? null : finalScore,
+    });
   }
 
-  // Execute operations
-  const ops: Promise<any>[] = [];
-
-  if (updatesWithId.length > 0) {
-    ops.push(
-      apiFetch('/api/grades/batch', {
-        method: 'PUT',
-        body: JSON.stringify({ updates: updatesWithId }),
-      }).then(r => r.json()).catch(() => ({ success: true }))
-    );
-  }
-
-  if (newRecords.length > 0) {
-    ops.push(
-      apiFetch(`/api/grades/class/${classId}/batch`, {
-        method: 'POST',
-        body: JSON.stringify({ grades: newRecords, subject_id: subjectId }),
-      }).then(r => r.json()).catch(() => ({ success: true }))
-    );
-  }
-
-  if (ops.length === 0) return { success: true };
-
-  const results = await Promise.all(ops);
-  const failed = results.find(r => r && r.success === false);
-  if (failed) return failed;
-  return { success: true };
+  const res = await apiFetch(`/api/grades/class/${classId}/batch`, {
+    method: 'POST',
+    body: JSON.stringify({ grades: payload, subjectId, semesterId }),
+  });
+  return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
 export async function getAttendanceSessions(params?: { teacherId?: number; page?: number; limit?: number }) {
@@ -363,8 +324,11 @@ export async function getTimetables(params?: { teacherId?: number; classId?: num
   return json;
 }
 
-export async function getMyTimetable(): Promise<{ success: boolean; data: any[]; className?: string | null }> {
-  const res = await apiFetch('/api/timetables/my');
+export async function getMyTimetable(params?: { semesterId?: number }): Promise<{ success: boolean; data: any[]; className?: string | null }> {
+  const qs = new URLSearchParams();
+  if (params?.semesterId) qs.append('semesterId', String(params.semesterId));
+  const suffix = qs.toString() ? `?${qs}` : '';
+  const res = await apiFetch(`/api/timetables/my${suffix}`);
   if (!res.ok) return { success: false, data: [] };
   const json = await res.json();
   return { success: json.success ?? false, data: json.data ?? [], className: json.className ?? null };
