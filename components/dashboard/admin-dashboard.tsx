@@ -2,21 +2,26 @@
 
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { useAcademic } from '@/lib/academic-context'
 import { getStudentStats, getTeacherStats, getClassesCount, getGradeStats, } from '@/lib/api'
 
 export function AdminDashboard() {
     const pathname = usePathname()
+    const { selectedSchoolYearId, currentSchoolYear, schoolYears } = useAcademic()
     const [stats, setStats] = useState<{ totalStudents: number; totalTeachers: number; totalClasses: number } | null>(null)
     const [gradeStats, setGradeStats] = useState<{ grade_level: number; class_count: number; student_count: number }[]>([])
     const [loading, setLoading] = useState(true)
 
+    const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
+
     useEffect(() => {
         let cancelled = false
+        setLoading(true)
         Promise.all([
             getStudentStats(),
             getTeacherStats(),
-            getClassesCount(),
-            getGradeStats(),
+            getClassesCount(effectiveYearId),
+            getGradeStats(effectiveYearId),
         ])
             .then(([studentStats, teacherStats, classesCount, gradeStatsData]) => {
                 if (cancelled) return
@@ -32,7 +37,12 @@ export function AdminDashboard() {
                 if (!cancelled) setLoading(false)
             })
         return () => { cancelled = true }
-    }, [pathname])
+    }, [pathname, effectiveYearId])
+
+    const activeYear = schoolYears.find((y: any) => Number(y.school_year_id) === Number(selectedSchoolYearId)) ||
+        currentSchoolYear ||
+        null
+    const activeYearName = activeYear ? (activeYear.is_current ? `${activeYear.year_name} (hiện tại)` : activeYear.year_name) : ''
 
     return (
         <div className="p-4 md:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -40,7 +50,7 @@ export function AdminDashboard() {
             <div className="mb-6 lg:mb-8 bg-gradient-to-r from-[#0B3D5C] to-[#0066CC] text-white rounded-lg p-4 md:p-6">
                 <h1 className="text-lg md:text-2xl font-bold mb-1 md:mb-2">Xin chào, Thầy Hiệu Trưởng</h1>
                 <p className="text-xs md:text-sm opacity-90 mb-3 md:mb-4">
-                    Chào mừng bạn đến với hệ thống quản lý học tập trường THCS CMC.
+                    Chào mừng bạn đến với hệ thống quản lý học tập trường THCS CMC.{activeYearName ? ` Đang xem: ${activeYearName}.` : ''}
                 </p>
                 <button className="bg-white text-[#0B3D5C] px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-semibold text-xs md:text-sm hover:bg-gray-100 transition-colors">
                     Xem Báo Cáo Toàn Trường

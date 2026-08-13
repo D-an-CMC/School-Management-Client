@@ -1,26 +1,18 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
+import { useAcademic } from '@/lib/academic-context'
 import { CustomDatePicker } from '@/components/ui/custom-date-picker'
 import { getMyTimetable, getSemesters } from '@/lib/api'
+import AdminStyleTimetableGrid from './admin-style-grid'
 
 // ──────────────────────────────────────────────────────
 // Types & Helper Functions
 // ──────────────────────────────────────────────────────
 
-interface TimetableSlot {
-  periodNo: number
-  subjectName: string
-  subjectCode: string
-  teacherOrClass: string
-  room: string
-  colorThemeIdx: number
-}
-
-const MORNING_PERIODS = [
-  { period: 1, range: '07:00 - 07:45' },
+const MORNING_PERIODS = [  { period: 1, range: '07:00 - 07:45' },
   { period: 2, range: '07:55 - 08:40' },
   { period: 3, range: '08:50 - 09:35' },
   { period: 4, range: '10:00 - 10:45' },
@@ -40,6 +32,17 @@ function getMondayOfDate(d: Date): Date {
   const day = date.getDay()
   const diff = date.getDate() - day + (day === 0 ? -6 : 1)
   return new Date(date.setDate(diff))
+}
+
+// First Monday on/after a date (matches the weeks the server stores as week_start).
+// Uses UTC exactly like the server's mondayOf(), so week matching is timezone-safe.
+function firstMondayAtOrAfter(isoStr: string): string {
+  const d = new Date(`${isoStr}T00:00:00Z`)
+  if (isNaN(d.getTime())) return isoStr
+  const day = d.getUTCDay()
+  const delta = day === 1 ? 0 : day === 0 ? 1 : 8 - day
+  d.setUTCDate(d.getUTCDate() + delta)
+  return d.toISOString().split('T')[0]
 }
 
 function getWeekDays(currentDateStr: string) {
@@ -75,442 +78,97 @@ function formatDateVietnamese(isoStr: string) {
   return `${dayName}, ${dayNum}/${monthNum}/${yearNum}`
 }
 
-const CELL_STYLE = {
-  bg: 'bg-white text-[#001d36] border-[#0055aa]',
-  tag: 'bg-blue-50 text-[#003366]',
-}
 
-function getTheme(_idx: number) {
-  return CELL_STYLE
-}
-
-// ──────────────────────────────────────────────────────
-// Mock Data Generators
-// ──────────────────────────────────────────────────────
-
-function getStudentMockSchedule(): Record<string, TimetableSlot> {
-  return {
-    '0-1': { periodNo: 1, subjectName: 'Chào cờ', subjectCode: 'CC', teacherOrClass: 'Toàn trường', room: 'Sân trường', colorThemeIdx: 0 },
-    '0-2': { periodNo: 2, subjectName: 'Toán học', subjectCode: 'TOAN', teacherOrClass: 'Thầy Nam', room: 'P.302', colorThemeIdx: 1 },
-    '0-3': { periodNo: 3, subjectName: 'Toán học', subjectCode: 'TOAN', teacherOrClass: 'Thầy Nam', room: 'P.302', colorThemeIdx: 1 },
-    '0-4': { periodNo: 4, subjectName: 'Ngữ văn', subjectCode: 'VAN', teacherOrClass: 'Cô Hoa', room: 'P.302', colorThemeIdx: 2 },
-    '0-5': { periodNo: 5, subjectName: 'Ngữ văn', subjectCode: 'VAN', teacherOrClass: 'Cô Hoa', room: 'P.302', colorThemeIdx: 2 },
-
-    '1-1': { periodNo: 1, subjectName: 'Vật lý', subjectCode: 'LY', teacherOrClass: 'Thầy Hùng', room: 'P.401', colorThemeIdx: 3 },
-    '1-2': { periodNo: 2, subjectName: 'Hóa học', subjectCode: 'HOA', teacherOrClass: 'Cô Mai', room: 'Lab 02', colorThemeIdx: 1 },
-    '1-3': { periodNo: 3, subjectName: 'Tiếng Anh', subjectCode: 'ENG', teacherOrClass: 'Ms. Nga', room: 'P.302', colorThemeIdx: 0 },
-    '1-4': { periodNo: 4, subjectName: 'Tiếng Anh', subjectCode: 'ENG', teacherOrClass: 'Ms. Nga', room: 'P.302', colorThemeIdx: 0 },
-    '1-5': { periodNo: 5, subjectName: 'Lịch sử', subjectCode: 'SU', teacherOrClass: 'Cô Lan', room: 'P.302', colorThemeIdx: 3 },
-
-    '2-1': { periodNo: 1, subjectName: 'Sinh học', subjectCode: 'SINH', teacherOrClass: 'Thầy Bình', room: 'P.302', colorThemeIdx: 0 },
-    '2-2': { periodNo: 2, subjectName: 'Địa lý', subjectCode: 'DIA', teacherOrClass: 'Cô Tuyết', room: 'P.302', colorThemeIdx: 1 },
-    '2-3': { periodNo: 3, subjectName: 'Toán học', subjectCode: 'TOAN', teacherOrClass: 'Thầy Nam', room: 'P.302', colorThemeIdx: 0 },
-    '2-4': { periodNo: 4, subjectName: 'Ngữ văn', subjectCode: 'VAN', teacherOrClass: 'Cô Hoa', room: 'P.302', colorThemeIdx: 3 },
-    '2-5': { periodNo: 5, subjectName: 'GDCD', subjectCode: 'GDCD', teacherOrClass: 'Thầy Minh', room: 'P.302', colorThemeIdx: 2 },
-
-    '3-1': { periodNo: 1, subjectName: 'Tin học', subjectCode: 'TIN', teacherOrClass: 'Thầy Sơn', room: 'Lab IT', colorThemeIdx: 1 },
-    '3-2': { periodNo: 2, subjectName: 'Tin học', subjectCode: 'TIN', teacherOrClass: 'Thầy Sơn', room: 'Lab IT', colorThemeIdx: 1 },
-    '3-3': { periodNo: 3, subjectName: 'Tiếng Anh', subjectCode: 'ENG', teacherOrClass: 'Ms. Nga', room: 'P.302', colorThemeIdx: 0 },
-    '3-4': { periodNo: 4, subjectName: 'Vật lý', subjectCode: 'LY', teacherOrClass: 'Thầy Hùng', room: 'P.401', colorThemeIdx: 3 },
-    '3-5': { periodNo: 5, subjectName: 'Thể dục', subjectCode: 'TD', teacherOrClass: 'Thầy Cường', room: 'Sân tập', colorThemeIdx: 4 },
-
-    '4-1': { periodNo: 1, subjectName: 'Toán học', subjectCode: 'TOAN', teacherOrClass: 'Thầy Nam', room: 'P.302', colorThemeIdx: 1 },
-    '4-2': { periodNo: 2, subjectName: 'Ngữ văn', subjectCode: 'VAN', teacherOrClass: 'Cô Hoa', room: 'P.302', colorThemeIdx: 0 },
-    '4-3': { periodNo: 3, subjectName: 'Tiếng Anh', subjectCode: 'ENG', teacherOrClass: 'Ms. Nga', room: 'P.302', colorThemeIdx: 3 },
-    '4-4': { periodNo: 4, subjectName: 'Hóa học', subjectCode: 'HOA', teacherOrClass: 'Cô Mai', room: 'Lab 02', colorThemeIdx: 2 },
-    '4-5': { periodNo: 5, subjectName: 'Lịch sử', subjectCode: 'SU', teacherOrClass: 'Cô Lan', room: 'P.302', colorThemeIdx: 1 },
-
-    '5-1': { periodNo: 1, subjectName: 'Mỹ thuật', subjectCode: 'MT', teacherOrClass: 'Cô Phương', room: 'P.302', colorThemeIdx: 0 },
-    '5-2': { periodNo: 2, subjectName: 'Âm nhạc', subjectCode: 'AN', teacherOrClass: 'Thầy Đức', room: 'P.Music', colorThemeIdx: 1 },
-    '5-3': { periodNo: 3, subjectName: 'Sinh hoạt', subjectCode: 'SH', teacherOrClass: 'Cô Hoa', room: 'P.302', colorThemeIdx: 2 },
-  }
-}
-
-function getTeacherMockSchedule(): Record<string, TimetableSlot> {
-  return {
-    '0-2': { periodNo: 2, subjectName: 'Toán 6A1', subjectCode: 'TOAN', teacherOrClass: 'Lớp 6A1', room: 'P.302', colorThemeIdx: 0 },
-    '0-3': { periodNo: 3, subjectName: 'Toán 6A1', subjectCode: 'TOAN', teacherOrClass: 'Lớp 6A1', room: 'P.302', colorThemeIdx: 0 },
-    '1-1': { periodNo: 1, subjectName: 'Toán 7A2', subjectCode: 'TOAN', teacherOrClass: 'Lớp 7A2', room: 'P.201', colorThemeIdx: 1 },
-    '1-2': { periodNo: 2, subjectName: 'Toán 7A2', subjectCode: 'TOAN', teacherOrClass: 'Lớp 7A2', room: 'P.201', colorThemeIdx: 1 },
-    '2-3': { periodNo: 3, subjectName: 'Toán 6A1', subjectCode: 'TOAN', teacherOrClass: 'Lớp 6A1', room: 'P.302', colorThemeIdx: 0 },
-    '3-1': { periodNo: 1, subjectName: 'Toán 8A1', subjectCode: 'TOAN', teacherOrClass: 'Lớp 8A1', room: 'P.102', colorThemeIdx: 2 },
-    '3-2': { periodNo: 2, subjectName: 'Toán 8A1', subjectCode: 'TOAN', teacherOrClass: 'Lớp 8A1', room: 'P.102', colorThemeIdx: 2 },
-    '4-1': { periodNo: 1, subjectName: 'Toán 6A1', subjectCode: 'TOAN', teacherOrClass: 'Lớp 6A1', room: 'P.302', colorThemeIdx: 0 },
-    '4-4': { periodNo: 4, subjectName: 'Toán 9A3', subjectCode: 'TOAN', teacherOrClass: 'Lớp 9A3', room: 'P.405', colorThemeIdx: 3 },
-    '4-5': { periodNo: 5, subjectName: 'Toán 9A3', subjectCode: 'TOAN', teacherOrClass: 'Lớp 9A3', room: 'P.405', colorThemeIdx: 3 },
-  }
-}
-
-// ──────────────────────────────────────────────────────
-// Reusable Dynamic Equal Timetable Grid Component
-// ──────────────────────────────────────────────────────
-
-function DynamicEqualTimetableGrid({
-  schedule,
-  selectedDateStr,
-  onSelectDate,
-}: {
-  schedule: Record<string, TimetableSlot>
-  selectedDateStr: string
-  onSelectDate: (isoDate: string) => void
-}) {
-  const weekDays = getWeekDays(selectedDateStr)
-
-  function getConsecutiveStreakInfo(
-    dayIdx: number,
-    periodNo: number,
-    sessionSlots: { period: number }[]
-  ) {
-    const current = schedule[`${dayIdx}-${periodNo}`]
-    if (!current || !current.subjectName) {
-      return { isStart: true, streakLength: 1, isChild: false }
-    }
-
-    const sessionStartPeriod = sessionSlots[0].period
-    const sessionEndPeriod = sessionSlots[sessionSlots.length - 1].period
-
-    const prevEntry = periodNo > sessionStartPeriod ? schedule[`${dayIdx}-${periodNo - 1}`] : null
-
-    if (prevEntry && prevEntry.subjectName === current.subjectName) {
-      return { isStart: false, streakLength: 1, isChild: true }
-    }
-
-    let streakLength = 1
-    for (let p = periodNo + 1; p <= sessionEndPeriod; p++) {
-      const nextEntry = schedule[`${dayIdx}-${p}`]
-      if (nextEntry && nextEntry.subjectName === current.subjectName) {
-        streakLength++
-      } else {
-        break
-      }
-    }
-
-    return { isStart: true, streakLength, isChild: false }
-  }
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-      <div className="min-w-[960px]">
-        {/* Dynamic Header Row */}
-        <div className="grid grid-cols-[140px_repeat(6,1fr)] bg-gray-100/80 border-b border-gray-200 text-[#111c2d]">
-          <div className="p-3 border-r border-gray-200 text-[11px] font-bold text-center uppercase tracking-widest text-gray-500 flex items-center justify-center">
-            TIẾT / GIỜ
-          </div>
-          {weekDays.map((d) => (
-            <div
-              key={d.isoDate}
-              onClick={() => onSelectDate(d.isoDate)}
-              className={`p-3 border-r last:border-r-0 border-gray-200 text-center cursor-pointer transition-colors ${
-                d.isCurrentSelected
-                  ? 'bg-[#003366] text-white shadow-md'
-                  : 'hover:bg-gray-200/60'
-              }`}
-            >
-              <div className={`text-sm font-bold ${d.isCurrentSelected ? 'text-white' : 'text-[#001d36]'}`}>
-                {d.label}
-              </div>
-              <div className={`text-[11px] font-semibold mt-0.5 ${d.isCurrentSelected ? 'text-blue-100' : 'text-gray-500'}`}>
-                {d.dateStr}
-              </div>
-              {d.isCurrentSelected && (
-                <span className="mt-1 inline-block text-[9px] font-extrabold uppercase px-1.5 py-0.5 bg-white text-[#003366] rounded-full">
-                  Đang xem
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Timetable Body */}
-        <div className="flex flex-col divide-y divide-gray-200">
-          {/* BUỔI SÁNG */}
-          <div className="bg-blue-50/40 px-4 py-2 font-bold text-xs text-[#003366] flex items-center gap-2 border-b border-gray-200">
-            <span className="material-symbols-outlined text-[18px]">wb_sunny</span>
-            <span className="tracking-wider">BUỔI SÁNG</span>
-          </div>
-
-          {MORNING_PERIODS.map((slot) => (
-            <div
-              key={'m-slot-' + slot.period}
-              className="grid grid-cols-[140px_repeat(6,1fr)] divide-x divide-gray-200 min-h-[88px]"
-            >
-              <div className="p-3 bg-gray-50 flex flex-col justify-center items-center text-center">
-                <span className="text-xs font-bold text-[#001d36]">Tiết {slot.period}</span>
-                <span className="text-[11px] font-medium text-gray-500 mt-0.5">{slot.range}</span>
-              </div>
-
-              {weekDays.map((d) => {
-                const cellData = schedule[`${d.dayIdx}-${slot.period}`]
-                const theme = cellData ? getTheme(cellData.colorThemeIdx) : null
-
-                const streak = getConsecutiveStreakInfo(d.dayIdx, slot.period, MORNING_PERIODS)
-
-                if (streak.isChild) {
-                  return (
-                    <div key={`m-cell-${d.dayIdx}-${slot.period}`} className="p-1.5 h-[88px] opacity-0 pointer-events-none" />
-                  )
-                }
-
-                const streakLen = streak.streakLength
-                const isMulti = streakLen > 1
-
-                const titleFontSize =
-                  streakLen === 1
-                    ? 'text-xs font-bold'
-                    : streakLen === 2
-                    ? 'text-sm font-extrabold'
-                    : streakLen === 3
-                    ? 'text-base font-black'
-                    : 'text-lg font-black tracking-wide'
-
-                return (
-                  <div
-                    key={`m-cell-${d.dayIdx}-${slot.period}`}
-                    className={`p-1.5 flex flex-col transition-all ${
-                      d.isCurrentSelected ? 'bg-blue-50/50 ring-1 ring-[#003366]/30' : ''
-                    }`}
-                    style={
-                      isMulti
-                        ? {
-                            height: `${streakLen * 88 + (streakLen - 1) * 4}px`,
-                            marginBottom: `-${(streakLen - 1) * 92}px`,
-                            zIndex: 10,
-                            position: 'relative',
-                          }
-                        : { height: '88px' }
-                    }
-                  >
-                    {cellData ? (
-                      <div
-                        className="h-full w-full rounded-lg border border-[#0055aa] bg-white p-2.5 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#003366] transition-all"
-                      >
-                        <div className="flex justify-between items-start gap-1">
-                          <div>
-                            <span className={`${titleFontSize} leading-tight block text-[#001d36]`}>{cellData.subjectName}</span>
-                            {isMulti && (
-                              <span className="text-[10px] font-bold block mt-1 bg-blue-50 text-[#003366] px-2 py-0.5 rounded-full w-fit">
-                                Tiết {slot.period} - {slot.period + streakLen - 1} ({streakLen} tiết liền)
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold shrink-0 bg-blue-50 text-[#003366]">
-                            {cellData.subjectCode}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-end text-[10px] text-gray-500 mt-1">
-                          <span className="truncate font-semibold text-[#003366]">{cellData.teacherOrClass}</span>
-                          <span className="font-semibold text-gray-400">{cellData.room}</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="h-full w-full border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-300">
-                        <span className="text-[11px] font-medium opacity-60">Trống</span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ))}
-
-          {/* BUỔI CHIỀU */}
-          <div className="bg-amber-50/40 px-4 py-2 font-bold text-xs text-amber-900 flex items-center gap-2 border-y border-gray-200">
-            <span className="material-symbols-outlined text-[18px]">bedtime</span>
-            <span className="tracking-wider">BUỔI CHIỀU</span>
-          </div>
-
-          {AFTERNOON_PERIODS.map((slot) => (
-            <div
-              key={'a-slot-' + slot.period}
-              className="grid grid-cols-[140px_repeat(6,1fr)] divide-x divide-gray-200 min-h-[88px]"
-            >
-              <div className="p-3 bg-gray-50 flex flex-col justify-center items-center text-center">
-                <span className="text-xs font-bold text-[#001d36]">Tiết {slot.period}</span>
-                <span className="text-[11px] font-medium text-gray-500 mt-0.5">{slot.range}</span>
-              </div>
-
-              {weekDays.map((d) => {
-                const cellData = schedule[`${d.dayIdx}-${slot.period}`]
-                const theme = cellData ? getTheme(cellData.colorThemeIdx) : null
-
-                const streak = getConsecutiveStreakInfo(d.dayIdx, slot.period, AFTERNOON_PERIODS)
-
-                if (streak.isChild) {
-                  return (
-                    <div key={`a-cell-${d.dayIdx}-${slot.period}`} className="p-1.5 h-[88px] opacity-0 pointer-events-none" />
-                  )
-                }
-
-                const streakLen = streak.streakLength
-                const isMulti = streakLen > 1
-
-                const titleFontSize =
-                  streakLen === 1
-                    ? 'text-xs font-bold'
-                    : streakLen === 2
-                    ? 'text-sm font-extrabold'
-                    : streakLen === 3
-                    ? 'text-base font-black'
-                    : 'text-lg font-black tracking-wide'
-
-                return (
-                  <div
-                    key={`a-cell-${d.dayIdx}-${slot.period}`}
-                    className={`p-1.5 flex flex-col transition-all ${
-                      d.isCurrentSelected ? 'bg-amber-50/40 ring-1 ring-amber-500/30' : ''
-                    }`}
-                    style={
-                      isMulti
-                        ? {
-                            height: `${streakLen * 88 + (streakLen - 1) * 4}px`,
-                            marginBottom: `-${(streakLen - 1) * 92}px`,
-                            zIndex: 10,
-                            position: 'relative',
-                          }
-                        : { height: '88px' }
-                    }
-                  >
-                    {cellData ? (
-                      <div
-                        className="h-full w-full rounded-lg border border-[#0055aa] bg-white p-2.5 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#003366] transition-all"
-                      >
-                        <div className="flex justify-between items-start gap-1">
-                          <div>
-                            <span className={`${titleFontSize} leading-tight block text-[#001d36]`}>{cellData.subjectName}</span>
-                            {isMulti && (
-                              <span className="text-[10px] font-bold block mt-1 bg-blue-50 text-[#003366] px-2 py-0.5 rounded-full w-fit">
-                                Tiết {slot.period} - {slot.period + streakLen - 1} ({streakLen} tiết liền)
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold shrink-0 bg-blue-50 text-[#003366]">
-                            {cellData.subjectCode}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-end text-[10px] text-gray-500 mt-1">
-                          <span className="truncate font-semibold text-[#003366]">{cellData.teacherOrClass}</span>
-                          <span className="font-semibold text-gray-400">{cellData.room}</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="h-full w-full border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-300">
-                        <span className="text-[11px] font-medium opacity-60">Trống</span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ──────────────────────────────────────────────────────
-// Helpers to convert raw DB timetable entries → schedule map
-// ──────────────────────────────────────────────────────
-
-function parseDayIndex(day: any): number {
-  if (day == null) return 0
-  const str = String(day).trim()
-  if (str === 'Monday' || str === 'Thứ 2' || str === '2') return 0
-  if (str === 'Tuesday' || str === 'Thứ 3' || str === '3') return 1
-  if (str === 'Wednesday' || str === 'Thứ 4' || str === '4') return 2
-  if (str === 'Thursday' || str === 'Thứ 5' || str === '5') return 3
-  if (str === 'Friday' || str === 'Thứ 6' || str === '6') return 4
-  if (str === 'Saturday' || str === 'Thứ 7' || str === '7') return 5
-  const num = Number(str)
-  return isNaN(num) ? 0 : Math.max(0, num - 2)
-}
-
-function buildScheduleFromEntries(
-  entries: any[],
-  labelField: 'teacher' | 'class'
-): Record<string, TimetableSlot> {
-  const map: Record<string, TimetableSlot> = {}
-  entries.forEach((e, i) => {
-    const dayStr = e.day_of_week ?? e.dayOfWeek ?? '2'
-    const dayIdx = parseDayIndex(dayStr)
-    const period = Number(e.period_no ?? e.periodNo ?? 1)
-    const key = `${dayIdx}-${period}`
-    const subj = e.subjects ?? e.subject ?? {}
-    const subjectName = subj.subject_name ?? e.subject_name ?? 'Môn học'
-    const subjectCode = subj.subject_code ?? e.subject_code ?? 'MON'
-    const teacher = e.teachers ?? e.teacher ?? {}
-    const cls = e.classes ?? e.class ?? {}
-    const teacherOrClass =
-      labelField === 'teacher'
-        ? cls.class_name ?? e.class_name ?? `Lớp ${e.class_id ?? ''}`
-        : teacher.full_name ?? e.teacher_name ?? `GV ${e.teacher_id ?? ''}`
-    map[key] = {
-      periodNo: period,
-      subjectName,
-      subjectCode,
-      teacherOrClass,
-      room: e.room ?? 'P.101',
-      colorThemeIdx: i,
-    }
-  })
-  return map
-}
-
-// ──────────────────────────────────────────────────────
+// ------------------------------------------------------
 // Teacher View
-// ──────────────────────────────────────────────────────
+// ------------------------------------------------------
 
 function TeacherTimetablePage({ userName }: { userName: string }) {
-  const [schedule, setSchedule] = useState<Record<string, TimetableSlot>>({})
+  const { selectedSemesterId, setSelectedSemesterId, selectedSchoolYearId, currentSchoolYear } = useAcademic()
+  const [entries, setEntries] = useState<any[]>([])
   const [loadingData, setLoadingData] = useState(true)
   const [totalPeriods, setTotalPeriods] = useState(0)
   const [classCount, setClassCount] = useState(0)
   const [semesters, setSemesters] = useState<any[]>([])
-  const [selectedSemesterId, setSelectedSemesterId] = useState<number | null>(null)
   const [selectedDateStr, setSelectedDateStr] = useState<string>(
     new Date().toISOString().split('T')[0]
   )
+  const reqSeq = useRef(0)
+  const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? null
 
   useEffect(() => {
     getSemesters().then(sems => {
       const list = Array.isArray(sems) ? sems : []
       setSemesters(list)
-      if (list.length > 0 && !selectedSemesterId) {
-        const active = list.find((s: any) => s.is_active) || list[0]
-        if (active) setSelectedSemesterId(active.semester_id)
+      if (list.length > 0) {
+        const active = list.find((s: any) => Number(s.semester_id) === Number(selectedSemesterId)) || list.find((s: any) => s.is_active) || list[0]
+        if (active?.start_date) setSelectedDateStr(firstMondayAtOrAfter(active.start_date))
+        else if (active?.end_date) setSelectedDateStr(firstMondayAtOrAfter(active.end_date))
       }
     }).catch(console.error)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Sync the viewed week to the newly selected semester's start (semester is
+  // chosen in the Header), so the schedule isn't stuck on a date from another term.
   useEffect(() => {
+    if (semesters.length === 0 || selectedSemesterId == null) return
+    const chosen = semesters.find((s: any) => Number(s.semester_id) === Number(selectedSemesterId))
+    if (chosen?.start_date) setSelectedDateStr(firstMondayAtOrAfter(chosen.start_date))
+    else if (chosen?.end_date) setSelectedDateStr(firstMondayAtOrAfter(chosen.end_date))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSemesterId, semesters.length])
+
+  useEffect(() => {
+    if (selectedSemesterId == null) return
+    const seq = ++reqSeq.current
     setLoadingData(true)
-    getMyTimetable({ semesterId: selectedSemesterId ?? undefined }).then(res => {
-      const entries = res.data ?? []
-      setSchedule(buildScheduleFromEntries(entries, 'teacher'))
-      setTotalPeriods(entries.length)
-      const uniqueClasses = new Set(entries.map((e: any) => e.class_id).filter(Boolean))
+    getMyTimetable({ semesterId: selectedSemesterId, weekStart: selectedDateStr }).then(res => {
+      if (seq !== reqSeq.current) return
+      const data = res.data ?? []
+      setEntries(data)
+      setTotalPeriods(data.length)
+      const uniqueClasses = new Set(data.map((e: any) => e.class_id).filter(Boolean))
       setClassCount(uniqueClasses.size)
     }).catch(() => {
-      setSchedule({})
+      if (seq !== reqSeq.current) return
+      setEntries([])
       setTotalPeriods(0)
       setClassCount(0)
-    }).finally(() => setLoadingData(false))
-  }, [selectedSemesterId])
+    }).finally(() => {
+      if (seq !== reqSeq.current) return
+      setLoadingData(false)
+    })
+  }, [selectedSemesterId, selectedDateStr])
 
   function handlePrevWeek() {
     const d = new Date(selectedDateStr)
     d.setDate(d.getDate() - 7)
-    setSelectedDateStr(d.toISOString().split('T')[0])
+    selectDateAndSyncSemester(d.toISOString().split('T')[0])
   }
 
   function handleNextWeek() {
     const d = new Date(selectedDateStr)
     d.setDate(d.getDate() + 7)
-    setSelectedDateStr(d.toISOString().split('T')[0])
+    selectDateAndSyncSemester(d.toISOString().split('T')[0])
   }
 
   function handleToday() {
-    setSelectedDateStr(new Date().toISOString().split('T')[0])
+    selectDateAndSyncSemester(new Date().toISOString().split('T')[0])
+  }
+
+  function selectDateAndSyncSemester(dateStr: string) {
+    const yearSems = semesters.filter((s: any) => !effectiveYearId || Number(s.school_year_id) === Number(effectiveYearId))
+    const target = (yearSems as any[]).find((s: any) => {
+      const start = s.start_date ? new Date(s.start_date) : null
+      const end = s.end_date ? new Date(s.end_date) : null
+      const d = new Date(dateStr)
+      if (start && end) return d >= start && d <= end
+      if (start) return d >= start
+      return false
+    })
+    if (target) setSelectedSemesterId(Number(target.semester_id))
+    setSelectedDateStr(dateStr)
   }
 
   if (loadingData && semesters.length === 0) {
@@ -535,21 +193,6 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
           <h1 className="text-2xl font-bold text-[#111c2d]">Lịch Giảng Dạy — {userName || 'Giáo viên'}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <select
-            value={selectedSemesterId ?? ''}
-            onChange={(e) => setSelectedSemesterId(Number(e.target.value))}
-            className="bg-white border border-gray-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:border-[#003366] shadow-sm"
-          >
-            {semesters.map((s: any) => {
-              const yr = s.school_year?.year_name ? ` - ${s.school_year.year_name}` : ''
-              return (
-                <option key={s.semester_id} value={s.semester_id}>
-                  {s.semester_name}{yr}
-                </option>
-              )
-            })}
-            {semesters.length === 0 && <option value={1}>Học kỳ I - 2023-2024</option>}
-          </select>
           <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 text-[#111c2d] hover:bg-gray-50 transition-colors shadow-sm text-xs font-semibold">
             <span className="material-symbols-outlined text-[18px]">print</span>
             <span>In lịch dạy</span>
@@ -640,10 +283,10 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
       </div>
 
       {/* Dynamic Grid */}
-      <DynamicEqualTimetableGrid
-        schedule={schedule}
+      <AdminStyleTimetableGrid
+        entries={entries}
         selectedDateStr={selectedDateStr}
-        onSelectDate={setSelectedDateStr}
+        onSelectDate={selectDateAndSyncSemester}
       />
     </div>
   )
@@ -654,36 +297,59 @@ function TeacherTimetablePage({ userName }: { userName: string }) {
 // ──────────────────────────────────────────────────────
 
 function StudentTimetablePage({ userName }: { userName: string }) {
-  const [schedule, setSchedule] = useState<Record<string, TimetableSlot>>({})
+  const { selectedSemesterId, setSelectedSemesterId, selectedSchoolYearId, currentSchoolYear } = useAcademic()
+  const [entries, setEntries] = useState<any[]>([])
   const [loadingData, setLoadingData] = useState(true)
   const [className, setClassName] = useState<string | null>(null)
+  const [roomName, setRoomName] = useState<string | null>(null)
   const [subjectCount, setSubjectCount] = useState(0)
+  const [semesters, setSemesters] = useState<any[]>([])
   const [selectedDateStr, setSelectedDateStr] = useState<string>(
     new Date().toISOString().split('T')[0]
   )
+  const reqSeq = useRef(0)
+  const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? null
 
   useEffect(() => {
+    getSemesters().then(sems => {
+      const list = Array.isArray(sems) ? sems : []
+      setSemesters(list)
+      if (list.length > 0) {
+        const active = (list.find((s: any) => Number(s.semester_id) === Number(selectedSemesterId)) || list.find((s: any) => s.is_active) || list[0]) as any
+        if (active?.start_date) setSelectedDateStr(firstMondayAtOrAfter(active.start_date))
+        else if (active?.end_date) setSelectedDateStr(firstMondayAtOrAfter(active.end_date))
+      }
+    }).catch(() => {})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (selectedSemesterId == null) return
+    const seq = ++reqSeq.current
     setLoadingData(true)
-    getMyTimetable().then(res => {
-      const entries = res.data ?? []
-      if (entries.length > 0) {
-        setSchedule(buildScheduleFromEntries(entries, 'class'))
+    setEntries([])
+    setClassName(null)
+    setRoomName(null)
+    setSubjectCount(0)
+    getMyTimetable({ semesterId: selectedSemesterId, weekStart: selectedDateStr }).then(res => {
+      if (seq !== reqSeq.current) return
+      const data = res.data ?? []
+      setEntries(data)
+      if (data.length > 0) {
         setClassName(res.className ?? null)
-        const uniqueSubjects = new Set(entries.map((e: any) => e.subject_id).filter(Boolean))
+        setRoomName(res.roomName ?? null)
+        const uniqueSubjects = new Set(data.map((e: any) => e.subject_id).filter(Boolean))
         setSubjectCount(uniqueSubjects.size)
-      } else {
-        const mock = getStudentMockSchedule()
-        setSchedule(mock)
-        setClassName('Lớp 6A1')
-        setSubjectCount(9)
       }
     }).catch(() => {
-      const mock = getStudentMockSchedule()
-      setSchedule(mock)
-      setClassName('Lớp 6A1')
-      setSubjectCount(9)
-    }).finally(() => setLoadingData(false))
-  }, [])
+      if (seq !== reqSeq.current) return
+      // On network/API error, keep the grid empty rather than guessing.
+      setEntries([])
+    }).finally(() => {
+      if (seq !== reqSeq.current) return
+      setLoadingData(false)
+    })
+  }, [selectedDateStr, selectedSemesterId])
 
   // Tasks / homework list (placeholder — will be replaced by real data when assignments module is ready)
   const tasks = [
@@ -696,17 +362,31 @@ function StudentTimetablePage({ userName }: { userName: string }) {
   function handlePrevWeek() {
     const d = new Date(selectedDateStr)
     d.setDate(d.getDate() - 7)
-    setSelectedDateStr(d.toISOString().split('T')[0])
+    selectDateAndSyncSemester(d.toISOString().split('T')[0])
   }
 
   function handleNextWeek() {
     const d = new Date(selectedDateStr)
     d.setDate(d.getDate() + 7)
-    setSelectedDateStr(d.toISOString().split('T')[0])
+    selectDateAndSyncSemester(d.toISOString().split('T')[0])
   }
 
   function handleToday() {
-    setSelectedDateStr(new Date().toISOString().split('T')[0])
+    selectDateAndSyncSemester(new Date().toISOString().split('T')[0])
+  }
+
+  function selectDateAndSyncSemester(dateStr: string) {
+    const yearSems = semesters.filter((s: any) => !effectiveYearId || Number(s.school_year_id) === Number(effectiveYearId))
+    const target = (yearSems as any[]).find((s: any) => {
+      const start = s.start_date ? new Date(s.start_date) : null
+      const end = s.end_date ? new Date(s.end_date) : null
+      const d = new Date(dateStr)
+      if (start && end) return d >= start && d <= end
+      if (start) return d >= start
+      return false
+    })
+    if (target) setSelectedSemesterId(Number(target.semester_id))
+    setSelectedDateStr(dateStr)
   }
 
   if (loadingData) {
@@ -718,7 +398,7 @@ function StudentTimetablePage({ userName }: { userName: string }) {
     )
   }
 
-  const totalPeriods = Object.keys(schedule).length
+  const totalPeriods = entries.length
   const completionPct = totalPeriods > 0 ? Math.min(100, Math.round((totalPeriods / 30) * 100)) : 0
 
   return (
@@ -762,7 +442,7 @@ function StudentTimetablePage({ userName }: { userName: string }) {
         <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-emerald-600 flex justify-between items-start">
           <div>
             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Phòng học cố định</span>
-            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">Phòng 302</span>
+            <span className="text-2xl font-extrabold text-[#001d36] block mt-1">{roomName || '—'}</span>
           </div>
           <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700">
             <span className="material-symbols-outlined text-[20px]">door_sliding</span>
@@ -784,7 +464,7 @@ function StudentTimetablePage({ userName }: { userName: string }) {
             <div className="w-36 shrink-0">
               <CustomDatePicker
                 value={selectedDateStr}
-                onChange={(val) => val && setSelectedDateStr(val)}
+                onChange={(val) => val && selectDateAndSyncSemester(val)}
                 placeholder="dd/mm/yyyy"
                 minYear={2020}
                 maxYear={2035}
@@ -819,10 +499,10 @@ function StudentTimetablePage({ userName }: { userName: string }) {
       </div>
 
       {/* Grid View */}
-      <DynamicEqualTimetableGrid
-        schedule={schedule}
+      <AdminStyleTimetableGrid
+        entries={entries}
         selectedDateStr={selectedDateStr}
-        onSelectDate={setSelectedDateStr}
+        onSelectDate={selectDateAndSyncSemester}
       />
 
       {/* Bottom Widgets */}

@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth-context'
+import { useAcademic } from '@/lib/academic-context'
 import { getClasses, getClassStudents, getMyStudentInfo } from '@/lib/api'
 import Link from 'next/link'
 
 export default function MyClassesPage() {
   const { user } = useAuth()
+  const { selectedSchoolYearId } = useAcademic()
   const isTeacher = user?.role === 'teacher'
   const teacherId = (user as any)?.teacherId
   const [classes, setClasses] = useState<any[]>([])
@@ -19,7 +21,7 @@ export default function MyClassesPage() {
   useEffect(() => {
     if (isTeacher && teacherId) {
       setLoading(true)
-      getClasses({ teacherId, limit: 50 })
+      getClasses({ teacherId, limit: 50, schoolYearId: selectedSchoolYearId ?? undefined })
         .then((res) => { setClasses(res?.data ?? []) })
         .catch(() => {})
         .finally(() => { setLoading(false) })
@@ -37,7 +39,7 @@ export default function MyClassesPage() {
     } else {
       setLoading(false)
     }
-  }, [isTeacher, teacherId])
+  }, [isTeacher, teacherId, selectedSchoolYearId])
 
   const handleClassClick = (classId: number) => {
     setSelectedClass(classId)

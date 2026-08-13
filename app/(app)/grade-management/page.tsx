@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects } from '@/lib/api'
+import { useAcademic } from '@/lib/academic-context'
+import { isScoredSubject, isGradedSubject } from '@/lib/utils'
 
 interface GradeStudent {
   id: string
@@ -14,11 +16,13 @@ interface GradeStudent {
   aiPrediction: string
   average: string
   warning?: boolean
+  ranking?: string
   // Grade item IDs from backend for updating existing records
-  gradeItemIds?: { freq: (number|null)[]; midTerm: number|null; finalTerm: number|null }
+  gradeItemIds?: { freq: (number | null)[]; midTerm: number | null; finalTerm: number | null }
 }
 
 export default function GradeManagementPage() {
+  const { selectedSemesterId, selectedSchoolYearId, semesters, currentSchoolYear, reload } = useAcademic()
   const [classes, setClasses] = useState<any[]>([])
   const [selectedClass, setSelectedClass] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
@@ -33,28 +37,32 @@ export default function GradeManagementPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
+  const [confirmBack, setConfirmBack] = useState(false)
 
-  const draftStorageKey = useMemo(() => {
-    if (!selectedClass) return null
-    return `draft_grades_${selectedClass.class_id}_${selectedSubject}_${selectedSemester}`
-  }, [selectedClass, selectedSubject, selectedSemester])
+  // Sync the local semester dropdown to the header selection (Học kỳ I/II) for ANY selected year.
+  useEffect(() => {
+    if (!selectedSemesterId) return
+    const chosen = semesters.find((s: any) => Number(s.semester_id) === Number(selectedSemesterId))
+    const label = chosen ? (Number(chosen.term_order) === 2 ? 'Học kỳ II' : 'Học kỳ I') : null
+    if (label && label !== selectedSemester && !isDirty) {
+      setSelectedSemester(label)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSemesterId, semesters])
 
-  // Load Classes list & Subjects
+  // Load Classes list & Subjects (filtered by header year)
   useEffect(() => {
     setLoading(true)
     Promise.all([
-      getClasses({ limit: 100 }).catch(() => null),
+      getClasses({ limit: 100, schoolYearId: selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined }).catch(() => null),
       getSubjects().catch(() => []),
     ])
       .then(([clsRes, subjRes]) => {
-        if (clsRes?.data && clsRes.data.length > 0) {
-          setClasses(clsRes.data)
-        } else {
-          setClasses([])
-        }
+        setClasses(clsRes?.data ?? [])
         if (Array.isArray(subjRes) && subjRes.length > 0) {
-          setSubjectsList(subjRes)
-          setSelectedSubject(subjRes[0].subject_name || 'Toán học')
+          const graded = subjRes.filter((s: any) => isGradedSubject(s.subject_id))
+          setSubjectsList(graded)
+          setSelectedSubject(graded[0].subject_name || 'Toán học')
         }
       })
       .catch((err) => {
@@ -64,15 +72,7 @@ export default function GradeManagementPage() {
       .finally(() => {
         setLoading(false)
       })
-  }, [])
-
-  // Auto-save draft to localStorage whenever gradeStudents changes & isDirty is true
-  useEffect(() => {
-    if (!isDirty || !draftStorageKey || gradeStudents.length === 0) return
-    try {
-      localStorage.setItem(draftStorageKey, JSON.stringify(gradeStudents))
-    } catch {}
-  }, [gradeStudents, isDirty, draftStorageKey])
+  }, [selectedSchoolYearId, currentSchoolYear?.school_year_id])
 
   // Warn user on page refresh (F5) or closing tab if there are unsaved changes
   useEffect(() => {
@@ -91,26 +91,31 @@ export default function GradeManagementPage() {
   const fetchClassGrades = async (cls: any, subj: string, sem: string) => {
     setLoading(true)
     try {
+      const semesterId = resolveSemesterIdByLabel(sem)
+      const mode = sem === 'Cả Năm' ? 'year' : undefined
+      const targetSubjId = subjectsList.find((s: any) => s.subject_name === subj)?.subject_id
       const [studentsData, gradesData] = await Promise.all([
         getClassStudents(cls.class_id).catch(() => null),
-        getGradesByClass(cls.class_id).catch(() => null),
+        getGradesByClass(cls.class_id, targetSubjId, semesterId ?? undefined, mode).catch(() => null),
       ])
 
       const gradeMap = new Map<number, {
         freq: string[];
         midTerm: string;
         finalTerm: string;
-        itemIds: { freq: (number|null)[]; midTerm: number|null; finalTerm: number|null }
+        ranking: string;
+        itemIds: { freq: (number | null)[]; midTerm: number | null; finalTerm: number | null }
       }>()
       if (Array.isArray(gradesData)) {
         gradesData.forEach((g: any) => {
           if (!gradeMap.has(g.student_id)) {
             gradeMap.set(g.student_id, {
-              freq: [], midTerm: '', finalTerm: '',
+              freq: [], midTerm: '', finalTerm: '', ranking: g.ranking || '',
               itemIds: { freq: [], midTerm: null, finalTerm: null }
             })
           }
           const entry = gradeMap.get(g.student_id)!
+          if (g.ranking) entry.ranking = g.ranking
           const itemId = g.grade_item_id ?? g.id ?? null
           if (g.grade_type === 'TX' || g.grade_type === 'frequent') {
             entry.freq.push(String(g.score ?? ''))
@@ -123,6 +128,11 @@ export default function GradeManagementPage() {
             entry.itemIds.finalTerm = itemId
           } else if (Array.isArray(g.freq)) {
             entry.freq = g.freq.map((v: any) => String(v ?? ''))
+            if (g.midTerm != null && g.midTerm !== '') entry.midTerm = String(g.midTerm)
+            if (g.finalTerm != null && g.finalTerm !== '') entry.finalTerm = String(g.finalTerm)
+          } else if (g.midTerm != null && g.midTerm !== '') {
+            entry.midTerm = String(g.midTerm)
+            if (g.finalTerm != null && g.finalTerm !== '') entry.finalTerm = String(g.finalTerm)
           }
         })
       }
@@ -131,7 +141,7 @@ export default function GradeManagementPage() {
       if (studentsData && studentsData.length > 0) {
         mapped = studentsData.map((s: any) => {
           const gInfo = gradeMap.get(s.student_id) ?? {
-            freq: [], midTerm: '', finalTerm: '',
+            freq: [], midTerm: '', finalTerm: '', ranking: '',
             itemIds: { freq: [], midTerm: null, finalTerm: null }
           }
           const rawFreq = gInfo.freq || []
@@ -156,39 +166,13 @@ export default function GradeManagementPage() {
             aiPrediction: '--',
             average: avg,
             warning: parseFloat(avg) < 5.0,
+            ranking: gInfo.ranking,
             gradeItemIds: gInfo.itemIds,
           }
         })
       }
 
-      // Check if localStorage has unsaved draft for this specific class + subject + semester
-      const draftKey = `draft_grades_${cls.class_id}_${subj}_${sem}`
-      const savedDraft = typeof window !== 'undefined' ? localStorage.getItem(draftKey) : null
-      if (savedDraft) {
-        try {
-          const parsed = JSON.parse(savedDraft)
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setGradeStudents(parsed)
-            setIsDirty(true)
-            return
-          }
-        } catch {}
-      }
-
-      // Check if localStorage has persistent saved grades for this class + subject + semester
-      const savedKey = `saved_grades_${cls.class_id}_${subj}_${sem}`
-      const savedPerm = typeof window !== 'undefined' ? localStorage.getItem(savedKey) : null
-      if (savedPerm) {
-        try {
-          const parsed = JSON.parse(savedPerm)
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setGradeStudents(parsed)
-            setIsDirty(false)
-            return
-          }
-        } catch {}
-      }
-
+      // Always load the freshest data from the server (no stale localStorage override).
       setGradeStudents(mapped)
       setIsDirty(false)
     } catch {
@@ -216,6 +200,47 @@ export default function GradeManagementPage() {
     if (selectedClass) {
       fetchClassGrades(selectedClass, selectedSubject, newSemester)
     }
+  }
+
+  // React to header year/semester changes:
+  // - Year changed  -> go back to the class grid (class list differs per year).
+  // - Semester changed (same year) -> refetch grades for the open class.
+  const prevYearRef = useRef<number | null>(null)
+  useEffect(() => {
+    const yearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? null
+    const isYearChange = prevYearRef.current !== null && prevYearRef.current !== yearId
+    prevYearRef.current = yearId
+
+    // Year changed -> always return to the class grid.
+    if (isYearChange) {
+      setSelectedClass(null)
+      setGradeStudents([])
+      return
+    }
+
+    // Semester changed -> refetch grades for the open class using the header semester id directly.
+    if (selectedClass && selectedSemesterId) {
+      const chosen = semesters.find((s: any) => Number(s.semester_id) === Number(selectedSemesterId))
+      const label = chosen ? (Number(chosen.term_order) === 2 ? 'Học kỳ II' : 'Học kỳ I') : selectedSemester
+      fetchClassGrades(selectedClass, selectedSubject, label)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSchoolYearId, selectedSemesterId, currentSchoolYear?.school_year_id])
+
+  // Map semester label to a real semester_id from the selected school year.
+  const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? null
+  const effectiveYearSems = semesters.filter((s: any) => Number(s.school_year_id) === Number(effectiveYearId))
+
+  const labelForSemester = (s: any): string =>
+    Number(s.term_order) === 2 ? 'Học kỳ II' : 'Học kỳ I'
+
+  // Map semester label to a real semester_id from the selected school year.
+  const resolveSemesterIdByLabel = (label: string): number | undefined => {
+    const yearSems = effectiveYearSems
+    if (label === 'Học kỳ I') return yearSems.find((s: any) => Number(s.term_order) === 1)?.semester_id
+    if (label === 'Học kỳ II') return yearSems.find((s: any) => Number(s.term_order) === 2)?.semester_id
+    if (label === 'Học kỳ I - hiện tại') return yearSems.find((s: any) => s.is_active)?.semester_id
+    return undefined
   }
 
   // Calculate dynamic average for a student
@@ -272,22 +297,20 @@ export default function GradeManagementPage() {
     )
   }
 
+  // Handle live editing of "Đạt/Chưa đạt" ranking for non-scored subjects
+  const handleRankingChange = (id: string, value: string) => {
+    setIsDirty(true)
+    setGradeStudents((prev) => prev.map((s) => (s.id === id ? { ...s, ranking: value } : s)))
+  }
+
   const handleSaveGrades = async () => {
     if (!selectedClass) return
     setIsSaving(true)
     try {
-      // 1. Immediately persist to client-side saved_grades cache
-      const savedKey = `saved_grades_${selectedClass.class_id}_${selectedSubject}_${selectedSemester}`
-      localStorage.setItem(savedKey, JSON.stringify(gradeStudents))
-
-      // 2. Clear temporary draft
-      if (draftStorageKey) {
-        localStorage.removeItem(draftStorageKey)
-      }
-
-      // 3. Send to backend API with subjectId
+      // Send to backend API with subjectId + semesterId
       const targetSubj = subjectsList.find(s => s.subject_name === selectedSubject)
-      const result = await saveClassGrades(selectedClass.class_id, gradeStudents, targetSubj?.subject_id)
+      const semesterId = resolveSemesterIdByLabel(selectedSemester)
+      const result = await saveClassGrades(selectedClass.class_id, gradeStudents, targetSubj?.subject_id, semesterId)
       console.log('[SaveGrades] response:', result)
 
       setIsDirty(false)
@@ -295,23 +318,11 @@ export default function GradeManagementPage() {
       setTimeout(() => setSaveSuccess(false), 4000)
     } catch (err) {
       console.error('[SaveGrades] error:', err)
-      // Even if backend fails, local cache holds the saved data
       setIsDirty(false)
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 4000)
     } finally {
       setIsSaving(false)
-    }
-  }
-
-  const handleDiscardDraft = () => {
-    if (!selectedClass) return
-    if (confirm('Bạn có chắc muốn hủy bản nháp và khôi phục dữ liệu gốc từ máy chủ?')) {
-      if (draftStorageKey) {
-        localStorage.removeItem(draftStorageKey)
-      }
-      setIsDirty(false)
-      fetchClassGrades(selectedClass, selectedSubject, selectedSemester)
     }
   }
 
@@ -352,6 +363,9 @@ export default function GradeManagementPage() {
   }, [gradeStudents, studentSearchQuery, statusFilter])
 
   // Summary Metrics for selected class
+  const selectedSubjectId = subjectsList.find((s: any) => s.subject_name === selectedSubject)?.subject_id
+  const nonScored = isScoredSubject(selectedSubjectId) === false
+
   const classAvgMetric = useMemo(() => {
     const avgs = gradeStudents
       .map((s) => parseFloat(s.average))
@@ -532,7 +546,8 @@ export default function GradeManagementPage() {
       <div className="mb-6">
         <button
           onClick={() => {
-            if (isDirty && !confirm('Bạn chưa lưu điểm đã sửa. Bạn có chắc muốn quay lại danh sách lớp?')) {
+            if (isDirty) {
+              setConfirmBack(true)
               return
             }
             setSelectedClass(null)
@@ -579,32 +594,11 @@ export default function GradeManagementPage() {
               )}
             </select>
 
-            <select
-              value={selectedSemester}
-              onChange={(e) => handleSemesterChange(e.target.value)}
-              className="px-3 py-2 text-xs md:text-sm bg-white border border-gray-300 rounded-lg font-medium text-gray-800 focus:ring-2 focus:ring-[#003366] outline-none shadow-sm"
-            >
-              <option value="Học kỳ I">Học kỳ I</option>
-              <option value="Học kỳ II">Học kỳ II</option>
-              <option value="Cả Năm">Cả Năm</option>
-            </select>
-
-            {isDirty && (
-              <button
-                onClick={handleDiscardDraft}
-                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-semibold transition cursor-pointer"
-                title="Hủy các sửa đổi chưa lưu và tải lại điểm từ CSDL"
-              >
-                Hủy nháp
-              </button>
-            )}
-
             <button
               onClick={handleSaveGrades}
               disabled={isSaving}
-              className={`px-4 py-2 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer ${
-                isDirty ? 'bg-amber-600 hover:bg-amber-700 font-bold ring-2 ring-amber-400' : 'bg-[#003366] hover:bg-[#002244]'
-              }`}
+              className={`px-4 py-2 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer ${isDirty ? 'bg-amber-600 hover:bg-amber-700 font-bold ring-2 ring-amber-400' : 'bg-[#003366] hover:bg-[#002244]'
+                }`}
             >
               {isSaving ? (
                 <>
@@ -670,7 +664,7 @@ export default function GradeManagementPage() {
 
       {/* Filter and Student Search */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1 max-w-2xl">
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -681,7 +675,7 @@ export default function GradeManagementPage() {
             value={studentSearchQuery}
             onChange={(e) => setStudentSearchQuery(e.target.value)}
             placeholder="Tìm tên học sinh, mã HS..."
-            className="w-full pl-9 pr-4 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
+            className="w-full pl-9 pr-4 py-2 text-xs md:text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
           />
         </div>
 
@@ -724,11 +718,17 @@ export default function GradeManagementPage() {
               <tr className="bg-gray-50 border-b border-gray-200 text-gray-700 text-[11px] font-bold uppercase tracking-wider">
                 <th className="py-3 px-4 w-12 text-center">#</th>
                 <th className="py-3 px-4 min-w-[200px]">Học sinh</th>
-                <th className="py-3 px-4 text-center min-w-[240px]">Điểm thường xuyên (Hệ số 1 - 4 Cột)</th>
-                <th className="py-3 px-4 text-center w-24">Giữa kỳ (x2)</th>
-                <th className="py-3 px-4 text-center w-24">Cuối kỳ (x3)</th>
-                <th className="py-3 px-4 text-center w-28">AI Dự Đoán</th>
-                <th className="py-3 px-4 text-center w-24">ĐTB</th>
+                {nonScored ? (
+                  <th className="py-3 px-4 text-center min-w-[200px]">Xếp loại</th>
+                ) : (
+                  <>
+                    <th className="py-3 px-4 text-center min-w-[240px]">Điểm thường xuyên (Hệ số 1 - 4 Cột)</th>
+                    <th className="py-3 px-4 text-center w-24">Giữa kỳ (x2)</th>
+                    <th className="py-3 px-4 text-center w-24">Cuối kỳ (x3)</th>
+                    <th className="py-3 px-4 text-center w-28">AI Dự Đoán</th>
+                    <th className="py-3 px-4 text-center w-24">ĐTB</th>
+                  </>
+                )}
                 <th className="py-3 px-4 text-center w-28">Trạng thái</th>
               </tr>
             </thead>
@@ -756,6 +756,24 @@ export default function GradeManagementPage() {
                       </div>
                     </td>
 
+                    {nonScored ? (
+                      <td className="py-3 px-4 text-center">
+                        <select
+                          value={s.ranking || ''}
+                          onChange={(e) => handleRankingChange(s.id, e.target.value)}
+                          className={`w-40 h-9 text-center font-bold text-xs border rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none cursor-pointer ${
+                            s.ranking === 'Chưa đạt' ? 'border-red-300 bg-red-50 text-red-700' :
+                            s.ranking === 'Đạt' ? 'border-emerald-300 bg-emerald-50 text-emerald-700' :
+                            'border-gray-300 bg-gray-50 text-gray-500'
+                          }`}
+                        >
+                          <option value="">— Chọn —</option>
+                          <option value="Đạt">Đạt</option>
+                          <option value="Chưa đạt">Chưa đạt</option>
+                        </select>
+                      </td>
+                    ) : (
+                      <>
                     {/* Frequency Scores (4 Square Boxes: TX1, TX2, TX3, TX4) */}
                     <td className="py-3 px-4">
                       <div className="flex items-center justify-center gap-2">
@@ -807,10 +825,26 @@ export default function GradeManagementPage() {
                     <td className="py-3 px-4 text-center font-black text-sm text-[#003366]">
                       {s.average}
                     </td>
+                      </>
+                    )}
 
                     {/* Status Badge */}
                     <td className="py-3 px-4 text-center">
-                      {isWarning ? (
+                      {nonScored ? (
+                        s.ranking === 'Chưa đạt' ? (
+                          <span className="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-[11px] font-bold inline-block">
+                            Chưa đạt
+                          </span>
+                        ) : s.ranking === 'Đạt' ? (
+                          <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[11px] font-bold inline-block">
+                            Đạt
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-[11px] font-medium inline-block">
+                            Chưa nhập
+                          </span>
+                        )
+                      ) : isWarning ? (
                         <span className="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-[11px] font-bold inline-block">
                           ⚠️ Cảnh báo
                         </span>
@@ -843,6 +877,38 @@ export default function GradeManagementPage() {
           </table>
         </div>
       </div>
+
+      {/* CONFIRM BACK (unsaved changes) MODAL */}
+      {confirmBack && (
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmBack(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-5 bg-gradient-to-r from-amber-500 to-amber-400 text-white flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold">Chưa Lưu Thay Đổi</h3>
+                <p className="text-xs text-amber-100 mt-0.5">Lớp: {selectedClass?.class_name}</p>
+              </div>
+              <button onClick={() => setConfirmBack(false)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-gray-700">
+                Bạn chưa lưu điểm đã sửa. Bạn có chắc muốn <span className="font-bold">quay lại danh sách lớp</span> không? Thay đổi chưa lưu sẽ bị mất.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button onClick={() => setConfirmBack(false)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy Bỏ</button>
+              <button
+                onClick={() => {
+                  setConfirmBack(false)
+                  setSelectedClass(null)
+                }}
+                className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-semibold transition"
+              >
+                Quay Lại Danh Sách
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

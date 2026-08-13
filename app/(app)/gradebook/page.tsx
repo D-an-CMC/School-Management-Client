@@ -2,8 +2,11 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '@/lib/auth-context'
+import { useAcademic } from '@/lib/academic-context'
+import { isScoredSubject, isGradedSubject } from '@/lib/utils'
 import {
   getMyGrades,
+  getMyGradesYear,
   getMyStudentInfo,
   getClasses,
   getClassStudents,
@@ -12,6 +15,7 @@ import {
   getSubjects,
   getTeacherSubjects,
   getMe,
+  getTimetables,
 } from '@/lib/api'
 
 interface GradeRow {
@@ -24,6 +28,9 @@ interface GradeRow {
   finalTerm: string
   average: string
   warning?: boolean
+  ranking?: string
+  avg1?: string
+  avg2?: string
 }
 
 interface SubjectGrade {
@@ -35,6 +42,20 @@ interface SubjectGrade {
   midTerm: string
   finalTerm: string
   average: string
+  ranking?: string
+  avg1?: number | null
+  avg2?: number | null
+  nonScored?: boolean
+}
+
+// Chọn học kỳ 1 (term_order nhỏ nhất) từ danh sách học kỳ của năm hiện tại.
+function week1Semester(semesters: any[], currentSchoolYear: any): number | null {
+  const list = (semesters ?? []).filter(
+    (s: any) => currentSchoolYear && Number(s.school_year_id) === Number(currentSchoolYear.school_year_id),
+  )
+  if (!list.length) return null
+  const sorted = [...list].sort((a, b) => Number(a.term_order) - Number(b.term_order))
+  return sorted[0]?.semester_id ?? null
 }
 
 function calcAverage(freq: string[], mid: string, final: string): string {
@@ -64,46 +85,81 @@ const AVATAR_COLORS = [
 ]
 
 function StudentGradebook({ userName }: { userName: string }) {
+  const { selectedSemesterId, semesters, currentSchoolYear } = useAcademic()
   const [subjects, setSubjects] = useState<SubjectGrade[]>([])
   const [loading, setLoading] = useState(true)
   const [studentInfo, setStudentInfo] = useState<any>(null)
+  const [semMode, setSemMode] = useState<'sem1' | 'sem2' | 'year'>('year')
+  const [yearRes, setYearRes] = useState<any>(null)
 
   useEffect(() => {
     async function load() {
       setLoading(true)
       try {
-        const [gradesRes, infoRes] = await Promise.all([getMyGrades(), getMyStudentInfo()])
+        const infoRes = await getMyStudentInfo()
         setStudentInfo(infoRes)
-        if (gradesRes && gradesRes.length > 0) {
-          const subjectMap = new Map<number, SubjectGrade>()
-          for (const resItem of gradesRes) {
-            const sid = resItem.subject_id
-            if (!subjectMap.has(sid)) {
-              subjectMap.set(sid, {
-                subject_id: sid,
-                subject_name: resItem.subject_name || resItem.subjects?.subject_name || `Môn học ${sid}`,
-                subject_code: resItem.subject_code || resItem.subjects?.subject_code || 'MON',
-                teacher_name: resItem.teacher_name,
-                freq: [], midTerm: '--', finalTerm: '--', average: '--',
-              })
+        if (semMode === 'year') {
+          const yr = await getMyGradesYear()
+          setYearRes(yr)
+          const rows: SubjectGrade[] = (yr?.rows ?? []).map((s: any) => {
+            const nonScored = isScoredSubject(s.subject_id) === false
+            return {
+              subject_id: s.subject_id,
+              subject_name: s.subject_name,
+              subject_code: s.subject_code,
+              freq: [],
+              midTerm: '--',
+              finalTerm: '--',
+              average: s.yearAvg != null ? String(s.yearAvg) : '--',
+              ranking: nonScored ? s.ranking : '',
+              avg1: s.avg1,
+              avg2: s.avg2,
+              nonScored,
             }
-            const entry = subjectMap.get(sid)!
-            if (Array.isArray(resItem.grade_items)) {
-              for (const item of resItem.grade_items) {
-                const scoreStr = item.score != null ? String(item.score) : '--'
-                const typeName = (item.type_name || '').toLowerCase()
-                if (typeName.includes('giữa') || typeName.includes('mid')) {
-                  entry.midTerm = scoreStr
-                } else if (typeName.includes('cuối') || typeName.includes('final')) {
-                  entry.finalTerm = scoreStr
-                } else {
-                  entry.freq.push(scoreStr)
+          })
+          setSubjects(rows.filter((e) => isGradedSubject(e.subject_id)))
+        } else {
+          setYearRes(null)
+          const semId = semMode === 'sem1'
+            ? week1Semester(semesters, currentSchoolYear)
+            : (selectedSemesterId ?? week1Semester(semesters, currentSchoolYear))
+          const gradesRes = await getMyGrades(semId ?? undefined)
+          if (gradesRes && gradesRes.length > 0) {
+            const subjectMap = new Map<number, SubjectGrade>()
+            for (const resItem of gradesRes) {
+              const sid = resItem.subject_id
+              if (!subjectMap.has(sid)) {
+                subjectMap.set(sid, {
+                  subject_id: sid,
+                  subject_name: resItem.subject_name || resItem.subjects?.subject_name || `Môn học ${sid}`,
+                  subject_code: resItem.subject_code || resItem.subjects?.subject_code || 'MON',
+                  teacher_name: resItem.teacher_name,
+                  freq: [], midTerm: '--', finalTerm: '--', average: '--',
+                  ranking: resItem.ranking || '',
+                  avg1: resItem.avg1, avg2: resItem.avg2, nonScored: false,
+                })
+              }
+              const entry = subjectMap.get(sid)!
+              if (resItem.ranking) entry.ranking = resItem.ranking
+              if (Array.isArray(resItem.grade_items)) {
+                for (const item of resItem.grade_items) {
+                  const scoreStr = item.score != null ? String(item.score) : '--'
+                  const typeName = (item.type_name || '').toLowerCase()
+                  if (typeName.includes('giữa') || typeName.includes('mid')) {
+                    entry.midTerm = scoreStr
+                  } else if (typeName.includes('cuối') || typeName.includes('final')) {
+                    entry.finalTerm = scoreStr
+                  } else {
+                    entry.freq.push(scoreStr)
+                  }
                 }
               }
             }
+            subjectMap.forEach((e) => { e.average = calcAverage(e.freq, e.midTerm, e.finalTerm) })
+            setSubjects(Array.from(subjectMap.values()).filter((e) => isGradedSubject(e.subject_id)))
+          } else {
+            setSubjects([])
           }
-          subjectMap.forEach((e) => { e.average = calcAverage(e.freq, e.midTerm, e.finalTerm) })
-          setSubjects(Array.from(subjectMap.values()))
         }
       } catch (err) {
         console.error('Failed to load student grades', err)
@@ -112,10 +168,13 @@ function StudentGradebook({ userName }: { userName: string }) {
       }
     }
     load()
-  }, [])
+  }, [semMode, selectedSemesterId, semesters, currentSchoolYear])
 
   const overallAvg = useMemo(() => {
-    const avgs = subjects.map((s) => parseFloat(s.average)).filter((n) => !isNaN(n))
+    const avgs = subjects
+      .filter((s) => isScoredSubject(s.subject_id))
+      .map((s) => parseFloat(s.average))
+      .filter((n) => !isNaN(n))
     if (!avgs.length) return '--'
     return (avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)
   }, [subjects])
@@ -150,12 +209,42 @@ function StudentGradebook({ userName }: { userName: string }) {
         </button>
       </div>
 
+      <div className="flex flex-wrap items-center gap-2 bg-white border border-gray-200 rounded-xl p-2 shadow-sm w-fit">
+        {([
+          { key: 'sem1', label: 'Học kỳ 1' },
+          { key: 'sem2', label: 'Học kỳ 2' },
+          { key: 'year', label: 'Cả năm' },
+        ] as const).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setSemMode(t.key)}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition ${
+              semMode === t.key ? 'bg-[#001d36] text-white shadow' : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {semMode === 'year' && yearRes?.sem1Id && (
+        <p className="text-xs text-gray-400 -mt-4">
+          Điểm cả năm = (ĐTB môn HK1 + 2 × ĐTB môn HK2) / 3
+        </p>
+      )}
+
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           { label: 'Điểm TB tổng kết', value: overallAvg, color: scoreColor(overallAvg) },
           { label: 'Số môn học', value: String(subjects.length), color: 'text-gray-900' },
           { label: 'Môn giỏi (>=8.5)', value: String(subjects.filter((s) => parseFloat(s.average) >= 8.5).length), color: 'text-emerald-600' },
-          { label: 'Môn yếu (<5.0)', value: String(subjects.filter((s) => parseFloat(s.average) < 5.0).length), color: 'text-red-500' },
+          { label: 'Môn yếu (<5.0) hoặc chưa đạt', value: String(
+            subjects.filter((s) => {
+              const n = parseFloat(s.average)
+              if (!isNaN(n)) return n < 5.0
+              return isScoredSubject(s.subject_id) === false && s.ranking === 'Chưa đạt'
+            }).length
+          ), color: 'text-red-500' },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">{stat.label}</p>
@@ -176,6 +265,8 @@ function StudentGradebook({ userName }: { userName: string }) {
             const colorClass = AVATAR_COLORS[idx % AVATAR_COLORS.length]
             const avg = parseFloat(subj.average)
             const isWarn = !isNaN(avg) && avg < 5.0
+            const nonScored = !isScoredSubject(subj.subject_id)
+            const rankVal = subj.ranking || ''
             return (
               <div key={subj.subject_id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                 <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -191,37 +282,62 @@ function StudentGradebook({ userName }: { userName: string }) {
                   <div className="flex items-center gap-3">
                     {isWarn && <span className="px-2.5 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase">Cần cải thiện</span>}
                     <div className="text-right">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Điểm TB</p>
-                      <span className={`text-3xl font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{nonScored ? 'Xếp loại' : 'Điểm TB'}</p>
+                      {nonScored ? (
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
+                          rankVal && rankVal !== 'Chưa đạt' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          {rankVal || 'Chưa nhập'}
+                        </span>
+                      ) : (
+                        <span className={`text-3xl font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
+                      )}
                     </div>
                   </div>
                 </div>
-                <div className="p-5 grid grid-cols-1 sm:grid-cols-5 gap-4">
-                  <div className="col-span-1 sm:col-span-2 bg-gray-50 rounded-lg border border-gray-200 p-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Thường xuyên</p>
-                    {subj.freq.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5">
-                        {subj.freq.map((val, i) => (
-                          <span key={i} className={`px-2.5 py-1 rounded-md text-xs font-bold border ${parseFloat(val) < 5 ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-white'}`}>{val || '--'}</span>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-400 italic">Chưa có điểm</p>
-                    )}
+                {semMode === 'year' && (
+                  <div className="px-5 py-3 grid grid-cols-2 gap-4 border-b border-gray-100 bg-[#fafcff]">
+                    <div>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Học kỳ 1</p>
+                      {nonScored ? (
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
+                          subj.ranking === 'Chưa đạt' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
+                        }`}>
+                          {subj.ranking && subj.ranking !== 'Chưa đạt' ? 'Đạt' : subj.ranking || '—'}
+                        </span>
+                      ) : (
+                        <span className="text-xl font-bold text-gray-800">{subj.avg1 != null ? subj.avg1 : '—'}</span>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Học kỳ 2</p>
+                      {nonScored ? (
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
+                          subj.ranking === 'Chưa đạt' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
+                        }`}>
+                          {subj.ranking && subj.ranking !== 'Chưa đạt' ? 'Đạt' : subj.ranking || '—'}
+                        </span>
+                      ) : (
+                        <span className="text-xl font-bold text-gray-800">{subj.avg2 != null ? subj.avg2 : '—'}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg border border-gray-200 p-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Giữa kỳ</p>
-                    <p className="text-xl font-bold text-gray-900">{subj.midTerm}</p>
+                )}
+                {nonScored ? (
+                  <div className="p-5">
+                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-3 flex items-center justify-between">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Kết quả</p>
+                      <p className="text-sm font-bold text-gray-800">{rankVal || 'Chưa có kết quả'}</p>
+                    </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg border border-gray-200 p-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Cuối kỳ</p>
-                    <p className="text-xl font-bold text-gray-900">{subj.finalTerm}</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg border border-gray-200 p-3 flex flex-col justify-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Đánh giá</p>
-                    <p className="text-xs font-semibold text-gray-700">{avg >= 8.0 ? 'Xuất sắc' : avg >= 6.5 ? 'Khá' : avg >= 5.0 ? 'Trung bình' : isNaN(avg) ? '--' : 'Yếu'}</p>
+                ) : (
+                <div className="p-5">
+                  <div className="bg-gray-50 rounded-lg border border-gray-200 p-3 flex items-center justify-between">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Đánh giá</p>
+                    <p className="text-sm font-bold text-gray-800">{avg >= 8.0 ? 'Xuất sắc' : avg >= 6.5 ? 'Khá' : avg >= 5.0 ? 'Trung bình' : isNaN(avg) ? '--' : 'Yếu'}</p>
                   </div>
                 </div>
+                )}
               </div>
             )
           })}
@@ -232,32 +348,93 @@ function StudentGradebook({ userName }: { userName: string }) {
 }
 
 function TeacherGradebook({ userName }: { userName: string }) {
+  const { selectedSemesterId, selectedSchoolYearId, currentSchoolYear, semesters } = useAcademic()
   const [classes, setClasses] = useState<any[]>([])
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null)
   const [subjects, setSubjects] = useState<any[]>([])
   const [selectedSubjectId, setSelectedSubjectId] = useState<number | null>(null)
+  const [subjectByClass, setSubjectByClass] = useState<Record<number, any[]>>({})
   const [rows, setRows] = useState<GradeRow[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saveOk, setSaveOk] = useState(false)
+  const [saveErr, setSaveErr] = useState<string | null>(null)
+  const [semMode, setSemMode] = useState<'sem1' | 'sem2' | 'year'>('year')
 
+  const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
+  const yearSems = effectiveYearId != null
+    ? semesters.filter((s: any) => Number(s.school_year_id) === Number(effectiveYearId))
+    : []
+  const defaultSem = yearSems.find((s: any) => s.is_active)?.semester_id ?? yearSems[0]?.semester_id
+  const sem1Id = yearSems.length ? yearSems[0]?.semester_id ?? null : null
+  const sem2Id = yearSems.length > 1 ? yearSems[1]?.semester_id ?? null : null
+  const effectiveSemesterId = selectedSemesterId ?? defaultSem
+  // Học kỳ hiển thị theo tab: ưu tiên tab, fallback về học kỳ từ header.
+  const activeSemesterId = semMode === 'sem1'
+    ? (sem1Id ?? effectiveSemesterId)
+    : semMode === 'sem2'
+      ? (sem2Id ?? effectiveSemesterId)
+      : effectiveSemesterId
+  const isYearView = semMode === 'year'
+
+  // Classes & subjects the teacher actually teaches come from the timetables of the
+  // selected semester/year (not teaching_assignments, which may be empty).
   useEffect(() => {
     async function init() {
       setLoading(true)
       try {
         const me = await getMe()
         const tId = me?.teacherId ?? null
-        const clsRes = tId ? await getClasses({ teacherId: tId, limit: 50 }) : await getClasses({ limit: 50 })
-        const clsList = clsRes?.data ?? []
-        setClasses(clsList)
-        if (clsList.length > 0) setSelectedClassId(clsList[0].class_id)
-
-        let subjList: any[] = []
-        if (tId) {
-          subjList = await getTeacherSubjects(tId)
+        if (!tId) {
+          setClasses([])
+          setSubjects([])
+          setSelectedClassId(null)
+          setSelectedSubjectId(null)
+          return
         }
-        setSubjects(subjList)
-        if (subjList.length > 0) setSelectedSubjectId(subjList[0].subject_id)
+        const ttRes = await getTimetables({ teacherId: tId, semesterId: effectiveSemesterId, limit: 500 })
+        const entries: any[] = ttRes?.data ?? []
+        const clsMap = new Map<number, any>()
+        const byClass = new Map<number, Map<number, any>>()
+        entries.forEach((t: any) => {
+          const subjRel = Array.isArray(t.subjects) ? t.subjects[0] : t.subjects
+          if (t.class_id != null) {
+            clsMap.set(Number(t.class_id), {
+              class_id: t.class_id,
+              class_name: t.class_name || (Array.isArray(t.classes) ? t.classes[0]?.class_name : t.classes?.class_name) || `Lớp ${t.class_id}`,
+              homeroom_teacher_name: t.classes?.homeroom_teacher_name,
+            })
+          }
+          if (t.subject_id != null && subjRel?.subject_name) {
+            const cid = Number(t.class_id)
+            if (!byClass.has(cid)) byClass.set(cid, new Map())
+            byClass.get(cid)!.set(Number(t.subject_id), {
+              subject_id: t.subject_id,
+              subject_name: subjRel.subject_name,
+              subject_code: subjRel.subject_code,
+            })
+          }
+        })
+        const clsList = Array.from(clsMap.values()).sort((a, b) => {
+          const matchA = (a.class_name || '').match(/\d+/)
+          const matchB = (b.class_name || '').match(/\d+/)
+          const gradeA = matchA ? parseInt(matchA[0], 10) : 999
+          const gradeB = matchB ? parseInt(matchB[0], 10) : 999
+          if (gradeA !== gradeB) return gradeA - gradeB
+          return (a.class_name || '').localeCompare(b.class_name || '', 'vi', { numeric: true, sensitivity: 'base' })
+        })
+        const byClassObj: Record<number, any[]> = {}
+        byClass.forEach((m, cid) => {
+          byClassObj[cid] = Array.from(m.values()).filter((v) => isGradedSubject(v.subject_id))
+        })
+        setClasses(clsList)
+        setSubjectByClass(byClassObj)
+        const firstSubjList = byClassObj[clsList[0]?.class_id] ?? []
+        setSubjects(firstSubjList)
+        if (clsList.length > 0) setSelectedClassId(clsList[0].class_id)
+        else setSelectedClassId(null)
+        if (firstSubjList.length > 0) setSelectedSubjectId(firstSubjList[0].subject_id)
+        else setSelectedSubjectId(null)
       } catch (err) {
         console.error('Failed to init teacher gradebook', err)
       } finally {
@@ -265,7 +442,24 @@ function TeacherGradebook({ userName }: { userName: string }) {
       }
     }
     init()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveYearId, effectiveSemesterId])
+
+  // When the selected class changes, show only the subjects the teacher teaches in that class.
+  useEffect(() => {
+    if (selectedClassId == null) {
+      setSubjects([])
+      setSelectedSubjectId(null)
+      return
+    }
+    const subjList = subjectByClass[selectedClassId] ?? []
+    setSubjects(subjList)
+    // Reset subject selection if the previous subject isn't taught in this class.
+    if (!subjList.some((s: any) => Number(s.subject_id) === Number(selectedSubjectId))) {
+      setSelectedSubjectId(subjList[0]?.subject_id ?? null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedClassId, subjectByClass])
 
   const loadGradesData = async () => {
     if (!selectedClassId) return
@@ -273,24 +467,33 @@ function TeacherGradebook({ userName }: { userName: string }) {
     try {
       const [studentsData, gradesData] = await Promise.all([
         getClassStudents(selectedClassId!),
-        getGradesByClass(selectedClassId!, selectedSubjectId ?? undefined),
+        isYearView
+          ? getGradesByClass(selectedClassId!, selectedSubjectId ?? undefined, undefined, 'year')
+          : getGradesByClass(selectedClassId!, selectedSubjectId ?? undefined, activeSemesterId ?? undefined),
       ])
       const studentList: any[] = studentsData ?? []
       const gradeList: any[] = Array.isArray(gradesData) ? gradesData : []
-      const gradeMap = new Map<number, { freq: string[]; midTerm: string; finalTerm: string }>()
+      const gradeMap = new Map<number, { freq: string[]; midTerm: string; finalTerm: string; ranking: string; avg1?: string; avg2?: string }>()
 
       gradeList.forEach((g: any) => {
         if (g.student_id) {
+          const sem1 = g.sem1 || {}
+          const sem2 = g.sem2 || {}
+          const a1 = isYearView ? calcAverage(Array.isArray(sem1.freq) ? sem1.freq : [], sem1.midTerm, sem1.finalTerm) : undefined
+          const a2 = isYearView ? calcAverage(Array.isArray(sem2.freq) ? sem2.freq : [], sem2.midTerm, sem2.finalTerm) : undefined
           gradeMap.set(g.student_id, {
             freq: Array.isArray(g.freq) ? g.freq : [],
             midTerm: g.midTerm != null && g.midTerm !== '' ? String(g.midTerm) : '',
             finalTerm: g.finalTerm != null && g.finalTerm !== '' ? String(g.finalTerm) : '',
+            ranking: g.ranking || '',
+            avg1: isYearView && a1 !== '--' ? a1 : undefined,
+            avg2: isYearView && a2 !== '--' ? a2 : undefined,
           })
         }
       })
 
       const mapped: GradeRow[] = studentList.map((s: any) => {
-        const g = gradeMap.get(s.student_id) ?? { freq: [], midTerm: '', finalTerm: '' }
+        const g = gradeMap.get(s.student_id) ?? { freq: [], midTerm: '', finalTerm: '', ranking: '', avg1: undefined, avg2: undefined }
         const freq = g.freq.length >= 4 ? g.freq.slice(0, 4) : [...g.freq, ...Array(4 - g.freq.length).fill('')]
         const avg = calcAverage(freq, g.midTerm, g.finalTerm)
         return {
@@ -300,6 +503,9 @@ function TeacherGradebook({ userName }: { userName: string }) {
           studentId: s.student_code || `HS${s.student_id}`,
           freq, midTerm: g.midTerm, finalTerm: g.finalTerm, average: avg,
           warning: parseFloat(avg) < 5.0,
+          ranking: g.ranking,
+          avg1: g.avg1,
+          avg2: g.avg2,
         }
       })
       setRows(mapped)
@@ -313,9 +519,11 @@ function TeacherGradebook({ userName }: { userName: string }) {
 
   useEffect(() => {
     loadGradesData()
-  }, [selectedClassId, selectedSubjectId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedClassId, selectedSubjectId, selectedSemesterId, effectiveYearId, semMode])
 
   function handleScoreChange(id: string, field: 'freq' | 'midTerm' | 'finalTerm', index: number | undefined, value: string) {
+    if (isYearView) return
     setRows((prev) => prev.map((s) => {
       if (s.id !== id) return s
       let updated = { ...s }
@@ -326,21 +534,28 @@ function TeacherGradebook({ userName }: { userName: string }) {
     }))
   }
 
+  function handleRankingChange(id: string, value: string) {
+    if (isYearView) return
+    setRows((prev) => prev.map((s) => (s.id === id ? { ...s, ranking: value } : s)))
+  }
+
   async function handleSave() {
-    if (!selectedClassId) return
+    if (!selectedClassId || isYearView) return
     setSaving(true)
     try {
-      const res = await saveClassGrades(selectedClassId, rows, selectedSubjectId ?? undefined)
+      const res = await saveClassGrades(selectedClassId, rows, selectedSubjectId ?? undefined, activeSemesterId ?? undefined)
       if (res && res.success !== false) {
         setSaveOk(true)
         setTimeout(() => setSaveOk(false), 3000)
         await loadGradesData()
       } else {
-        alert('Lưu điểm thất bại: ' + (res?.error || 'Lỗi cơ sở dữ liệu'))
+        setSaveErr('Lưu điểm thất bại: ' + (res?.error || 'Lỗi cơ sở dữ liệu'))
+        setTimeout(() => setSaveErr(null), 4000)
       }
     } catch (err) {
       console.error('Save grade error:', err)
-      alert('Lưu điểm thất bại!')
+      setSaveErr('Lưu điểm thất bại!')
+      setTimeout(() => setSaveErr(null), 4000)
     } finally {
       setSaving(false)
     }
@@ -348,6 +563,7 @@ function TeacherGradebook({ userName }: { userName: string }) {
 
   const selectedClass = classes.find((c) => c.class_id === selectedClassId)
   const selectedSubject = subjects.find((s) => s.subject_id === selectedSubjectId)
+  const nonScored = isScoredSubject(selectedSubjectId) === false
   const classAvg = useMemo(() => {
     const avgs = rows.map((r) => parseFloat(r.average)).filter((n) => !isNaN(n))
     if (!avgs.length) return '--'
@@ -355,7 +571,7 @@ function TeacherGradebook({ userName }: { userName: string }) {
   }, [rows])
   const warningCount = rows.filter((r) => r.warning).length
   const excellentCount = rows.filter((r) => parseFloat(r.average) >= 8.5).length
-  const filledCount = rows.filter((r) => r.average !== '--').length
+  const filledCount = rows.filter((r) => r.ranking).length
 
   if (loading && classes.length === 0) {
     return (
@@ -386,15 +602,44 @@ function TeacherGradebook({ userName }: { userName: string }) {
               Da luu thanh cong
             </span>
           )}
+          {saveErr && (
+            <span className="text-xs font-bold text-red-600 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[16px]">error</span>
+              {saveErr}
+            </span>
+          )}
           <button
             onClick={handleSave}
-            disabled={saving || rows.length === 0}
+            disabled={saving || rows.length === 0 || isYearView}
             className="px-4 py-2 bg-[#001d36] hover:bg-[#00284d] text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">{saving ? 'hourglass_top' : 'save'}</span>
             {saving ? 'Dang luu...' : 'Luu diem'}
           </button>
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 bg-white border border-gray-200 rounded-xl p-2 shadow-sm w-fit">
+        {([
+          { key: 'sem1', label: 'Học kỳ 1' },
+          { key: 'sem2', label: 'Học kỳ 2' },
+          { key: 'year', label: 'Cả năm' },
+        ] as const).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setSemMode(t.key)}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition ${
+              semMode === t.key ? 'bg-[#001d36] text-white shadow' : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+        {isYearView && (
+          <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold uppercase">
+            Chỉ xem
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -433,12 +678,20 @@ function TeacherGradebook({ userName }: { userName: string }) {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[
-          { label: 'Si so', value: String(rows.length), color: 'text-gray-900' },
-          { label: 'DTB lop', value: classAvg, color: scoreColor(classAvg) },
-          { label: 'Hoc sinh gioi', value: String(excellentCount), color: 'text-emerald-600' },
-          { label: 'Can chu y (<5)', value: String(warningCount), color: 'text-red-500' },
-        ].map((stat) => (
+        {(nonScored
+          ? [
+              { label: 'Si so', value: String(rows.length), color: 'text-gray-900' },
+              { label: 'Dat', value: String(rows.filter((r) => r.ranking === 'Đạt').length), color: 'text-emerald-600' },
+              { label: 'Chua dat', value: String(rows.filter((r) => r.ranking === 'Chưa đạt').length), color: 'text-red-500' },
+              { label: 'Chua nhap', value: String(rows.filter((r) => !r.ranking).length), color: 'text-gray-400' },
+            ]
+          : [
+              { label: 'Si so', value: String(rows.length), color: 'text-gray-900' },
+              { label: 'DTB lop', value: classAvg, color: scoreColor(classAvg) },
+              { label: 'Hoc sinh gioi', value: String(excellentCount), color: 'text-emerald-600' },
+              { label: 'Can chu y (<5)', value: String(warningCount), color: 'text-red-500' },
+            ]
+        ).map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{stat.label}</p>
             <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -472,17 +725,29 @@ function TeacherGradebook({ userName }: { userName: string }) {
                 <tr>
                   <th className="px-5 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider w-10">#</th>
                   <th className="px-5 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hoc sinh</th>
-                  {['TX1','TX2','TX3','TX4'].map((h) => (
-                    <th key={h} className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">{h}</th>
-                  ))}
-                  <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">GK <span className="text-[8px] text-orange-500">x2</span></th>
-                  <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">CK <span className="text-[8px] text-red-500">x3</span></th>
-                  <th className="px-5 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">DTB</th>
+                  {isYearView && !nonScored && (
+                    <>
+                      <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">HK1</th>
+                      <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">HK2</th>
+                    </>
+                  )}
+                  {nonScored ? (
+                    <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Xep loai</th>
+                  ) : (
+                    <>
+                      {['TX1','TX2','TX3','TX4'].map((h) => (
+                        <th key={h} className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">{h}</th>
+                      ))}
+                      <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">GK <span className="text-[8px] text-orange-500">x2</span></th>
+                      <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">CK <span className="text-[8px] text-red-500">x3</span></th>
+                      <th className="px-5 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">DTB</th>
+                    </>
+                  )}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-50">
                 {rows.map((row, idx) => (
-                  <tr key={row.id} className={`transition-colors ${row.warning ? 'bg-red-50/30 hover:bg-red-50/60' : 'hover:bg-gray-50/60'}`}>
+                  <tr key={row.id} className={`transition-colors ${nonScored ? 'hover:bg-gray-50/60' : row.warning ? 'bg-red-50/30 hover:bg-red-50/60' : 'hover:bg-gray-50/60'}`}>
                     <td className="px-5 py-3 text-xs text-gray-400 font-semibold">{idx + 1}</td>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
@@ -495,14 +760,52 @@ function TeacherGradebook({ userName }: { userName: string }) {
                         </div>
                       </div>
                     </td>
+                    {isYearView && !nonScored && (
+                      <>
+                        <td className="px-3 py-3 text-center">
+                          <span className={`inline-flex items-center justify-center w-12 py-1 rounded-full text-xs font-bold ${
+                            row.avg1 && parseFloat(row.avg1) < 5 ? 'bg-red-100 text-red-700' : 'bg-gray-50 text-gray-700'
+                          }`}>
+                            {row.avg1 ?? '—'}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3 text-center">
+                          <span className={`inline-flex items-center justify-center w-12 py-1 rounded-full text-xs font-bold ${
+                            row.avg2 && parseFloat(row.avg2) < 5 ? 'bg-red-100 text-red-700' : 'bg-gray-50 text-gray-700'
+                          }`}>
+                            {row.avg2 ?? '—'}
+                          </span>
+                        </td>
+                      </>
+                    )}
+                    {nonScored ? (
+                      <td className="px-3 py-3 text-center">
+                        <select
+                          value={row.ranking || ''}
+                          onChange={(e) => handleRankingChange(row.id, e.target.value)}
+                          disabled={isYearView}
+                          className={`w-32 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition cursor-pointer ${isYearView ? 'opacity-60 cursor-not-allowed ' : ''}${
+                            row.ranking === 'Chưa đạt' ? 'border-red-300 text-red-700 bg-red-50' :
+                            row.ranking === 'Đạt' ? 'border-emerald-300 text-emerald-700 bg-emerald-50' :
+                            'border-gray-200 text-gray-500 bg-gray-50'
+                          }`}
+                        >
+                          <option value="">--</option>
+                          <option value="Đạt">Đạt</option>
+                          <option value="Chưa đạt">Chưa đạt</option>
+                        </select>
+                      </td>
+                    ) : (
+                      <>
                     {row.freq.map((val, i) => (
                       <td key={i} className="px-3 py-3 text-center">
                         <input
                           type="text"
                           value={val}
                           onChange={(e) => handleScoreChange(row.id, 'freq', i, e.target.value)}
+                          disabled={isYearView}
                           placeholder="-"
-                          className={`w-10 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${
+                          className={`w-10 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${isYearView ? 'opacity-60 cursor-not-allowed ' : ''}${
                             parseFloat(val) < 5 && val !== '' ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-gray-50'
                           }`}
                         />
@@ -514,8 +817,9 @@ function TeacherGradebook({ userName }: { userName: string }) {
                           type="text"
                           value={row[field]}
                           onChange={(e) => handleScoreChange(row.id, field, undefined, e.target.value)}
+                          disabled={isYearView}
                           placeholder="-"
-                          className={`w-12 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${
+                          className={`w-12 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${isYearView ? 'opacity-60 cursor-not-allowed ' : ''}${
                             parseFloat(row[field]) < 5 && row[field] !== '' ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-gray-50'
                           }`}
                         />
@@ -530,6 +834,8 @@ function TeacherGradebook({ userName }: { userName: string }) {
                         {row.average}
                       </span>
                     </td>
+                      </>
+                    )}
                   </tr>
                 ))}
               </tbody>

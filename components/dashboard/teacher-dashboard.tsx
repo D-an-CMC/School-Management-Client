@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth-context'
+import { useAcademic } from '@/lib/academic-context'
 import { getClasses, getAttendanceSessions, getTimetables } from '@/lib/api'
 
 export function TeacherDashboard() {
   const { user } = useAuth()
+  const { selectedSchoolYearId, currentSchoolYear, selectedSemesterId, semesters } = useAcademic()
   const teacherId = (user as any)?.teacherId
   const [classes, setClasses] = useState<any[]>([])
   const [sessions, setSessions] = useState<any[]>([])
   const [allTimetables, setAllTimetables] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+
+  const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
+  const yearSems = effectiveYearId != null
+    ? semesters.filter((s: any) => Number(s.school_year_id) === Number(effectiveYearId))
+    : []
+  const effectiveSemesterId = selectedSemesterId ?? (yearSems.find((s: any) => s.is_active)?.semester_id ?? yearSems[0]?.semester_id)
 
   const DAY_LABELS: Record<string, string> = {
     Monday: 'Thứ 2', Tuesday: 'Thứ 3', Wednesday: 'Thứ 4',
@@ -24,9 +32,9 @@ export function TeacherDashboard() {
     if (!teacherId) return
     setLoading(true)
     Promise.all([
-      getClasses({ teacherId, limit: 20 }),
+      getClasses({ teacherId, limit: 20, schoolYearId: effectiveYearId }),
       getAttendanceSessions({ teacherId, limit: 5 }),
-      getTimetables({ teacherId, limit: 200 }),
+      getTimetables({ teacherId, limit: 200, semesterId: effectiveSemesterId }),
     ])
     .then(([cls, sess, tt]) => {
       setClasses(cls?.data ?? [])
@@ -35,7 +43,7 @@ export function TeacherDashboard() {
     })
     .catch(() => {})
     .finally(() => setLoading(false))
-  }, [teacherId])
+  }, [teacherId, effectiveYearId, effectiveSemesterId])
 
   const totalStudents = classes.reduce((sum, c) => sum + (c.student_count || 0), 0)
 
@@ -84,7 +92,7 @@ export function TeacherDashboard() {
                 <div key={tt.schedule_id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border-l-4 border-[#0066CC]">
                   <div>
                     <p className="font-semibold text-sm text-gray-900">
-                      {tt.subject_name || 'Môn học'} - Lớp {tt.class_name || tt.class_id}
+                      {(Array.isArray(tt.subjects) ? tt.subjects[0]?.subject_name : tt.subjects?.subject_name) || 'Môn học'} - Lớp {tt.class_name || (Array.isArray(tt.classes) ? tt.classes[0]?.class_name : tt.classes?.class_name) || tt.class_id}
                     </p>
                     <p className="text-xs text-gray-600">Phòng {tt.room || 'N/A'} • Tiết {tt.period_no}</p>
                   </div>

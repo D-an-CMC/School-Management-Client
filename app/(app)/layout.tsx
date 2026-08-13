@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useIsMobile } from '@/lib/use-media-query'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Header } from '@/components/layout/header'
+import { AcademicProvider } from '@/lib/academic-context'
+import { ChatWidget } from '@/components/layout/chat-widget'
 import { useCallback, useEffect, useState } from 'react'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -46,26 +48,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      {isMobile && sidebarOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/50 z-40"
-            onClick={closeSidebar}
-            aria-hidden="true"
-          />
-          <div className="fixed inset-y-0 left-0 z-50">
-            <Sidebar variant="drawer" onClose={closeSidebar} />
-          </div>
-        </>
-      )}
-      {!isMobile && <Sidebar />}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onMenuClick={openSidebar} showMenuButton={isMobile} />
-        <main className="flex-1 overflow-auto bg-gray-50">
-          {children}
-        </main>
+    <AcademicProvider>
+      <div className="flex h-screen bg-background">
+        {isMobile && sidebarOpen && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={closeSidebar}
+              aria-hidden="true"
+            />
+            <div className="fixed inset-y-0 left-0 z-50">
+              <Sidebar variant="drawer" onClose={closeSidebar} />
+            </div>
+          </>
+        )}
+        {!isMobile && <Sidebar />}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header onMenuClick={openSidebar} showMenuButton={isMobile} />
+          <main className="flex-1 overflow-auto bg-gray-50">
+            {children}
+          </main>
+        </div>
+        <ChatWidget />
       </div>
-    </div>
+    </AcademicProvider>
   )
 }

@@ -137,6 +137,13 @@ export default function UserManagementPage() {
   // Delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deletingUser, setDeletingUser] = useState<UserRow | null>(null)
+  const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  function showToast(msg: string, type: 'success' | 'error' = 'success') {
+    setToast({ msg, type })
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(null), 3500)
+  }
 
   const gradeLevels = useMemo(() => [...new Set(classOptions.map(c => c.grade_level))].sort((a, b) => a - b), [classOptions])
   const classesForSelectedGrade = useMemo(() => {
@@ -236,7 +243,7 @@ export default function UserManagementPage() {
     if (!deletingUser) return
     const res = await deleteUser(deletingUser.user_id)
     if (!res.success) {
-      alert(res.error || 'Xóa thất bại')
+      showToast(res.error || 'Xóa thất bại', 'error')
       return
     }
     setAllUsers((prev) => prev.filter((x) => x.user_id !== deletingUser.user_id))
@@ -656,7 +663,7 @@ export default function UserManagementPage() {
               <p className="text-sm font-medium text-gray-600">Giáo viên trống tiết</p>
               <div className="flex items-baseline justify-between mt-2">
                 <span className="text-2xl font-bold text-blue-900">{idleTeachingCount}</span>
-                <span className="text-xs font-semibold text-gray-500">Tại phòng hội đồng</span>
+
               </div>
             </div>
             {/* Absent */}
@@ -664,7 +671,7 @@ export default function UserManagementPage() {
               <p className="text-sm font-medium text-gray-600">Giáo viên vắng/nghỉ</p>
               <div className="flex items-baseline justify-between mt-2">
                 <span className="text-2xl font-bold text-blue-900">0</span>
-                <span className="text-xs font-semibold text-green-500">An toàn</span>
+
               </div>
             </div>
           </section>
@@ -1238,9 +1245,9 @@ export default function UserManagementPage() {
                 const newActive = !u.is_active
                 try {
                   const res = await updateUser(u.user_id, { is_active: newActive })
-                  if (!res.success) { alert(res.error || 'Không thể cập nhật trạng thái'); return }
+                  if (!res.success) { showToast(res.error || 'Không thể cập nhật trạng thái', 'error'); return }
                   setAllUsers((prev) => prev.map((x) => (x.user_id === u.user_id ? { ...x, is_active: newActive } : x)))
-                } catch (err: any) { alert('Lỗi: ' + (err.message || 'Không thể cập nhật')) }
+                } catch (err: any) { showToast('Lỗi: ' + (err.message || 'Không thể cập nhật'), 'error') }
               }}
               className={u.is_active ? "w-full text-left px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2.5 transition-colors" : "w-full text-left px-4 py-2.5 text-xs text-green-600 hover:bg-green-50 flex items-center gap-2.5 transition-colors"}
             >
@@ -1457,25 +1464,7 @@ export default function UserManagementPage() {
                 </div>
 
                 <div className="grid grid-cols-12 gap-8">
-                  {/* Avatar Section */}
-                  <div className="col-span-12 lg:col-span-3 flex flex-col items-center gap-4">
-                    <label className="text-xs font-semibold text-gray-500 uppercase self-start">Ảnh đại diện</label>
-                    <div className="relative group w-40 h-40 rounded-2xl bg-gray-50 overflow-hidden border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-all">
-                      {avatarPreview ? (
-                        <img src={avatarPreview} alt="Avatar Preview" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="flex flex-col items-center text-gray-400">
-                          <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-                            <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-                          </svg>
-                          <span className="text-xs font-medium">Tải ảnh lên</span>
-                        </div>
-                      )}
-                      <input type="file" accept="image/*" onChange={handleImageChange} className="absolute inset-0 opacity-0 cursor-pointer" />
-                    </div>
-                    <p className="text-[11px] text-center text-gray-400 leading-tight">Định dạng JPG, PNG.<br />Tối đa 2MB.</p>
-                  </div>
+
 
                   {/* Form Fields Grid */}
                   <div className="col-span-12 lg:col-span-9 grid grid-cols-2 gap-x-6 gap-y-5">
@@ -1912,6 +1901,22 @@ export default function UserManagementPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Global Toast */}
+      {toast && createPortal(
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-xl border text-sm font-semibold"
+          style={{ background: toast.type === 'success' ? 'linear-gradient(135deg,#059669,#047857)' : 'linear-gradient(135deg,#dc2626,#b91c1c)', color: '#fff', borderColor: 'transparent' }}
+          key={Date.now()}
+        >
+          <span className="material-symbols-outlined text-[18px]">{toast.type === 'success' ? 'check_circle' : 'error'}</span>
+          <span>{toast.msg}</span>
+          <button onClick={() => setToast(null)} className="ml-2 text-white/70 hover:text-white font-bold">✕</button>
+        </div>,
+        document.body
       )}
     </div>
   )

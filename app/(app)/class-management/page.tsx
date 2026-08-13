@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { getClasses, getClassStudents, getTeachers, updateClass, addStudentToClass, removeStudentFromClass } from '@/lib/api'
+import { useAcademic } from '@/lib/academic-context'
+import { getClasses, getClassStudents, getTeachers, updateClass, addStudentToClass, removeStudentFromClass, createClass, deleteClass, getStudentsCount } from '@/lib/api'
 
 interface Student {
   student_id: number
@@ -19,6 +20,7 @@ interface Teacher {
   department?: string
   email?: string
   phone?: string
+  subject?: string
 }
 
 const INITIAL_MOCK_CLASSES = [
@@ -55,6 +57,19 @@ export default function ClassManagementPage() {
   const [students, setStudents] = useState<Student[]>([])
   const [teachers, setTeachers] = useState<Teacher[]>([])
   const [loading, setLoading] = useState(true)
+  const [totalStudentsAll, setTotalStudentsAll] = useState(0)
+
+  // Modals – Create / Edit Class
+  const [showClassModal, setShowClassModal] = useState(false)
+  const [editingClass, setEditingClass] = useState<any | null>(null)
+  const [classForm, setClassForm] = useState({ class_name: '', grade_level: '' })
+  const [savingClass, setSavingClass] = useState(false)
+
+  // Notification + confirm modals (replace native alert/confirm)
+  const [notify, setNotify] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
+  const [confirmDeleteClass, setConfirmDeleteClass] = useState<any | null>(null)
+  const [confirmMismatchAdd, setConfirmMismatchAdd] = useState<{ count: number; ids: number[] } | null>(null)
+  const [confirmRemoveStudent, setConfirmRemoveStudent] = useState<number | null>(null)
 
   // Filters & Search
   const [searchClassQuery, setSearchClassQuery] = useState('')
@@ -85,12 +100,40 @@ export default function ClassManagementPage() {
   })
 
   // Load Classes and Teachers list
+  const { selectedSchoolYearId, currentSchoolYear } = useAcademic()
+
+  // Birth-year rule: admission based on current school year start.
+  // A student in grade G is expected to be born ~ (startYear - G - 5).
+  // Late learners (born earlier) are allowed; only students who are too young
+  // (born after the expected/admission year) are flagged as mismatched.
+  const startYear = currentSchoolYear?.start_date
+    ? new Date(currentSchoolYear.start_date).getFullYear()
+    : new Date().getFullYear()
+  const expectedBirthYear = (grade: number | null | undefined) => (grade ? startYear - grade - 5 : null)
+  const birthYearOf = (dob?: string) =>
+    dob ? new Date(dob).getFullYear() : null
+  const isBirthYearMatch = (s: Student) => {
+    const expected = expectedBirthYear((selectedClass as any)?.grade_level)
+    const by = birthYearOf(s.date_of_birth)
+    if (expected == null || by == null) return false
+    return by <= expected
+  }
+  const birthYearNote = (s: Student) => {
+    const expected = expectedBirthYear((selectedClass as any)?.grade_level)
+    const by = birthYearOf(s.date_of_birth)
+    if (by == null) return 'Chưa có ngày sinh'
+    if (expected != null && by > expected) return `Sinh ${by} (lệch khối, cần ≤ ${expected})`
+    return null
+  }
+
   useEffect(() => {
     setLoading(true)
     Promise.all([
-      getClasses({ limit: 50 }).catch(() => null),
+      getClasses({ limit: 50, schoolYearId: selectedSchoolYearId ?? undefined }).catch(() => null),
       getTeachers({ limit: 50 }).catch(() => null),
-    ]).then(([classRes, teacherRes]) => {
+      getStudentsCount().catch(() => 0),
+    ]).then(([classRes, teacherRes, totalStudents]) => {
+      setTotalStudentsAll(totalStudents)
       if (classRes?.data && classRes.data.length > 0) {
         setClasses(classRes.data)
       } else {
@@ -105,7 +148,7 @@ export default function ClassManagementPage() {
     }).finally(() => {
       setLoading(false)
     })
-  }, [])
+  }, [selectedSchoolYearId])
 
   // When class selected, fetch students
   const handleSelectClass = async (cls: any) => {
@@ -114,21 +157,107 @@ export default function ClassManagementPage() {
     setLoading(true)
     try {
       const res = await getClassStudents(cls.class_id)
-      if (res && res.length > 0) {
-        setStudents(res)
-      } else {
-        setStudents(INITIAL_MOCK_STUDENTS)
-      }
+      setStudents(res ?? [])
     } catch {
-      setStudents(INITIAL_MOCK_STUDENTS)
+      setStudents([])
     } finally {
       setLoading(false)
     }
   }
 
+  // Open create class modal
+  const openCreateClass = () => {
+    setEditingClass(null)
+    setClassForm({ class_name: '', grade_level: '' })
+    setShowClassModal(true)
+  }
+
+  // Open edit class modal
+  const openEditClass = (cls: any) => {
+    setEditingClass(cls)
+    setClassForm({
+      class_name: cls.class_name || '',
+      grade_level: cls.grade_level ? String(cls.grade_level) : '',
+    })
+    setShowClassModal(true)
+  }
+
+  // Save create/edit class
+  const handleSaveClass = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const name = classForm.class_name.trim()
+    if (!name) return
+
+    // Prevent duplicate class name (case-insensitive), excluding the one being edited.
+    const duplicate = classes.find(c =>
+      c.class_name?.toLowerCase() === name.toLowerCase() && c.class_id !== (editingClass?.class_id ?? null)
+    )
+    if (duplicate) {
+      setNotify({ type: 'error', message: `Lớp "${duplicate.class_name}" đã tồn tại. Vui lòng chọn tên lớp khác.` })
+      return
+    }
+
+    setSavingClass(true)
+    try {
+      const gradeNum = classForm.grade_level ? parseInt(classForm.grade_level, 10) : null
+      if (editingClass) {
+        const res = await updateClass(editingClass.class_id, {
+          class_name: name,
+          grade_level: gradeNum ?? undefined,
+        })
+        if (res?.error) {
+          setNotify({ type: 'error', message: res.error })
+          setSavingClass(false)
+          return
+        }
+      } else {
+        const res = await createClass({
+          class_name: name,
+          grade_level: gradeNum ?? undefined,
+        })
+        if (res?.error) {
+          setNotify({ type: 'error', message: res.error })
+          setSavingClass(false)
+          return
+        }
+      }
+      const classRes = await getClasses({ limit: 50, schoolYearId: selectedSchoolYearId ?? undefined })
+      if (classRes?.data && classRes.data.length > 0) setClasses(classRes.data)
+      setNotify({ type: 'success', message: editingClass ? `Đã cập nhật lớp ${name}` : `Đã thêm lớp ${name}` })
+    } catch (err) {
+      console.warn('Save class error', err)
+      setNotify({ type: 'error', message: 'Lưu lớp thất bại!' })
+    } finally {
+      setSavingClass(false)
+      setShowClassModal(false)
+    }
+  }
+
+  // Delete class (opens confirm modal, then deletes)
+  const handleDeleteClass = (cls: any) => {
+    setConfirmDeleteClass(cls)
+  }
+
+  const confirmDelete = async () => {
+    if (!confirmDeleteClass) return
+    try {
+      const res = await deleteClass(confirmDeleteClass.class_id)
+      if (res?.error) {
+        setNotify({ type: 'error', message: res.error })
+        setConfirmDeleteClass(null)
+        return
+      }
+      setClasses(prev => prev.filter(c => c.class_id !== confirmDeleteClass.class_id))
+      setNotify({ type: 'success', message: `Đã xóa lớp ${confirmDeleteClass.class_name}` })
+    } catch (err) {
+      console.warn('Delete class error', err)
+      setNotify({ type: 'error', message: 'Xóa lớp thất bại!' })
+    }
+    setConfirmDeleteClass(null)
+  }
+
   // Confirm Teacher Change
-  const handleSaveHomeroomTeacher = async () => {
-    if (!selectedClass) return
+  const handleSaveHomeroomTeacher = async () => {    if (!selectedClass) return
     setIsUpdatingTeacher(true)
 
     const teacherObj = teachers.find(t => t.teacher_id === selectedTeacherId)
@@ -214,8 +343,21 @@ export default function ClassManagementPage() {
   // Handle picking existing unassigned students into class
   const handleAddSelectedStudents = async () => {
     if (!selectedClass || selectedUnassignedIds.length === 0) return
+    // If any selected student is younger than expected for this grade, ask to confirm.
+    const mismatched = unassignedStudents.filter(
+      s => selectedUnassignedIds.includes(s.student_id) && !isBirthYearMatch(s)
+    )
+    if (mismatched.length > 0) {
+      setConfirmMismatchAdd({ count: mismatched.length, ids: selectedUnassignedIds })
+      return
+    }
+    await performAddSelectedStudents(selectedUnassignedIds)
+  }
+
+  const performAddSelectedStudents = async (ids: number[]) => {
+    if (!selectedClass || ids.length === 0) return
     setIsAddingStudent(true)
-    const toAdd = unassignedStudents.filter(s => selectedUnassignedIds.includes(s.student_id))
+    const toAdd = unassignedStudents.filter(s => ids.includes(s.student_id))
     try {
       await Promise.all(
         toAdd.map(s =>
@@ -234,7 +376,7 @@ export default function ClassManagementPage() {
     // Add to local students list
     setStudents(prev => [...toAdd.map(s => ({ ...s, status: 'Đang học' })), ...prev])
     // Remove from unassigned list
-    setUnassignedStudents(prev => prev.filter(s => !selectedUnassignedIds.includes(s.student_id)))
+    setUnassignedStudents(prev => prev.filter(s => !ids.includes(s.student_id)))
     // Update count
     const updatedCount = (selectedClass.student_count || students.length) + toAdd.length
     const updatedClass = { ...selectedClass, student_count: updatedCount }
@@ -280,7 +422,6 @@ export default function ClassManagementPage() {
 
   // Handle Remove Student
   const handleRemoveStudent = async (studentId: number) => {
-    if (!confirm('Bạn có chắc chắn muốn gỡ học sinh này khỏi lớp không?')) return
     if (selectedClass) {
       try {
         await removeStudentFromClass(selectedClass.class_id, studentId)
@@ -295,6 +436,13 @@ export default function ClassManagementPage() {
       setSelectedClass(updatedClass)
       setClasses(prev => prev.map(c => c.class_id === selectedClass.class_id ? updatedClass : c))
     }
+  }
+
+  const confirmRemoveStudentAction = async () => {
+    if (confirmRemoveStudent == null) return
+    const id = confirmRemoveStudent
+    setConfirmRemoveStudent(null)
+    await handleRemoveStudent(id)
   }
 
   // Filtered Classes list
@@ -349,6 +497,7 @@ export default function ClassManagementPage() {
   if (!selectedClass) {
     const totalStudentsSum = classes.reduce((sum, c) => sum + (c.student_count || 0), 0)
     const assignedTeachersCount = classes.filter(c => !!c.homeroom_teacher_name).length
+    const unassignedStudentsCount = Math.max(0, totalStudentsAll - totalStudentsSum)
 
     return (
       <div className="p-4 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
@@ -365,6 +514,16 @@ export default function ClassManagementPage() {
           </p>
         </div>
 
+        <button
+          onClick={openCreateClass}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition shadow-sm"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Thêm Lớp Mới
+        </button>
+
         {/* Quick Stats Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
@@ -380,7 +539,10 @@ export default function ClassManagementPage() {
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-[11px] font-bold text-gray-500 uppercase">TỔNG SỐ HỌC SINH</p>
-              <p className="text-2xl font-extrabold text-emerald-600 mt-1">{totalStudentsSum} <span className="text-xs font-normal text-gray-500">em</span></p>
+              <p className="text-2xl font-extrabold text-emerald-600 mt-1">{totalStudentsSum} <span className="text-xs font-normal text-gray-500">/ {totalStudentsAll} em</span></p>
+              {unassignedStudentsCount > 0 && (
+                <p className="text-[11px] font-semibold text-red-600 mt-1">Còn {unassignedStudentsCount} học sinh chưa có lớp</p>
+              )}
             </div>
             <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold">
               👨‍🎓
@@ -488,7 +650,15 @@ export default function ClassManagementPage() {
                           <div className="w-6 h-6 rounded-full bg-[#003366] text-white flex items-center justify-center text-xs font-bold">
                             {cls.homeroom_teacher_name.charAt(0)}
                           </div>
-                          <span className="text-xs font-bold text-gray-900">{cls.homeroom_teacher_name}</span>
+                          <div>
+                            <div className="text-xs font-bold text-gray-900">{cls.homeroom_teacher_name}</div>
+                            {(() => {
+                              const ht = teachers.find(t => t.teacher_id === cls.homeroom_teacher_id)
+                              return ht?.subject ? (
+                                <div className="text-[10px] text-gray-500">Bộ môn: {ht.subject}</div>
+                              ) : null
+                            })()}
+                          </div>
                         </div>
                       ) : (
                         <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 inline-block">
@@ -500,11 +670,163 @@ export default function ClassManagementPage() {
 
                   <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#003366]">
                     <span>Quản lý danh sách & GVCN</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    <span className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openEditClass(cls) }}
+                        className="px-2 py-1 text-[11px] rounded-md text-blue-600 hover:bg-blue-50 font-semibold transition"
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDeleteClass(cls) }}
+                        className="px-2 py-1 text-[11px] rounded-md text-red-600 hover:bg-red-50 font-semibold transition"
+                      >
+                        Xóa
+                      </button>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </span>
                   </div>
                 </div>
               )
             })}
+          </div>
+        )}
+
+        {/* MODAL: CREATE / EDIT CLASS */}
+        {showClassModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowClassModal(false)}>
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+              <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-[#003366] to-[#0055a5] text-white flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold">{editingClass ? 'Sửa Thông Tin Lớp' : 'Thêm Lớp Mới'}</h3>
+                  <p className="text-xs text-blue-200 mt-0.5">Năm học hiện tại</p>
+                </div>
+                <button onClick={() => setShowClassModal(false)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+              </div>
+              <form onSubmit={handleSaveClass} className="p-8 space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Khối Lớp</label>
+                  <select
+                    value={classForm.grade_level}
+                    onChange={e => setClassForm({ ...classForm, grade_level: e.target.value })}
+                    className="w-full px-4 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-white cursor-pointer"
+                  >
+                    <option value="">-- Chọn khối --</option>
+                    {['6', '7', '8', '9'].map(g => (
+                      <option key={g} value={g}>Khối {g}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Tên Lớp <span className="text-red-500">*</span></label>
+                  <input
+                    type="text" required
+                    value={classForm.class_name}
+                    onChange={e => setClassForm({ ...classForm, class_name: e.target.value })}
+                    placeholder="Ví dụ: 9C"
+                    className="w-full px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none"
+                  />
+                </div>
+                </div>
+                <div className="flex justify-end gap-3 pt-2">
+                  <button type="button" onClick={() => setShowClassModal(false)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy bỏ</button>
+                  <button
+                    type="submit"
+                    disabled={savingClass || !classForm.class_name.trim()}
+                    className="px-5 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {savingClass ? 'Đang lưu...' : (editingClass ? 'Cập Nhật Lớp' : 'Thêm Lớp')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* NOTIFICATION MODAL */}
+        {notify && (
+          <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setNotify(null)}>
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+              <div className={`px-6 py-4 flex items-center gap-3 ${notify.type === 'error' ? 'bg-red-50' : notify.type === 'success' ? 'bg-emerald-50' : 'bg-blue-50'}`}>
+                <span className={`text-2xl ${notify.type === 'error' ? 'text-red-500' : notify.type === 'success' ? 'text-emerald-600' : 'text-blue-600'}`}>
+                  {notify.type === 'error' ? '✕' : notify.type === 'success' ? '✓' : 'ℹ'}
+                </span>
+                <h3 className={`text-sm font-bold ${notify.type === 'error' ? 'text-red-700' : notify.type === 'success' ? 'text-emerald-700' : 'text-blue-700'}`}>
+                  {notify.type === 'error' ? 'Thông báo lỗi' : notify.type === 'success' ? 'Thành công' : 'Thông báo'}
+                </h3>
+              </div>
+              <div className="px-6 py-5">
+                <p className="text-sm text-gray-700">{notify.message}</p>
+              </div>
+              <div className="px-6 py-4 border-t border-gray-100 flex justify-end">
+                <button
+                  onClick={() => setNotify(null)}
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold text-white transition ${notify.type === 'error' ? 'bg-red-600 hover:bg-red-700' : notify.type === 'success' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CONFIRM DELETE CLASS MODAL */}
+        {confirmDeleteClass && (
+          <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmDeleteClass(null)}>
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+              <div className="px-6 py-5 bg-gradient-to-r from-red-600 to-red-500 text-white flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold">Xóa Lớp</h3>
+                  <p className="text-xs text-red-100 mt-0.5">Lớp: {confirmDeleteClass.class_name}</p>
+                </div>
+                <button onClick={() => setConfirmDeleteClass(null)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+              </div>
+              <div className="px-6 py-5">
+                <p className="text-sm text-gray-700">
+                  Bạn có chắc chắn muốn xóa lớp <span className="font-bold">{confirmDeleteClass.class_name}</span> không? Hành động này không thể hoàn tác.
+                </p>
+              </div>
+              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                <button onClick={() => setConfirmDeleteClass(null)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy bỏ</button>
+                <button onClick={confirmDelete} className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition">Xóa Lớp</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CONFIRM ADD MISMATCHED (birth-year) STUDENTS */}
+        {confirmMismatchAdd && (
+          <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmMismatchAdd(null)}>
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+              <div className="px-6 py-5 bg-gradient-to-r from-amber-500 to-amber-400 text-white flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold">Cảnh Báo Năm Sinh</h3>
+                  <p className="text-xs text-amber-100 mt-0.5">Khối {selectedClass?.grade_level || ''} · Năm học {startYear}-{startYear + 1}</p>
+                </div>
+                <button onClick={() => setConfirmMismatchAdd(null)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+              </div>
+              <div className="px-6 py-5">
+                <p className="text-sm text-gray-700">
+                  Có <span className="font-bold">{confirmMismatchAdd.count}</span> học sinh được chọn có <span className="font-semibold">năm sinh trẻ hơn chuẩn</span> của khối
+                  <span className="font-bold"> {selectedClass?.grade_level || ''}</span> (cần sinh ≤ {expectedBirthYear((selectedClass as any)?.grade_level)}).
+                  Bạn vẫn muốn thêm những học sinh này vào lớp <span className="font-bold">{selectedClass?.class_name}</span> không?
+                </p>
+              </div>
+              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                <button onClick={() => setConfirmMismatchAdd(null)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy Bỏ</button>
+                <button
+                  onClick={() => {
+                    const ids = confirmMismatchAdd.ids
+                    setConfirmMismatchAdd(null)
+                    performAddSelectedStudents(ids)
+                  }}
+                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-semibold transition"
+                >
+                  Vẫn Thêm Học Sinh
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -643,7 +965,7 @@ export default function ClassManagementPage() {
                   </td>
                   <td className="py-3 px-4 text-center">
                     <button
-                      onClick={() => handleRemoveStudent(s.student_id)}
+                      onClick={() => setConfirmRemoveStudent(s.student_id)}
                       className="text-red-500 hover:text-red-700 text-xs font-semibold px-2 py-1 rounded hover:bg-red-50 transition"
                       title="Gỡ khỏi lớp"
                     >
@@ -738,7 +1060,9 @@ export default function ClassManagementPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-bold text-sm text-gray-900 truncate">{t.full_name}</div>
-                          <div className="text-xs text-gray-500 truncate">{t.department || 'Giáo viên'} · {t.teacher_code || '—'}</div>
+                          <div className="text-xs text-gray-500 truncate">
+                            {t.subject ? `Bộ môn: ${t.subject}` : (t.department || 'Giáo viên')} · {t.teacher_code || '—'}
+                          </div>
                           {isAlreadyAssigned && (
                             <span className="text-[10px] text-amber-600 font-semibold">Đang chủ nhiệm lớp khác</span>
                           )}
@@ -875,6 +1199,8 @@ export default function ClassManagementPage() {
                         {displayed.map(s => {
                           const isSelected = selectedUnassignedIds.includes(s.student_id)
                           const hasClass = !!(s as any).class_id
+                          const byMatch = isBirthYearMatch(s)
+                          const byNote = birthYearNote(s)
                           return (
                             <div
                               key={s.student_id}
@@ -884,7 +1210,7 @@ export default function ClassManagementPage() {
                               className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${isSelected
                                 ? 'border-emerald-500 bg-emerald-50 shadow-sm'
                                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                                }`}
+                                } ${!byMatch ? 'opacity-70' : ''}`}
                             >
                               <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600'
                                 }`}>
@@ -895,6 +1221,9 @@ export default function ClassManagementPage() {
                                 <div className="text-xs text-gray-500">{s.student_code || '—'} · {s.gender}</div>
                                 {hasClass && (
                                   <span className="text-[10px] text-amber-600 font-semibold">Đang ở lớp {(s as any).class_name}</span>
+                                )}
+                                {!byMatch && byNote && (
+                                  <span className="inline-block text-[10px] text-red-600 font-semibold bg-red-50 border border-red-200 rounded-full px-2 py-0.5 mt-1">⚠ {byNote}</span>
                                 )}
                               </div>
                               <div className={`w-5 h-5 shrink-0 rounded border-2 flex items-center justify-center ${isSelected ? 'border-emerald-500 bg-emerald-500' : 'border-gray-300'
@@ -988,6 +1317,30 @@ export default function ClassManagementPage() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* CONFIRM REMOVE STUDENT MODAL */}
+      {confirmRemoveStudent != null && (
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmRemoveStudent(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-5 bg-gradient-to-r from-red-600 to-red-500 text-white flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold">Gỡ Học Sinh</h3>
+                <p className="text-xs text-red-100 mt-0.5">Lớp: {selectedClass?.class_name}</p>
+              </div>
+              <button onClick={() => setConfirmRemoveStudent(null)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-gray-700">
+                Bạn có chắc chắn muốn <span className="font-bold">gỡ học sinh này khỏi lớp</span> {selectedClass?.class_name} không?
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button onClick={() => setConfirmRemoveStudent(null)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy bỏ</button>
+              <button onClick={confirmRemoveStudentAction} className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition">Gỡ Khỏi Lớp</button>
+            </div>
           </div>
         </div>
       )}

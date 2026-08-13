@@ -12,6 +12,7 @@ interface CustomDatePickerProps {
   hasError?: boolean
   disabled?: boolean
   align?: 'left' | 'right'
+  openAbove?: boolean
 }
 
 function getMaxDaysInMonth(month: number, year: number): number {
@@ -30,6 +31,7 @@ export function CustomDatePicker({
   hasError = false,
   disabled = false,
   align = 'left',
+  openAbove = false,
 }: CustomDatePickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -316,7 +318,7 @@ export function CustomDatePicker({
         <div
           className={`absolute ${
             align === 'right' ? 'right-0' : 'left-0'
-          } mt-2 z-50 w-72 bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 animate-in fade-in zoom-in-95 duration-150`}
+          } ${openAbove ? 'bottom-full mb-2' : 'mt-2'} z-50 w-72 bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 animate-in fade-in zoom-in-95 duration-150`}
         >
           {/* Header Controls */}
           <div className="flex items-center justify-between gap-1 mb-3">
