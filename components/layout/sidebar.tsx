@@ -38,7 +38,6 @@ export function Sidebar({ variant = 'default', onClose }: SidebarProps) {
     { href: '/year-transition', label: 'Chuyển năm học', icon: 'M3 4v16m0 0h16M3 20l4-4 3 3 5-6 6 7' },
     { href: '/year-result', label: 'Xét kết quả cuối năm', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
     { href: '/security-logs', label: 'Nhật ký bảo mật', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
-    { href: '/administrative-ai', label: 'AI Trợ lý Quản trị', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
   ]
 
   const teacherNavItems = [

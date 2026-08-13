@@ -204,13 +204,6 @@ export async function getClassesCount(schoolYearId?: number) {
   return json.total || 0;
 }
 
-export async function getRiskStats() {
-  const res = await apiFetch('/api/ai/risk-stats')
-  if (!res.ok) return null
-  const json = (await res.json()) as { success: boolean; data?: any }
-  return json.success ? json.data : null
-}
-
 export async function getGradeStats(schoolYearId?: number) {
   const qs = schoolYearId != null ? `?schoolYearId=${schoolYearId}` : '';
   const res = await apiFetch(`/api/classes/stats/by-grade${qs}`);
