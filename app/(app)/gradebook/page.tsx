@@ -38,6 +38,7 @@ interface SubjectGrade {
   subject_name: string
   subject_code: string
   teacher_name?: string
+  teacher_code?: string
   freq: string[]
   midTerm: string
   finalTerm: string
@@ -107,6 +108,8 @@ function StudentGradebook({ userName }: { userName: string }) {
               subject_id: s.subject_id,
               subject_name: s.subject_name,
               subject_code: s.subject_code,
+              teacher_name: s.teacher_name,
+              teacher_code: s.teacher_code,
               freq: [],
               midTerm: '--',
               finalTerm: '--',
@@ -134,6 +137,7 @@ function StudentGradebook({ userName }: { userName: string }) {
                   subject_name: resItem.subject_name || resItem.subjects?.subject_name || `Môn học ${sid}`,
                   subject_code: resItem.subject_code || resItem.subjects?.subject_code || 'MON',
                   teacher_name: resItem.teacher_name,
+                  teacher_code: resItem.teacher_code,
                   freq: [], midTerm: '--', finalTerm: '--', average: '--',
                   ranking: resItem.ranking || '',
                   avg1: resItem.avg1, avg2: resItem.avg2, nonScored: false,
@@ -276,7 +280,12 @@ function StudentGradebook({ userName }: { userName: string }) {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-900">{subj.subject_name}</h4>
-                      {subj.teacher_name && <p className="text-xs text-gray-500">GV: {subj.teacher_name}</p>}
+                      {subj.teacher_name && (
+                        <p className="text-xs text-gray-500">
+                          GV: {subj.teacher_name}
+                          {subj.teacher_code && <span className="text-gray-400"> • Mã GV: {subj.teacher_code}</span>}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -295,6 +304,26 @@ function StudentGradebook({ userName }: { userName: string }) {
                     </div>
                   </div>
                 </div>
+                {semMode !== 'year' && !nonScored && (
+                  <div className="px-5 py-3 border-b border-gray-100 bg-[#fafcff]">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Điểm thường xuyên</p>
+                        <p className="text-sm font-bold text-gray-800">
+                          {subj.freq.length > 0 ? subj.freq.join(', ') : '—'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Giữa kỳ</p>
+                        <p className="text-sm font-bold text-gray-800">{subj.midTerm !== '--' ? subj.midTerm : '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Cuối kỳ</p>
+                        <p className="text-sm font-bold text-gray-800">{subj.finalTerm !== '--' ? subj.finalTerm : '—'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {semMode === 'year' && (
                   <div className="px-5 py-3 grid grid-cols-2 gap-4 border-b border-gray-100 bg-[#fafcff]">
                     <div>

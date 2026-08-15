@@ -1,0 +1,101 @@
+<mxfile host="app.diagrams.net" agent="Next-AI-DrawIO">
+  <diagram id="diag_overview" name="Tổng Quan Kiến Trúc &amp; Vòng Đời Năm Học">
+    <mxGraphModel dx="171775" dy="97318" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p1_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" value="&lt;b&gt;HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC - TỔNG QUAN KIẾN TRÚC &amp; VÒNG ĐỜI VẬN HÀNH NĂM HỌC&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="1400" x="340" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_sec_arch" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;arcSize=6;fontSize=16;align=center;" value="&lt;b&gt;1. SƠ ĐỒ KIẾN TRÚC PHÂN TẦNG HỆ THỐNG&lt;/b&gt;" vertex="1">
+          <mxGeometry height="750" width="2000" x="50" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_client" parent="p1_sec_arch" style="swimlane;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E3A8A;rounded=1;fontSize=14;" value="&lt;b&gt;GIAO DIỆN NGƯỜI DÙNG (Next.js 16 + React 19 + Tailwind CSS v4)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="660" width="450" x="40" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_c1" parent="p1_client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" value="&lt;b&gt;Cổng Xác Thực&lt;/b&gt;&#xa;• /login (Đăng nhập, kiểm tra tính hợp lệ dữ liệu)&#xa;• Lưu trữ mã bảo mật JWT (Cookies / LocalStorage)" vertex="1">
+          <mxGeometry height="65" width="390" x="30" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_c2" parent="p1_client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" value="&lt;b&gt;Bảng Điều Khiển &amp; Thống Kê&lt;/b&gt;&#xa;• /dashboard (Biểu đồ sĩ số, phổ điểm, cảnh báo vắng học)" vertex="1">
+          <mxGeometry height="55" width="390" x="30" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_c3" parent="p1_client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" value="&lt;b&gt;Quản Lý Hồ Sơ &amp; Lớp Học&lt;/b&gt;&#xa;• /user-management (Quản lý tài khoản GV, HS, Admin)&#xa;• /class-management &amp; /my-classes (Phân lớp, GVCN)" vertex="1">
+          <mxGeometry height="65" width="390" x="30" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_c4" parent="p1_client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" value="&lt;b&gt;Thời Khóa Biểu&lt;/b&gt;&#xa;• /admin-timetable (Lưới TKB, Xếp lịch tự động)&#xa;• /timetable (Xem lịch học/dạy cá nhân)" vertex="1">
+          <mxGeometry height="65" width="390" x="30" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_c5" parent="p1_client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" value="&lt;b&gt;Điểm Danh &amp; Sổ Điểm Điện Tử&lt;/b&gt;&#xa;• /attendance (Điểm danh buổi/tiết, cảnh báo nghỉ nhiều)&#xa;• /grade-management &amp; /gradebook (Nhập điểm Thông tư 22)" vertex="1">
+          <mxGeometry height="70" width="390" x="30" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_c6" parent="p1_client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" value="&lt;b&gt;Đánh Giá Cuối Năm &amp; Chuyển Năm Học&lt;/b&gt;&#xa;• /year-result (Điểm trung bình cả năm, xếp loại học lực/hạnh kiểm)&#xa;• /year-transition (Quy trình 4 bước chuyển giao năm học mới)" vertex="1">
+          <mxGeometry height="70" width="390" x="30" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_server" parent="p1_sec_arch" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;fontColor=#14532D;rounded=1;fontSize=14;" value="&lt;b&gt;MÁY CHỦ DỊCH VỤ XỬ LÝ (Express.js 4 + TypeScript)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="660" width="620" x="640" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_s1" parent="p1_server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" value="&lt;b&gt;Tầng Xác Thực &amp; Phân Quyền Bảo Mật&lt;/b&gt;&#xa;• Xác thực mã JWT Token&#xa;• Kiểm tra ma trận phân quyền vai trò (RBAC)&#xa;• Tự động ghi nhật ký bảo mật (Địa chỉ IP, Thao tác, Thời gian)" vertex="1">
+          <mxGeometry height="75" width="560" x="30" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_s2" parent="p1_server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" value="&lt;b&gt;Các Dịch Vụ Nghiệp Vụ Cốt Lõi&lt;/b&gt;&#xa;• Quản lý Người dùng, Học sinh, Giáo viên&#xa;• Quản lý Lớp học, Phòng học, Năm học, Học kỳ" vertex="1">
+          <mxGeometry height="65" width="560" x="30" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_s3" parent="p1_server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;strokeColor=#EAB308;fontColor=#854D0E;align=left;spacingLeft=15;" value="&lt;b&gt;Động Cơ Xếp Thời Khóa Biểu Tự Động&lt;/b&gt;&#xa;• Tách môn tổ hợp KHTN (Vật Lý, Hóa Học, Sinh Học)&#xa;• Ma trận tiết học trong tuần (Tránh trùng GV và trùng Phòng học)&#xa;• Thuật toán quay lui (Backtracking) tối ưu hóa lịch giảng dạy" vertex="1">
+          <mxGeometry height="85" width="560" x="30" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_s4" parent="p1_server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" value="&lt;b&gt;Động Cơ Điểm Danh &amp; Kiểm Soát Vắng Học&lt;/b&gt;&#xa;• Quản lý buổi/tiết điểm danh&#xa;• Tự động quét giới hạn vắng: Cảnh báo tại 40 buổi, Ngưỡng 45 buổi" vertex="1">
+          <mxGeometry height="75" width="560" x="30" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_s5" parent="p1_server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" value="&lt;b&gt;Động Cơ Sổ Điểm (Quy Chế Đánh Giá Thông Tư 22)&lt;/b&gt;&#xa;• Trọng số: Thường xuyên (x1), Giữa kỳ (x2), Cuối kỳ (x3)&#xa;• Tính Điểm trung bình môn học kỳ và Điểm trung bình cả năm" vertex="1">
+          <mxGeometry height="75" width="560" x="30" y="405" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_s6" parent="p1_server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;strokeColor=#EAB308;fontColor=#854D0E;align=left;spacingLeft=15;" value="&lt;b&gt;Dịch Vụ Đánh Giá Cuối Năm &amp; Chuyển Giao Năm Học&lt;/b&gt;&#xa;• Đề xuất danh hiệu thi đua (Xuất sắc / Giỏi / Tiên tiến)&#xa;• Quy trình chuyển năm: Khối 9 tốt nghiệp; Khối 6,7,8 lên lớp; Xử lý lưu ban" vertex="1">
+          <mxGeometry height="95" width="560" x="30" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_db" parent="p1_sec_arch" style="swimlane;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#A855F7;fontColor=#581C87;rounded=1;fontSize=14;" value="&lt;b&gt;CƠ SỞ DỮ LIỆU ĐÁM MÂY (Supabase Cloud PostgreSQL)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="660" width="480" x="1420" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_tbl1" parent="p1_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" value="&lt;b&gt;Tài Khoản &amp; Phân Quyền&lt;/b&gt;&#xa;• Bảng users, roles, permissions, teachers, students, security_logs" vertex="1">
+          <mxGeometry height="95" width="400" x="40" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_tbl2" parent="p1_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" value="&lt;b&gt;Học Vụ &amp; Thời Khóa Biểu&lt;/b&gt;&#xa;• Bảng school_years, semesters, classes, rooms, subjects, timetables" vertex="1">
+          <mxGeometry height="95" width="400" x="40" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_tbl3" parent="p1_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" value="&lt;b&gt;Đánh Giá Điểm &amp; Chuyên Cần&lt;/b&gt;&#xa;• Bảng grade_types, subject_results, grade_items, attendance_records" vertex="1">
+          <mxGeometry height="95" width="400" x="40" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_tbl4" parent="p1_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" value="&lt;b&gt;Tổng Kết Cuối Năm &amp; Phân Lớp Năm Mới&lt;/b&gt;&#xa;• Bảng student_year_results, student_class_enrollments" vertex="1">
+          <mxGeometry height="95" width="400" x="40" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_conn1" edge="1" parent="p1_sec_arch" source="p1_client" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2563EB;strokeWidth=3;" target="p1_server" value="Giao thức REST API / JWT" />
+        <mxCell id="p1_conn2" edge="1" parent="p1_sec_arch" source="p1_server" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=3;" target="p1_db" value="Truy vấn dữ liệu SQL" />
+        <mxCell id="p1_sec_flow" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;arcSize=6;fontSize=16;" value="&lt;b&gt;2. QUY TRÌNH TỔNG THỂ VÒNG ĐỜI MỘT NĂM HỌC (ACADEMIC YEAR LIFECYCLE)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="400" width="2110" x="50" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="w1" parent="p1_sec_flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" value="&lt;b&gt;1. Khởi Tạo Năm Học&lt;/b&gt;&#xa;Tạo Năm học, Học kỳ,&#xa;Khai báo Phòng &amp; Lớp" vertex="1">
+          <mxGeometry height="90" width="260" x="60" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w2" parent="p1_sec_flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" value="&lt;b&gt;2. Phân Lớp &amp; Gán GVCN&lt;/b&gt;&#xa;Tiếp nhận học sinh mới&#xa;Phân công chủ nhiệm" vertex="1">
+          <mxGeometry height="90" width="260" x="380" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w3" parent="p1_sec_flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;" value="&lt;b&gt;3. Xếp Thời Khóa Biểu&lt;/b&gt;&#xa;Chạy thuật toán tự động&#xa;Phê duyệt lịch chính thức" vertex="1">
+          <mxGeometry height="90" width="280" x="700" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w4" parent="p1_sec_flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" value="&lt;b&gt;4. Giảng Dạy &amp; Điểm Danh&lt;/b&gt;&#xa;Điểm danh từng buổi học&#xa;Nhập điểm thường xuyên" vertex="1">
+          <mxGeometry height="90" width="300" x="1040" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w5" parent="p1_sec_flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" value="&lt;b&gt;5. Thi &amp; Đánh Giá Cuối Năm&lt;/b&gt;&#xa;Tính Điểm trung bình cả năm&#xa;Xét hạnh kiểm &amp; vắng học" vertex="1">
+          <mxGeometry height="90" width="280" x="1400" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w6" parent="p1_sec_flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" value="&lt;b&gt;6. Chuyển Giao Năm Mới&lt;/b&gt;&#xa;Nâng khối lớp học sinh&#xa;Kích hoạt năm học mới" vertex="1">
+          <mxGeometry height="90" width="300" x="1740" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="warr1" edge="1" parent="p1_sec_flow" source="w1" style="strokeWidth=3;" target="w2" />
+        <mxCell id="warr2" edge="1" parent="p1_sec_flow" source="w2" style="strokeWidth=3;" target="w3" />
+        <mxCell id="warr3" edge="1" parent="p1_sec_flow" source="w3" style="strokeWidth=3;" target="w4" />
+        <mxCell id="warr4" edge="1" parent="p1_sec_flow" source="w4" style="strokeWidth=3;" target="w5" />
+        <mxCell id="warr5" edge="1" parent="p1_sec_flow" source="w5" style="strokeWidth=3;" target="w6" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

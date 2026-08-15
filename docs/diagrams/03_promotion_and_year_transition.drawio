@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" modified="2026-08-15T09:46:17.006Z" agent="Next-AI-DrawIO" version="24.0.0">
+  <diagram id="trans" name="Year-Transition-Flow">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <mxCell id="title_trans" value="&lt;b&gt;QUY TRÌNH ĐÁNH GIÁ CUỐI NĂM &amp; CHUYỂN GIAO NĂM HỌC&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#1E293B;" vertex="1" parent="1">
+    <mxGeometry x="350" y="30" width="800" height="40" as="geometry" />
+  </mxCell>
+  <mxCell id="tr1" value="1. Tính TBCN &amp; Tổng vắng cả năm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;" vertex="1" parent="1">
+    <mxGeometry x="80" y="200" width="240" height="90" as="geometry" />
+  </mxCell>
+  <mxCell id="tr2" value="Vắng &gt; 45 buổi?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="1">
+    <mxGeometry x="380" y="180" width="160" height="130" as="geometry" />
+  </mxCell>
+  <mxCell id="tr_absent_warn" value="LƯU BAN VÌ VẮNG QUÁ QUY ĐỊNH&#xa;(PENDING_REVIEW)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#FB923C;fontColor=#7C2D12;" vertex="1" parent="1">
+    <mxGeometry x="360" y="370" width="200" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="tr3" value="TBCN &gt;= 5.0 &amp; Môn ĐG Đạt?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontColor=#78350F;" vertex="1" parent="1">
+    <mxGeometry x="610" y="180" width="180" height="130" as="geometry" />
+  </mxCell>
+  <mxCell id="tr_promote" value="PROMOTED (Lên lớp)&#xa;Khối 9 -&gt; GRADUATED&#xa;Khối 6,7,8 -&gt; Lên khối +1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;" vertex="1" parent="1">
+    <mxGeometry x="860" y="150" width="220" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="tr_remedial" value="REMEDIAL / RETAKE&#xa;Học hè / Thi lại" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="1">
+    <mxGeometry x="860" y="270" width="220" height="70" as="geometry" />
+  </mxCell>
+  <mxCell id="tr_apply" value="2. Wizard Chuyển Năm Batch Update&#xa;- Cập nhật class_id &amp; status&#xa;- Kích hoạt năm mới is_current = true" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;" vertex="1" parent="1">
+    <mxGeometry x="1170" y="185" width="280" height="120" as="geometry" />
+  </mxCell>
+  <mxCell id="trc1" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="tr1" target="tr2"/>
+  <mxCell id="trc2" value="&gt;45 buổi" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="1" source="tr2" target="tr_absent_warn"/>
+  <mxCell id="trc3" value="&lt;=45 buổi" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="1" source="tr2" target="tr3"/>
+  <mxCell id="trc4" value="Đạt" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="1" source="tr3" target="tr_promote"/>
+  <mxCell id="trc5" value="Chưa đạt" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="1" source="tr3" target="tr_remedial"/>
+  <mxCell id="trc6" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="tr_promote" target="tr_apply"/>
+  <mxCell id="trc7" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="tr_remedial" target="tr_apply"/>
+  <mxCell id="trc8" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="tr_absent_warn" target="tr_apply"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import {
   getSchoolYears,
   createSchoolYear,
+  deleteSchoolYear,
   getYearTransitionOverview,
   getYearTransitionPreview,
   getYearTransitionClasses,
@@ -86,6 +87,9 @@ export default function YearTransitionPage() {
   const [showCreateYear, setShowCreateYear] = useState(false)
   const [newYear, setNewYear] = useState({ year_name: '', start_date: '', end_date: '' })
   const [creatingYear, setCreatingYear] = useState(false)
+  const [createYearError, setCreateYearError] = useState('')
+  const [deletingYearId, setDeletingYearId] = useState<number | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<{ id: number; name: string } | null>(null)
 
   // Quyết định: student_id -> { status, class_id, grade_level }
   const [decisions, setDecisions] = useState<Record<number, { status: string; class_id: number | null; grade_level: number | null }>>({})
@@ -205,15 +209,29 @@ export default function YearTransitionPage() {
   }
 
   const createNewYear = async () => {
-    setError('')
+    setCreateYearError('')
     setMessage('')
     if (!newYear.year_name.trim() || !newYear.start_date || !newYear.end_date) {
-      setError('Vui lòng nhập tên năm học, ngày bắt đầu và ngày kết thúc.')
+      setCreateYearError('Vui lòng nhập tên năm học, ngày bắt đầu và ngày kết thúc.')
       return
+    }
+    const s = new Date(newYear.start_date)
+    const e = new Date(newYear.end_date)
+    if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+      const startYear = s.getFullYear()
+      const endYear = e.getFullYear()
+      if (endYear <= startYear) {
+        setCreateYearError(`Năm học không hợp lệ: năm kết thúc (${endYear}) phải là năm kế tiếp của năm bắt đầu (${startYear}). Không được trùng năm (${startYear}-${startYear}) hay lùi năm (${endYear}-${startYear}).`)
+        return
+      }
+      if (endYear !== startYear + 1) {
+        setCreateYearError(`Năm học không hợp lệ: chỉ được tạo năm kế tiếp (${startYear}-${startYear + 1}), không được cách năm.`)
+        return
+      }
     }
     const dup = years.find((y) => String(y.year_name) === newYear.year_name.trim())
     if (dup) {
-      setError(`Năm học "${newYear.year_name.trim()}" đã tồn tại trong hệ thống. Vui lòng chọn ngày khác hoặc xóa bản cũ.`)
+      setCreateYearError(`Năm học "${newYear.year_name.trim()}" đã tồn tại trong hệ thống. Vui lòng chọn ngày khác hoặc xóa bản cũ.`)
       return
     }
     setCreatingYear(true)
@@ -225,7 +243,7 @@ export default function YearTransitionPage() {
         is_current: false,
       })
       if (!res.success) {
-        setError(res.error || 'Không tạo được năm học')
+        setCreateYearError(res.error || 'Không tạo được năm học')
         return
       }
       const data = await getSchoolYears()
@@ -235,9 +253,43 @@ export default function YearTransitionPage() {
       setNewYear({ year_name: '', start_date: '', end_date: '' })
       setMessage('Đã tạo năm học mới và chọn làm năm học mới.')
     } catch (err: any) {
-      setError(err.message || 'Lỗi tạo năm học')
+      setCreateYearError(err.message || 'Lỗi tạo năm học')
     } finally {
       setCreatingYear(false)
+    }
+  }
+
+  const handleDeleteYear = async (id: number) => {
+    setError('')
+    setMessage('')
+    const target = years.find((y) => Number(y.school_year_id) === Number(id))
+    if (target?.is_current) {
+      setError(`Không thể xóa năm học "${target.year_name}" vì đây là năm học hiện tại. Hãy chuyển sang năm khác trước khi xóa.`)
+      return
+    }
+    const name = target?.year_name ?? `#${id}`
+    setConfirmDelete({ id, name })
+  }
+
+  const doDeleteYear = async () => {
+    if (!confirmDelete) return
+    const { id, name } = confirmDelete
+    setConfirmDelete(null)
+    setDeletingYearId(id)
+    try {
+      const res = await deleteSchoolYear(id)
+      if (!res.success) {
+        setError(`Không thể xóa năm học "${name}". ${res.error || 'Vui lòng thử lại.'}`)
+        return
+      }
+      const data = await getSchoolYears()
+      setYears(Array.isArray(data) ? data : [])
+      if (Number(toYearId) === Number(id)) setToYearId('' as any)
+      setMessage(`Đã xóa năm học "${name}".`)
+    } catch (err: any) {
+      setError(`Không thể xóa năm học "${name}". Kiểm tra kết nối máy chủ rồi thử lại. (${err?.message || 'lỗi không xác định'})`)
+    } finally {
+      setDeletingYearId(null)
     }
   }
 
@@ -247,7 +299,6 @@ export default function YearTransitionPage() {
       return { ...prev, [sid]: { ...cur, ...patch } }
     })
   }
-
   const summary = students.reduce((acc, s) => {
     const st = s.needs_decision ? decisions[s.student_id]?.status || 'RETAINED' : s.suggested_status
     acc[st] = (acc[st] || 0) + 1
@@ -330,7 +381,7 @@ export default function YearTransitionPage() {
                   ))}
                 </select>
                 <button
-                  onClick={() => setShowCreateYear(true)}
+                  onClick={() => { setCreateYearError(''); setShowCreateYear(true) }}
                   className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold whitespace-nowrap transition"
                 >
                   ＋ Tạo năm học mới
@@ -345,6 +396,33 @@ export default function YearTransitionPage() {
           >
             {loadingPreview ? 'Đang tải...' : '2. Đánh giá &amp; đề xuất'}
           </button>
+        </div>
+
+        {/* Quản lý năm học */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-sm font-bold text-[#111c2d] mb-4">Quản lý năm học</h2>
+          <div className="flex flex-wrap gap-2">
+            {years.map((y) => (
+              <div key={y.school_year_id} className="flex items-center gap-2 pl-3 pr-1.5 py-1.5 rounded-lg border border-gray-200 bg-gray-50">
+                <span className="text-sm font-semibold text-[#111c2d]">
+                  {y.year_name}
+                  {y.is_current ? <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full">hiện tại</span> : null}
+                </span>
+                <button
+                  onClick={() => handleDeleteYear(Number(y.school_year_id))}
+                  disabled={deletingYearId === Number(y.school_year_id)}
+                  title={y.is_current ? 'Không thể xóa năm học hiện tại' : 'Xóa năm học'}
+                  className={`p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition disabled:opacity-40 ${y.is_current ? 'opacity-30 cursor-not-allowed hover:text-gray-400 hover:bg-transparent' : ''}`}
+                >
+                  {deletingYearId === Number(y.school_year_id) ? (
+                    <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bước 2: danh sách học sinh */}
@@ -514,6 +592,11 @@ export default function YearTransitionPage() {
                   className="mt-1"
                 />
               </div>
+              {createYearError && (
+                <div className="bg-rose-50 border border-rose-300 text-rose-800 text-sm font-semibold rounded-lg px-4 py-3">
+                  {createYearError}
+                </div>
+              )}
               <div className="mt-2 flex gap-2 justify-end">
                 <button
                   onClick={() => setShowCreateYear(false)}
@@ -533,6 +616,31 @@ export default function YearTransitionPage() {
           </div>
         </div>
       , document.body)}
+      {confirmDelete && (
+        <div className="fixed inset-0 z-[75] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmDelete(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-5 bg-gradient-to-r from-rose-600 to-rose-500 text-white flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold">Xóa Năm Học</h3>
+                <p className="text-xs text-rose-100 mt-0.5">Năm học: {confirmDelete.name}</p>
+              </div>
+              <button onClick={() => setConfirmDelete(null)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-gray-700">
+                Bạn có chắc muốn xóa năm học <span className="font-bold text-rose-600">"{confirmDelete.name}"</span>?
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                Toàn bộ dữ liệu liên quan (lớp, học kỳ, điểm, thời khóa biểu, kết quả...) của năm này sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button onClick={() => setConfirmDelete(null)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy Bỏ</button>
+              <button onClick={doDeleteYear} className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-semibold transition">Xóa Năm Học</button>
+            </div>
+          </div>
+        </div>
+      )}
       {confirmActivate && (
         <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmActivate(false)}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>

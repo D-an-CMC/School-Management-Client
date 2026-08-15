@@ -1,0 +1,644 @@
+<mxfile host="app.diagrams.net" modified="2026-08-15T10:02:17.433Z" agent="Next-AI-DrawIO" version="24.0.0">
+  <diagram id="diag_overview" name="Tổng Quan Kiến Trúc & Vòng Đời Năm Học">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <mxCell id="p1_title" value="&lt;b&gt;HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC - TỔNG QUAN KIẾN TRÚC &amp; VÒNG ĐỜI VẬN HÀNH NĂM HỌC&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="30" width="1400" height="50" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_sec_arch" value="&lt;b&gt;1. SƠ ĐỒ KIẾN TRÚC PHÂN TẦNG HỆ THỐNG&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;arcSize=6;fontSize=16;" vertex="1" parent="1">
+    <mxGeometry x="50" y="100" width="2500" height="750" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_client" value="&lt;b&gt;GIAO DIỆN NGƯỜI DÙNG (Next.js 16 + React 19 + Tailwind CSS v4)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E3A8A;rounded=1;fontSize=14;" vertex="1" parent="p1_sec_arch">
+    <mxGeometry x="40" y="50" width="450" height="660" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_c1" value="&lt;b&gt;Cổng Xác Thực&lt;/b&gt;&#xa;• /login (Đăng nhập, kiểm tra tính hợp lệ dữ liệu)&#xa;• Lưu trữ mã bảo mật JWT (Cookies / LocalStorage)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" vertex="1" parent="p1_client">
+    <mxGeometry x="30" y="45" width="390" height="65" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_c2" value="&lt;b&gt;Bảng Điều Khiển &amp; Thống Kê&lt;/b&gt;&#xa;• /dashboard (Biểu đồ sĩ số, phổ điểm, cảnh báo vắng học)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" vertex="1" parent="p1_client">
+    <mxGeometry x="30" y="125" width="390" height="55" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_c3" value="&lt;b&gt;Quản Lý Hồ Sơ &amp; Lớp Học&lt;/b&gt;&#xa;• /user-management (Quản lý tài khoản GV, HS, Admin)&#xa;• /class-management &amp; /my-classes (Phân lớp, GVCN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" vertex="1" parent="p1_client">
+    <mxGeometry x="30" y="195" width="390" height="65" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_c4" value="&lt;b&gt;Thời Khóa Biểu&lt;/b&gt;&#xa;• /admin-timetable (Lưới TKB, Xếp lịch tự động)&#xa;• /timetable (Xem lịch học/dạy cá nhân)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" vertex="1" parent="p1_client">
+    <mxGeometry x="30" y="275" width="390" height="65" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_c5" value="&lt;b&gt;Điểm Danh &amp; Sổ Điểm Điện Tử&lt;/b&gt;&#xa;• /attendance (Điểm danh buổi/tiết, cảnh báo nghỉ nhiều)&#xa;• /grade-management &amp; /gradebook (Nhập điểm Thông tư 22)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" vertex="1" parent="p1_client">
+    <mxGeometry x="30" y="355" width="390" height="70" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_c6" value="&lt;b&gt;Đánh Giá Cuối Năm &amp; Chuyển Năm Học&lt;/b&gt;&#xa;• /year-result (Điểm trung bình cả năm, xếp loại học lực/hạnh kiểm)&#xa;• /year-transition (Quy trình 4 bước chuyển giao năm học mới)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#93C5FD;align=left;spacingLeft=15;" vertex="1" parent="p1_client">
+    <mxGeometry x="30" y="440" width="390" height="70" as="geometry" />
+  </mxCell>
+
+  <mxCell id="p1_server" value="&lt;b&gt;MÁY CHỦ DỊCH VỤ XỬ LÝ (Express.js 4 + TypeScript)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;fontColor=#14532D;rounded=1;fontSize=14;" vertex="1" parent="p1_sec_arch">
+    <mxGeometry x="640" y="50" width="620" height="660" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_s1" value="&lt;b&gt;Tầng Xác Thực &amp; Phân Quyền Bảo Mật&lt;/b&gt;&#xa;• Xác thực mã JWT Token&#xa;• Kiểm tra ma trận phân quyền vai trò (RBAC)&#xa;• Tự động ghi nhật ký bảo mật (Địa chỉ IP, Thao tác, Thời gian)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" vertex="1" parent="p1_server">
+    <mxGeometry x="30" y="45" width="560" height="75" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_s2" value="&lt;b&gt;Các Dịch Vụ Nghiệp Vụ Cốt Lõi&lt;/b&gt;&#xa;• Quản lý Người dùng, Học sinh, Giáo viên&#xa;• Quản lý Lớp học, Phòng học, Năm học, Học kỳ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" vertex="1" parent="p1_server">
+    <mxGeometry x="30" y="135" width="560" height="65" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_s3" value="&lt;b&gt;Động Cơ Xếp Thời Khóa Biểu Tự Động&lt;/b&gt;&#xa;• Tách môn tổ hợp KHTN (Vật Lý, Hóa Học, Sinh Học)&#xa;• Ma trận tiết học trong tuần (Tránh trùng GV và trùng Phòng học)&#xa;• Thuật toán quay lui (Backtracking) tối ưu hóa lịch giảng dạy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;strokeColor=#EAB308;fontColor=#854D0E;align=left;spacingLeft=15;" vertex="1" parent="p1_server">
+    <mxGeometry x="30" y="215" width="560" height="85" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_s4" value="&lt;b&gt;Động Cơ Điểm Danh &amp; Kiểm Soát Vắng Học&lt;/b&gt;&#xa;• Quản lý buổi/tiết điểm danh&#xa;• Tự động quét giới hạn vắng: Cảnh báo tại 40 buổi, Ngưỡng 45 buổi" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" vertex="1" parent="p1_server">
+    <mxGeometry x="30" y="315" width="560" height="75" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_s5" value="&lt;b&gt;Động Cơ Sổ Điểm (Quy Chế Đánh Giá Thông Tư 22)&lt;/b&gt;&#xa;• Trọng số: Thường xuyên (x1), Giữa kỳ (x2), Cuối kỳ (x3)&#xa;• Tính Điểm trung bình môn học kỳ và Điểm trung bình cả năm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#86EFAC;align=left;spacingLeft=15;" vertex="1" parent="p1_server">
+    <mxGeometry x="30" y="405" width="560" height="75" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_s6" value="&lt;b&gt;Dịch Vụ Đánh Giá Cuối Năm &amp; Chuyển Giao Năm Học&lt;/b&gt;&#xa;• Đề xuất danh hiệu thi đua (Xuất sắc / Giỏi / Tiên tiến)&#xa;• Quy trình chuyển năm: Khối 9 tốt nghiệp; Khối 6,7,8 lên lớp; Xử lý lưu ban" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;strokeColor=#EAB308;fontColor=#854D0E;align=left;spacingLeft=15;" vertex="1" parent="p1_server">
+    <mxGeometry x="30" y="495" width="560" height="95" as="geometry" />
+  </mxCell>
+
+  <mxCell id="p1_db" value="&lt;b&gt;CƠ SỞ DỮ LIỆU ĐÁM MÂY (Supabase Cloud PostgreSQL)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#A855F7;fontColor=#581C87;rounded=1;fontSize=14;" vertex="1" parent="p1_sec_arch">
+    <mxGeometry x="1420" y="50" width="480" height="660" as="geometry" />
+  </mxCell>
+  <mxCell id="p1_tbl1" value="&lt;b&gt;Tài Khoản &amp; Phân Quyền&lt;/b&gt;&#xa;• Bảng users, roles, permissions, teachers, students, security_logs" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" vertex="1" parent="p1_db"><mxGeometry x="40" y="45" width="400" height="95" as="geometry" /></mxCell>
+  <mxCell id="p1_tbl2" value="&lt;b&gt;Học Vụ &amp; Thời Khóa Biểu&lt;/b&gt;&#xa;• Bảng school_years, semesters, classes, rooms, subjects, timetables" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" vertex="1" parent="p1_db"><mxGeometry x="40" y="160" width="400" height="95" as="geometry" /></mxCell>
+  <mxCell id="p1_tbl3" value="&lt;b&gt;Đánh Giá Điểm &amp; Chuyên Cần&lt;/b&gt;&#xa;• Bảng grade_types, subject_results, grade_items, attendance_records" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" vertex="1" parent="p1_db"><mxGeometry x="40" y="275" width="400" height="95" as="geometry" /></mxCell>
+  <mxCell id="p1_tbl4" value="&lt;b&gt;Tổng Kết Cuối Năm &amp; Phân Lớp Năm Mới&lt;/b&gt;&#xa;• Bảng student_year_results, student_class_enrollments" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F3E8FF;strokeColor=#C084FC;align=left;spacingLeft=15;" vertex="1" parent="p1_db"><mxGeometry x="40" y="390" width="400" height="95" as="geometry" /></mxCell>
+
+  <mxCell id="p1_conn1" value="Giao thức REST API / JWT" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2563EB;strokeWidth=3;" edge="1" parent="p1_sec_arch" source="p1_client" target="p1_server"/>
+  <mxCell id="p1_conn2" value="Truy vấn dữ liệu SQL" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=3;" edge="1" parent="p1_sec_arch" source="p1_server" target="p1_db"/>
+
+  <mxCell id="p1_sec_flow" value="&lt;b&gt;2. QUY TRÌNH TỔNG THỂ VÒNG ĐỜI MỘT NĂM HỌC (ACADEMIC YEAR LIFECYCLE)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;arcSize=6;fontSize=16;" vertex="1" parent="1">
+    <mxGeometry x="50" y="900" width="2500" height="400" as="geometry" />
+  </mxCell>
+  <mxCell id="w1" value="&lt;b&gt;1. Khởi Tạo Năm Học&lt;/b&gt;&#xa;Tạo Năm học, Học kỳ,&#xa;Khai báo Phòng &amp; Lớp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="p1_sec_flow"><mxGeometry x="60" y="80" width="260" height="90" as="geometry" /></mxCell>
+  <mxCell id="w2" value="&lt;b&gt;2. Phân Lớp &amp; Gán GVCN&lt;/b&gt;&#xa;Tiếp nhận học sinh mới&#xa;Phân công chủ nhiệm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="p1_sec_flow"><mxGeometry x="380" y="80" width="260" height="90" as="geometry" /></mxCell>
+  <mxCell id="w3" value="&lt;b&gt;3. Xếp Thời Khóa Biểu&lt;/b&gt;&#xa;Chạy thuật toán tự động&#xa;Phê duyệt lịch chính thức" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;" vertex="1" parent="p1_sec_flow"><mxGeometry x="700" y="80" width="280" height="90" as="geometry" /></mxCell>
+  <mxCell id="w4" value="&lt;b&gt;4. Giảng Dạy &amp; Điểm Danh&lt;/b&gt;&#xa;Điểm danh từng buổi học&#xa;Nhập điểm thường xuyên" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="p1_sec_flow"><mxGeometry x="1040" y="80" width="300" height="90" as="geometry" /></mxCell>
+  <mxCell id="w5" value="&lt;b&gt;5. Thi &amp; Đánh Giá Cuối Năm&lt;/b&gt;&#xa;Tính Điểm trung bình cả năm&#xa;Xét hạnh kiểm &amp; vắng học" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="p1_sec_flow"><mxGeometry x="1400" y="80" width="280" height="90" as="geometry" /></mxCell>
+  <mxCell id="w6" value="&lt;b&gt;6. Chuyển Giao Năm Mới&lt;/b&gt;&#xa;Nâng khối lớp học sinh&#xa;Kích hoạt năm học mới" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="p1_sec_flow"><mxGeometry x="1740" y="80" width="300" height="90" as="geometry" /></mxCell>
+  <mxCell id="warr1" style="strokeWidth=3;" edge="1" parent="p1_sec_flow" source="w1" target="w2"/>
+  <mxCell id="warr2" style="strokeWidth=3;" edge="1" parent="p1_sec_flow" source="w2" target="w3"/>
+  <mxCell id="warr3" style="strokeWidth=3;" edge="1" parent="p1_sec_flow" source="w3" target="w4"/>
+  <mxCell id="warr4" style="strokeWidth=3;" edge="1" parent="p1_sec_flow" source="w4" target="w5"/>
+  <mxCell id="warr5" style="strokeWidth=3;" edge="1" parent="p1_sec_flow" source="w5" target="w6"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn1" name="CN1 - Xác Thực & Phân Quyền Bảo Mật">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m1_auth_header" value="&lt;b&gt;CHỨC NĂNG 1: XÁC THỰC NGƯỜI DÙNG, PHÂN QUYỀN VAI TRÒ (RBAC) & BẢO MẬT HỆ THỐNG&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m1_auth_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m1_u_admin" value="Quản Trị Viên / BGH" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="50" y="80" width="50" height="90" as="geometry" /></mxCell>
+    <mxCell id="m1_u_gv" value="Giáo Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="50" y="270" width="50" height="90" as="geometry" /></mxCell>
+    <mxCell id="m1_u_hs" value="Học Sinh / Phụ Huynh" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="50" y="470" width="50" height="90" as="geometry" /></mxCell>
+    <mxCell id="m1_uc1" value="Đăng nhập hệ thống (Bcrypt + JWT)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="250" y="70" width="240" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_uc2" value="Đăng xuất khỏi tài khoản" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="250" y="160" width="240" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_uc3" value="Khóa / Mở khóa tài khoản người dùng" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="250" y="270" width="240" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_uc4" value="Cấu hình ma trận phân quyền vai trò" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#A855F7;" vertex="1" parent="m1_auth_uc_box"><mxGeometry x="250" y="380" width="240" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_c1" style="strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m1_auth_uc_box" source="m1_u_admin" target="m1_uc1"/>
+    <mxCell id="m1_c2" style="strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m1_auth_uc_box" source="m1_u_gv" target="m1_uc1"/>
+    <mxCell id="m1_c3" style="strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m1_auth_uc_box" source="m1_u_hs" target="m1_uc1"/>
+    <mxCell id="m1_c4" style="strokeColor=#EF4444;strokeWidth=2;" edge="1" parent="m1_auth_uc_box" source="m1_u_admin" target="m1_uc3"/>
+    <mxCell id="m1_c5" style="strokeColor=#A855F7;strokeWidth=2;" edge="1" parent="m1_auth_uc_box" source="m1_u_admin" target="m1_uc4"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m1_auth_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m1_a_start" value="Bắt đầu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#3B82F6;fontColor=#FFFFFF;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="40" y="60" width="90" height="50" as="geometry" /></mxCell>
+    <mxCell id="m1_a_input" value="Nhập Tên tài khoản &amp; Mật khẩu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="170" y="55" width="220" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_a_val" value="Đúng định dạng?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="430" y="45" width="130" height="80" as="geometry" /></mxCell>
+    <mxCell id="m1_a_db" value="Truy vấn CSDL &amp; So khớp mã hóa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="385" y="170" width="220" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_a_pw_check" value="Mật khẩu chính xác?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="420" y="270" width="150" height="80" as="geometry" /></mxCell>
+    <mxCell id="m1_a_jwt" value="Cấp mã phiên làm việc JWT&#xa;Ghi nhật ký: Đăng nhập thành công" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="370" y="390" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m1_a_end" value="Chuyển vào Bảng điều khiển" style="ellipse;whiteSpace=wrap;html=1;fillColor=#22C55E;fontColor=#FFFFFF;" vertex="1" parent="m1_auth_act_box"><mxGeometry x="385" y="490" width="220" height="50" as="geometry" /></mxCell>
+    <mxCell id="m1_ac1" style="strokeWidth=2;" edge="1" parent="m1_auth_act_box" source="m1_a_start" target="m1_a_input"/>
+    <mxCell id="m1_ac2" style="strokeWidth=2;" edge="1" parent="m1_auth_act_box" source="m1_a_input" target="m1_a_val"/>
+    <mxCell id="m1_ac3" value="Đúng" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m1_auth_act_box" source="m1_a_val" target="m1_a_db"/>
+    <mxCell id="m1_ac4" style="strokeWidth=2;" edge="1" parent="m1_auth_act_box" source="m1_a_db" target="m1_a_pw_check"/>
+    <mxCell id="m1_ac5" value="Đúng" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m1_auth_act_box" source="m1_a_pw_check" target="m1_a_jwt"/>
+    <mxCell id="m1_ac6" style="strokeWidth=2;" edge="1" parent="m1_auth_act_box" source="m1_a_jwt" target="m1_a_end"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m1_auth_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m1_s_u" value="Người Dùng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m1_auth_seq_box"><mxGeometry x="40" y="40" width="110" height="40" as="geometry" /></mxCell>
+    <mxCell id="m1_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m1_auth_seq_box"><mxGeometry x="240" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m1_s_api" value="Máy Chủ API Xác Thực" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m1_auth_seq_box"><mxGeometry x="450" y="40" width="150" height="40" as="geometry" /></mxCell>
+    <mxCell id="m1_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m1_auth_seq_box"><mxGeometry x="700" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m1_sc1" value="1. Gửi yêu cầu đăng nhập { tên tài khoản, mật khẩu }" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m1_auth_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="140" as="sourcePoint"/><mxPoint x="525" y="140" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m1_sc2" value="2. Truy vấn thông tin người dùng từ bảng users" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m1_auth_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="525" y="200" as="sourcePoint"/><mxPoint x="760" y="200" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m1_sc4" value="3. Phản hồi thành công kèm mã JWT &amp; Vai trò" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m1_auth_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="525" y="280" as="sourcePoint"/><mxPoint x="300" y="280" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m1_auth_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m1_st1" value="CHƯA ĐĂNG NHẬP&#xa;(Khách truy cập)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E2E8F0;" vertex="1" parent="m1_auth_state_box"><mxGeometry x="60" y="150" width="180" height="70" as="geometry" /></mxCell>
+    <mxCell id="m1_st2" value="ĐANG XÁC THỰC&#xa;(Kiểm tra mật khẩu &amp; trạng thái)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;" vertex="1" parent="m1_auth_state_box"><mxGeometry x="340" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m1_st3" value="ĐANG HOẠT ĐỘNG&#xa;(Phiên làm việc hợp lệ trong 24h)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m1_auth_state_box"><mxGeometry x="660" y="150" width="240" height="70" as="geometry" /></mxCell>
+    <mxCell id="m1_st4" value="HẾT HẠN / BỊ KHÓA&#xa;(Bắt buộc đăng nhập lại)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m1_auth_state_box"><mxGeometry x="1000" y="150" width="240" height="70" as="geometry" /></mxCell>
+    <mxCell id="m1_stc1" style="strokeWidth=2;" edge="1" parent="m1_auth_state_box" source="m1_st1" target="m1_st2"/>
+    <mxCell id="m1_stc2" value="Thành công" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m1_auth_state_box" source="m1_st2" target="m1_st3"/>
+    <mxCell id="m1_stc3" value="Đăng xuất / Hết hạn" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m1_auth_state_box" source="m1_st3" target="m1_st4"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m1_auth_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m1_sc_login" value="Màn hình: /login&#xa;(Đăng nhập hệ thống)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m1_auth_screen_box"><mxGeometry x="80" y="150" width="200" height="75" as="geometry" /></mxCell>
+    <mxCell id="m1_sc_admin" value="Bảng điều khiển: /dashboard&#xa;(Dành cho Quản trị viên)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m1_auth_screen_box"><mxGeometry x="400" y="60" width="230" height="65" as="geometry" /></mxCell>
+    <mxCell id="m1_sc_gv" value="Không gian làm việc: /my-classes&#xa;(Dành cho Giáo viên)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m1_auth_screen_box"><mxGeometry x="400" y="155" width="230" height="65" as="geometry" /></mxCell>
+    <mxCell id="m1_scc1" value="Vai trò Admin" style="strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m1_auth_screen_box" source="m1_sc_login" target="m1_sc_admin"/>
+    <mxCell id="m1_scc2" value="Vai trò Giáo viên" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m1_auth_screen_box" source="m1_sc_login" target="m1_sc_gv"/>
+  
+        </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn2" name="CN2 - Quản Lý Người Dùng & Hồ Sơ">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m2_user_header" value="&lt;b&gt;CHỨC NĂNG 2: QUẢN LÝ NGƯỜI DÙNG, HỒ SƠ HỌC SINH & GIÁO VIÊN&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m2_user_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_u_admin" value="Quản Trị Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="50" y="150" width="50" height="100" as="geometry" /></mxCell>
+    <mxCell id="m2_uc1" value="Tạo mới tài khoản Giáo viên / Học sinh" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="240" y="80" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m2_uc2" value="Cập nhật hồ sơ cá nhân &amp; Thông tin phụ huynh" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="240" y="180" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m2_uc3" value="Tìm kiếm &amp; Lọc danh sách theo Vai trò/Khối lớp" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="240" y="280" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m2_c1" style="strokeWidth=2;" edge="1" parent="m2_user_uc_box" source="m2_u_admin" target="m2_uc1"/>
+    <mxCell id="m2_c2" style="strokeWidth=2;" edge="1" parent="m2_user_uc_box" source="m2_u_admin" target="m2_uc2"/>
+    <mxCell id="m2_c3" style="strokeWidth=2;" edge="1" parent="m2_user_uc_box" source="m2_u_admin" target="m2_uc3"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m2_user_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_a_start" value="Bắt đầu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#3B82F6;fontColor=#FFFFFF;" vertex="1" parent="m2_user_act_box"><mxGeometry x="50" y="50" width="90" height="50" as="geometry" /></mxCell>
+    <mxCell id="m2_a_form" value="Nhập thông tin: Mã, Họ tên, Email, Vai trò" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m2_user_act_box"><mxGeometry x="190" y="45" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m2_a_dup" value="Trùng Mã / Email?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;" vertex="1" parent="m2_user_act_box"><mxGeometry x="490" y="35" width="150" height="80" as="geometry" /></mxCell>
+    <mxCell id="m2_a_save" value="Thêm mới vào bảng users và bảng chi tiết" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_act_box"><mxGeometry x="440" y="170" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m2_a_end" value="Tạo người dùng thành công" style="ellipse;whiteSpace=wrap;html=1;fillColor=#22C55E;fontColor=#FFFFFF;" vertex="1" parent="m2_user_act_box"><mxGeometry x="465" y="280" width="200" height="50" as="geometry" /></mxCell>
+    <mxCell id="m2_ac1" style="strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_start" target="m2_a_form"/>
+    <mxCell id="m2_ac2" style="strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_form" target="m2_a_dup"/>
+    <mxCell id="m2_ac3" value="Không trùng" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_dup" target="m2_a_save"/>
+    <mxCell id="m2_ac4" style="strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_save" target="m2_a_end"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m2_user_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m2_user_seq_box"><mxGeometry x="100" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m2_s_api" value="Máy Chủ Quản Lý Người Dùng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_seq_box"><mxGeometry x="380" y="40" width="180" height="40" as="geometry" /></mxCell>
+    <mxCell id="m2_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m2_user_seq_box"><mxGeometry x="680" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m2_sc1" value="1. Gửi yêu cầu tạo tài khoản mới" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m2_user_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="165" y="120" as="sourcePoint"/><mxPoint x="470" y="120" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m2_sc2" value="2. Lưu bản ghi người dùng vào CSDL" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m2_user_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="470" y="180" as="sourcePoint"/><mxPoint x="740" y="180" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m2_sc3" value="3. Phản hồi tạo thành công kèm mã người dùng" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m2_user_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="470" y="260" as="sourcePoint"/><mxPoint x="165" y="260" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m2_user_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_st1" value="HOẠT ĐỘNG&#xa;(Tài khoản có thể đăng nhập)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_state_box"><mxGeometry x="100" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m2_st2" value="TẠM KHÓA&#xa;(Vô hiệu hóa quyền truy cập)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m2_user_state_box"><mxGeometry x="460" y="150" width="240" height="70" as="geometry" /></mxCell>
+    <mxCell id="m2_stc1" value="Khóa tài khoản" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m2_user_state_box" source="m2_st1" target="m2_st2"/>
+    <mxCell id="m2_stc2" value="Mở khóa tài khoản" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m2_user_state_box" source="m2_st2" target="m2_st1"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m2_user_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_sc1" value="Màn hình: /user-management&#xa;(Danh sách người dùng)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m2_user_screen_box"><mxGeometry x="80" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m2_sc2" value="Cửa sổ: Thêm Người Dùng Mới" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_screen_box"><mxGeometry x="420" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m2_scc1" value="Bấm Thêm mới" style="strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m2_user_screen_box" source="m2_sc1" target="m2_sc2"/>
+  
+        </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn3" name="CN3 - Quản Lý Năm Học, Lớp & Phòng Học">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m3_academic_header" value="&lt;b&gt;CHỨC NĂNG 3: QUẢN LÝ CẤU TRÚC HỌC VỤ (NĂM HỌC, HỌC KỲ, LỚP HỌC & PHÒNG HỌC)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m3_academic_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m3_u_admin" value="Quản Trị Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m3_academic_uc_box"><mxGeometry x="50" y="150" width="50" height="100" as="geometry" /></mxCell>
+    <mxCell id="m3_uc1" value="Tạo mới Năm học &amp; Khai báo 2 Học kỳ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m3_academic_uc_box"><mxGeometry x="240" y="80" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m3_uc2" value="Khai báo danh sách Lớp học theo Khối (6, 7, 8, 9)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m3_academic_uc_box"><mxGeometry x="240" y="180" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m3_uc3" value="Phân công GVCN &amp; Gán Phòng học cố định" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m3_academic_uc_box"><mxGeometry x="240" y="280" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m3_c1" style="strokeWidth=2;" edge="1" parent="m3_academic_uc_box" source="m3_u_admin" target="m3_uc1"/>
+    <mxCell id="m3_c2" style="strokeWidth=2;" edge="1" parent="m3_academic_uc_box" source="m3_u_admin" target="m3_uc2"/>
+    <mxCell id="m3_c3" style="strokeWidth=2;" edge="1" parent="m3_academic_uc_box" source="m3_u_admin" target="m3_uc3"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m3_academic_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m3_a1" value="Khai báo Năm học mới (Ví dụ: 2025-2026)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m3_academic_act_box"><mxGeometry x="50" y="60" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m3_a2" value="Tạo danh sách Lớp học và gán GVCN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m3_academic_act_box"><mxGeometry x="350" y="60" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m3_a3" value="GV đã chủ nhiệm lớp khác?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;" vertex="1" parent="m3_academic_act_box"><mxGeometry x="650" y="45" width="180" height="90" as="geometry" /></mxCell>
+    <mxCell id="m3_a4" value="Gán thành công Phòng học &amp; GVCN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m3_academic_act_box"><mxGeometry x="615" y="190" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m3_c1" style="strokeWidth=2;" edge="1" parent="m3_academic_act_box" source="m3_a1" target="m3_a2"/>
+    <mxCell id="m3_c2" style="strokeWidth=2;" edge="1" parent="m3_academic_act_box" source="m3_a2" target="m3_a3"/>
+    <mxCell id="m3_c3" value="Không trùng" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m3_academic_act_box" source="m3_a3" target="m3_a4"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m3_academic_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m3_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m3_academic_seq_box"><mxGeometry x="100" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m3_s_api" value="Máy Chủ Quản Lý Lớp Học" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m3_academic_seq_box"><mxGeometry x="380" y="40" width="170" height="40" as="geometry" /></mxCell>
+    <mxCell id="m3_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m3_academic_seq_box"><mxGeometry x="680" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m3_sc1" value="1. Cập nhật phân công GVCN và Phòng học" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m3_academic_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="165" y="120" as="sourcePoint"/><mxPoint x="465" y="120" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m3_sc2" value="2. UPDATE classes SET homeroom_teacher_id = ?" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m3_academic_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="465" y="180" as="sourcePoint"/><mxPoint x="740" y="180" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m3_sc3" value="3. 200 OK Phân công thành công" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m3_academic_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="465" y="260" as="sourcePoint"/><mxPoint x="165" y="260" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m3_academic_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m3_st1" value="SẮP DIỄN RA&#xa;(Năm học được tạo mới)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;" vertex="1" parent="m3_academic_state_box"><mxGeometry x="80" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m3_st2" value="ĐANG HOẠT ĐỘNG&#xa;(Năm học hiện tại: is_current=true)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m3_academic_state_box"><mxGeometry x="400" y="150" width="240" height="70" as="geometry" /></mxCell>
+    <mxCell id="m3_st3" value="ĐÃ ĐÓNG SỔ / LƯU TRỮ&#xa;(Năm học đã kết thúc chuyển giao)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E2E8F0;" vertex="1" parent="m3_academic_state_box"><mxGeometry x="740" y="150" width="250" height="70" as="geometry" /></mxCell>
+    <mxCell id="m3_stc1" style="strokeWidth=2;" edge="1" parent="m3_academic_state_box" source="m3_st1" target="m3_st2"/>
+    <mxCell id="m3_stc2" style="strokeWidth=2;" edge="1" parent="m3_academic_state_box" source="m3_st2" target="m3_st3"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m3_academic_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m3_sc1" value="Màn hình: /class-management&#xa;(Danh sách lớp theo khối)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m3_academic_screen_box"><mxGeometry x="80" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m3_sc2" value="Cửa sổ: Phân Công GVCN &amp; Phòng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m3_academic_screen_box"><mxGeometry x="420" y="150" width="240" height="75" as="geometry" /></mxCell>
+    <mxCell id="m3_scc1" style="strokeWidth=2;" edge="1" parent="m3_academic_screen_box" source="m3_sc1" target="m3_sc2"/>
+  
+        </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn4" name="CN4 - Thời Khóa Biểu & Auto-Scheduler">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <mxCell id="p3_title" value="&lt;b&gt;CHỨC NĂNG 4: XẾP THỜI KHÓA BIỂU TỰ ĐỘNG &amp; ĐIỀU CHỈNH THỦ CÔNG&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#0F172A;" vertex="1" parent="1">
+    <mxGeometry x="500" y="20" width="1600" height="40" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_box_algo" value="&lt;b&gt;QUY TRÌNH THUẬT TOÁN TỐI ƯU HÓA XẾP THỜI KHÓA BIỂU TỰ ĐỘNG&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="2530" height="700" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t1" value="&lt;b&gt;1. Tải Ràng Buộc Dữ Liệu Đầu Vào&lt;/b&gt;&#xa;• Danh sách Lớp theo Khối 6, 7, 8, 9&#xa;• Giáo viên bộ môn &amp; Định mức số tiết/tuần&#xa;• Phòng chức năng (Tin học, Thí nghiệm, Âm nhạc)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;align=left;spacingLeft=15;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="50" y="60" width="340" height="110" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t2" value="&lt;b&gt;2. Phân Rã Môn Khoa Học Tự Nhiên&lt;/b&gt;&#xa;Tách môn KHTN thành:&#xa;• KHTN - Phân môn Vật Lý&#xa;• KHTN - Phân môn Hóa Học&#xa;• KHTN - Phân môn Sinh Học&#xa;Phân bổ đúng giáo viên chuyên ngành" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;align=left;spacingLeft=15;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="450" y="60" width="330" height="110" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t3" value="&lt;b&gt;3. Khởi Tạo Ma Trận Tiết Học Tuần&lt;/b&gt;&#xa;6 ngày (Thứ 2 đến Thứ 7)&#xa;x 10 tiết (5 tiết Sáng + 5 tiết Chiều)&#xa;x Số lượng các Lớp học" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#A855F7;align=left;spacingLeft=15;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="840" y="60" width="300" height="110" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t4" value="&lt;b&gt;4. Kiểm Tra Ràng Buộc Cứng&lt;/b&gt;&#xa;1. Giáo viên có bị trùng 2 lớp cùng tiết?&#xa;2. Phòng chức năng có bị trùng 2 lớp?&#xa;3. Có vượt quá 3 tiết liên tiếp/môn?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="1200" y="35" width="290" height="160" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t_backtrack" value="&lt;b&gt;Thuật Toán Quay Lui (Backtracking)&lt;/b&gt;&#xa;Thử lại khung giờ khác hoặc hoán đổi tiết" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#FB923C;fontColor=#7C2D12;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="1205" y="260" width="280" height="70" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t5" value="&lt;b&gt;5. Sinh Bản Thảo Thời Khóa Biểu&lt;/b&gt;&#xa;Hiển thị lưới TKB trên giao diện quản trị&#xa;Cho phép kéo thả điều chỉnh thủ công" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;align=left;spacingLeft=15;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="1570" y="60" width="360" height="110" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_t6" value="&lt;b&gt;6. Phát Hành Thời Khóa Biểu Chính Thức&lt;/b&gt;&#xa;Lưu dữ liệu vào bảng timetables&#xa;Gửi thông báo tới toàn bộ Giáo viên &amp; Học sinh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;align=left;spacingLeft=15;" vertex="1" parent="p3_box_algo">
+    <mxGeometry x="2000" y="60" width="330" height="110" as="geometry" />
+  </mxCell>
+  <mxCell id="p3_c1" style="strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t1" target="p3_t2"/>
+  <mxCell id="p3_c2" style="strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t2" target="p3_t3"/>
+  <mxCell id="p3_c3" style="strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t3" target="p3_t4"/>
+  <mxCell id="p3_c4" value="Xung đột lịch" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t4" target="p3_t_backtrack"/>
+  <mxCell id="p3_c5" style="strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t_backtrack" target="p3_t3"/>
+  <mxCell id="p3_c6" value="Hợp lệ" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t4" target="p3_t5"/>
+  <mxCell id="p3_c7" value="Phê duyệt" style="strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="p3_box_algo" source="p3_t5" target="p3_t6"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn5" name="CN5 - Điểm Danh & Giám Sát Vắng Học">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m5_att_header" value="&lt;b&gt;CHỨC NĂNG 5: QUẢN LÝ ĐIỂM DANH & CẢNH BÁO GIỚI HẠN NGHỈ HỌC 45 BUỔI&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m5_att_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m5_u_gv" value="Giáo Viên Phụ Trách" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DCFCE7;" vertex="1" parent="m5_att_uc_box"><mxGeometry x="50" y="150" width="50" height="100" as="geometry" /></mxCell>
+    <mxCell id="m5_uc1" value="Thực hiện điểm danh theo buổi / tiết" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m5_att_uc_box"><mxGeometry x="240" y="80" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m5_uc2" value="Cảnh báo học sinh vắng quá 45 buổi quy định" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m5_att_uc_box"><mxGeometry x="240" y="190" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m5_c1" style="strokeWidth=2;" edge="1" parent="m5_att_uc_box" source="m5_u_gv" target="m5_uc1"/>
+    <mxCell id="m5_c2" value="Tự động kiểm tra" style="strokeColor=#DC2626;dashed=1;strokeWidth=2;" edge="1" parent="m5_att_uc_box" source="m5_uc1" target="m5_uc2"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m5_att_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m5_a1" value="Mở sổ điểm danh lớp học" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m5_att_act_box"><mxGeometry x="50" y="60" width="220" height="60" as="geometry" /></mxCell>
+    <mxCell id="m5_a2" value="Đánh dấu Có mặt / Vắng phép / Không phép" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m5_att_act_box"><mxGeometry x="320" y="60" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m5_a3" value="Tổng vắng &gt; 45 buổi?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m5_att_act_box"><mxGeometry x="620" y="45" width="160" height="90" as="geometry" /></mxCell>
+    <mxCell id="m5_a4" value="Đánh dấu diện xem xét lưu ban cuối năm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;" vertex="1" parent="m5_att_act_box"><mxGeometry x="580" y="190" width="240" height="60" as="geometry" /></mxCell>
+    <mxCell id="m5_c1" style="strokeWidth=2;" edge="1" parent="m5_att_act_box" source="m5_a1" target="m5_a2"/>
+    <mxCell id="m5_c2" style="strokeWidth=2;" edge="1" parent="m5_att_act_box" source="m5_a2" target="m5_a3"/>
+    <mxCell id="m5_c3" value="Vượt ngưỡng" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m5_att_act_box" source="m5_a3" target="m5_a4"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m5_att_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m5_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m5_att_seq_box"><mxGeometry x="100" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m5_s_api" value="Máy Chủ Điểm Danh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m5_att_seq_box"><mxGeometry x="380" y="40" width="150" height="40" as="geometry" /></mxCell>
+    <mxCell id="m5_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m5_att_seq_box"><mxGeometry x="680" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m5_sc1" value="1. Gửi dữ liệu điểm danh buổi học" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m5_att_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="165" y="120" as="sourcePoint"/><mxPoint x="455" y="120" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m5_sc2" value="2. Lưu dữ liệu &amp; đếm tổng số buổi vắng trong năm" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m5_att_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="455" y="180" as="sourcePoint"/><mxPoint x="740" y="180" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m5_sc3" value="3. Phản hồi thành công kèm cảnh báo học sinh vắng nhiều" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m5_att_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="455" y="260" as="sourcePoint"/><mxPoint x="165" y="260" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m5_att_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m5_st1" value="BÌNH THƯỜNG&#xa;(&lt; 40 buổi vắng)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m5_att_state_box"><mxGeometry x="80" y="150" width="200" height="70" as="geometry" /></mxCell>
+    <mxCell id="m5_st2" value="CẢNH BÁO SỚM&#xa;(40 - 44 buổi vắng)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;" vertex="1" parent="m5_att_state_box"><mxGeometry x="360" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m5_st3" value="VI PHẠM NGHỈ QUÁ 45 BUỔI&#xa;(Xét diện lưu ban cuối năm)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m5_att_state_box"><mxGeometry x="660" y="150" width="240" height="70" as="geometry" /></mxCell>
+    <mxCell id="m5_stc1" style="strokeWidth=2;" edge="1" parent="m5_att_state_box" source="m5_st1" target="m5_st2"/>
+    <mxCell id="m5_stc2" style="strokeWidth=2;" edge="1" parent="m5_att_state_box" source="m5_st2" target="m5_st3"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m5_att_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m5_sc1" value="Màn hình: /attendance&#xa;(Sổ điểm danh lớp)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m5_att_screen_box"><mxGeometry x="80" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m5_sc2" value="Nhãn Đỏ: Cảnh Báo Vượt 45 Buổi" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m5_att_screen_box"><mxGeometry x="400" y="150" width="240" height="75" as="geometry" /></mxCell>
+    <mxCell id="m5_scc1" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m5_att_screen_box" source="m5_sc1" target="m5_sc2"/>
+  
+        </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn6" name="CN6 - Sổ Điểm & Đánh Giá Thông Tư 22">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m6_grade_header" value="&lt;b&gt;CHỨC NĂNG 6: SỔ ĐIỂM ĐIỆN TỬ & QUẢN LÝ ĐIỂM SỐ THEO THÔNG TƯ 22&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m6_grade_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m6_u_gv" value="Giáo Viên Bộ Môn" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DCFCE7;" vertex="1" parent="m6_grade_uc_box"><mxGeometry x="50" y="150" width="50" height="100" as="geometry" /></mxCell>
+    <mxCell id="m6_uc1" value="Nhập điểm Thường xuyên, Giữa kỳ, Cuối kỳ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m6_grade_uc_box"><mxGeometry x="240" y="80" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m6_uc2" value="Đánh giá môn Đạt / Chưa đạt" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m6_grade_uc_box"><mxGeometry x="240" y="180" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m6_uc3" value="Tự động tính Điểm trung bình môn &amp; Cả năm" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FEF08A;" vertex="1" parent="m6_grade_uc_box"><mxGeometry x="240" y="280" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m6_c1" style="strokeWidth=2;" edge="1" parent="m6_grade_uc_box" source="m6_u_gv" target="m6_uc1"/>
+    <mxCell id="m6_c2" style="strokeWidth=2;" edge="1" parent="m6_grade_uc_box" source="m6_u_gv" target="m6_uc2"/>
+    <mxCell id="m6_c3" value="Tự động tính toán" style="strokeColor=#D97706;dashed=1;strokeWidth=2;" edge="1" parent="m6_grade_uc_box" source="m6_uc1" target="m6_uc3"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m6_grade_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m6_a1" value="Chọn Lớp, Môn học &amp; Học kỳ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m6_grade_act_box"><mxGeometry x="50" y="60" width="220" height="60" as="geometry" /></mxCell>
+    <mxCell id="m6_a2" value="Nhập điểm các cột TX, GK, CK" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m6_grade_act_box"><mxGeometry x="320" y="60" width="220" height="60" as="geometry" /></mxCell>
+    <mxCell id="m6_a3" value="Điểm từ 0 đến 10?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;" vertex="1" parent="m6_grade_act_box"><mxGeometry x="590" y="45" width="160" height="90" as="geometry" /></mxCell>
+    <mxCell id="m6_a4" value="Tính Điểm TB Môn = (TX + GK*2 + CK*3) / (nTX + 5)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m6_grade_act_box"><mxGeometry x="530" y="190" width="280" height="60" as="geometry" /></mxCell>
+    <mxCell id="m6_c1" style="strokeWidth=2;" edge="1" parent="m6_grade_act_box" source="m6_a1" target="m6_a2"/>
+    <mxCell id="m6_c2" style="strokeWidth=2;" edge="1" parent="m6_grade_act_box" source="m6_a2" target="m6_a3"/>
+    <mxCell id="m6_c3" value="Hợp lệ" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m6_grade_act_box" source="m6_a3" target="m6_a4"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m6_grade_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m6_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m6_grade_seq_box"><mxGeometry x="100" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m6_s_api" value="Máy Chủ Quản Lý Điểm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m6_grade_seq_box"><mxGeometry x="380" y="40" width="160" height="40" as="geometry" /></mxCell>
+    <mxCell id="m6_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m6_grade_seq_box"><mxGeometry x="680" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m6_sc1" value="1. Gửi dữ liệu bảng điểm học kỳ" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m6_grade_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="165" y="120" as="sourcePoint"/><mxPoint x="460" y="120" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m6_sc2" value="2. Lưu đầu điểm và cập nhật điểm trung bình môn" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m6_grade_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="460" y="180" as="sourcePoint"/><mxPoint x="740" y="180" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m6_sc3" value="3. Phản hồi lưu điểm thành công" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m6_grade_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="460" y="260" as="sourcePoint"/><mxPoint x="165" y="260" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m6_grade_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m6_st1" value="ĐANG MỞ&#xa;(Cho phép nhập và sửa điểm)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m6_grade_state_box"><mxGeometry x="100" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m6_st2" value="ĐÃ KHÓA SỔ&#xa;(Khóa sổ điểm cuối kỳ)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m6_grade_state_box"><mxGeometry x="450" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m6_stc1" value="Ban giám hiệu Khóa sổ" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m6_grade_state_box" source="m6_st1" target="m6_st2"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m6_grade_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m6_sc1" value="Màn hình: /grade-management&#xa;(Nhập điểm theo môn/lớp)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m6_grade_screen_box"><mxGeometry x="80" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m6_sc2" value="Màn hình: /gradebook&#xa;(Sổ điểm chi tiết cá nhân HS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m6_grade_screen_box"><mxGeometry x="400" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m6_scc1" style="strokeWidth=2;" edge="1" parent="m6_grade_screen_box" source="m6_sc1" target="m6_sc2"/>
+  
+        </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn7_8" name="CN7&8 - Đánh Giá Cuối Năm & Chuyển Giao Năm Học">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <mxCell id="p4_title" value="&lt;b&gt;CHỨC NĂNG 7 &amp; 8: ĐÁNH GIÁ CUỐI NĂM &amp; QUY TRÌNH CHUYỂN GIAO NĂM HỌC MỚI&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#0F172A;" vertex="1" parent="1">
+    <mxGeometry x="400" y="20" width="1800" height="40" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_box" value="&lt;b&gt;QUY TRÌNH TỔNG KẾT, XÉT LÊN LỚP &amp; PHÂN LỚP NĂM HỌC MỚI (4 BƯỚC WIZARD)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="2530" height="800" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_s1" value="&lt;b&gt;1. Tính Điểm Cả Năm &amp; Tổng Hợp Chuyên Cần&lt;/b&gt;&#xa;• Điểm TBCN = (TBM_HK1 + 2*TBM_HK2) / 3&#xa;• Đếm tổng số buổi vắng học trong cả năm&#xa;• Phân loại Học lực &amp; Hạnh kiểm học sinh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;align=left;spacingLeft=15;" vertex="1" parent="p4_box">
+    <mxGeometry x="50" y="80" width="340" height="120" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_s2" value="&lt;b&gt;Vắng &gt; 45 buổi?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="p4_box">
+    <mxGeometry x="470" y="65" width="200" height="150" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_absent" value="&lt;b&gt;Cờ Cảnh Báo Vắng Quá Quy Định&lt;/b&gt;&#xa;Đề xuất: LƯU BAN DO VẮNG QUÁ QUY CHẾ&#xa;(Đưa vào diện Hội đồng xem xét)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#FB923C;fontColor=#7C2D12;" vertex="1" parent="p4_box">
+    <mxGeometry x="445" y="280" width="250" height="90" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_s3" value="&lt;b&gt;Xét Điểm TB &amp; Hạnh Kiểm&lt;/b&gt;&#xa;Điểm TBCN &gt;= 5.0 &amp; Môn ĐG Đạt?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontColor=#78350F;" vertex="1" parent="p4_box">
+    <mxGeometry x="760" y="65" width="230" height="150" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_promote" value="&lt;b&gt;ĐỦ ĐIỀU KIỆN LÊN LỚP&lt;/b&gt;&#xa;• Khối 9 -&gt; Xét tốt nghiệp THCS&#xa;• Khối 6, 7, 8 -&gt; Lên khối lớp kế tiếp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;" vertex="1" parent="p4_box">
+    <mxGeometry x="1070" y="60" width="250" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_remedial" value="&lt;b&gt;RÈN LUYỆN HÈ / THI LẠI&lt;/b&gt;&#xa;Yêu cầu rèn luyện hè hoặc thi lại môn" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="p4_box">
+    <mxGeometry x="1070" y="160" width="250" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_wizard" value="&lt;b&gt;2. Khởi Chạy Quy Trình Chuyển Năm Học&lt;/b&gt;&#xa;• Bước 1: Chọn Năm học cũ &amp; Năm học mới&#xa;• Bước 2: Xem trước danh sách phân lớp tự động&#xa;• Bước 3: Xử lý các trường hợp lưu ban / thi lại&#xa;• Bước 4: Kích hoạt Năm học mới chính thức" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#A855F7;fontColor=#581C87;align=left;spacingLeft=15;" vertex="1" parent="p4_box">
+    <mxGeometry x="1400" y="60" width="380" height="180" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_apply" value="&lt;b&gt;3. Cập Nhật Cơ Sở Dữ Liệu Đồng Loạt&lt;/b&gt;&#xa;• Tạo phân lớp học sinh cho năm học mới&#xa;• Cập nhật trạng thái học sinh (Lên lớp, Tốt nghiệp)&#xa;• Đánh dấu Năm học mới là năm hiện tại" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;align=left;spacingLeft=15;" vertex="1" parent="p4_box">
+    <mxGeometry x="1880" y="60" width="380" height="180" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_c1" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_s1" target="p4_s2"/>
+  <mxCell id="p4_c2" value="&gt; 45 buổi" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s2" target="p4_absent"/>
+  <mxCell id="p4_c3" value="&lt;= 45 buổi" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s2" target="p4_s3"/>
+  <mxCell id="p4_c4" value="Đạt yêu cầu" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s3" target="p4_promote"/>
+  <mxCell id="p4_c5" value="Chưa đạt" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s3" target="p4_remedial"/>
+  <mxCell id="p4_c6" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_promote" target="p4_wizard"/>
+  <mxCell id="p4_c7" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_remedial" target="p4_wizard"/>
+  <mxCell id="p4_c8" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_absent" target="p4_wizard"/>
+  <mxCell id="p4_c9" style="strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="p4_box" source="p4_wizard" target="p4_apply"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_cn9" name="CN9 - Thông Báo & Nhật Ký Kiểm Toán">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m9_security_header" value="&lt;b&gt;CHỨC NĂNG 9: HỆ THỐNG THÔNG BÁO & NHẬT KÝ KIỂM TOÁN BẢO MẬT (AUDIT TRAIL)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m9_security_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m9_u_admin" value="Quản Trị Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m9_security_uc_box"><mxGeometry x="50" y="150" width="50" height="100" as="geometry" /></mxCell>
+    <mxCell id="m9_uc1" value="Phát thông báo toàn trường / theo vai trò" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m9_security_uc_box"><mxGeometry x="240" y="80" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m9_uc2" value="Xem &amp; Lọc nhật ký kiểm toán bảo mật (Audit Logs)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m9_security_uc_box"><mxGeometry x="240" y="180" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m9_uc3" value="Tự động cảnh báo hành vi bất thường" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;" vertex="1" parent="m9_security_uc_box"><mxGeometry x="240" y="280" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m9_c1" style="strokeWidth=2;" edge="1" parent="m9_security_uc_box" source="m9_u_admin" target="m9_uc1"/>
+    <mxCell id="m9_c2" style="strokeWidth=2;" edge="1" parent="m9_security_uc_box" source="m9_u_admin" target="m9_uc2"/>
+    <mxCell id="m9_c3" style="strokeWidth=2;" edge="1" parent="m9_security_uc_box" source="m9_u_admin" target="m9_uc3"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m9_security_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m9_a1" value="Người dùng thực hiện thao tác trong hệ thống" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m9_security_act_box"><mxGeometry x="50" y="60" width="260" height="60" as="geometry" /></mxCell>
+    <mxCell id="m9_a2" value="Tự động ghi lại vết: IP, UserID, Action, Thời gian" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m9_security_act_box"><mxGeometry x="360" y="60" width="280" height="60" as="geometry" /></mxCell>
+    <mxCell id="m9_a3" value="Phát hiện đăng nhập sai &gt; 5 lần?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m9_security_act_box"><mxGeometry x="690" y="45" width="190" height="90" as="geometry" /></mxCell>
+    <mxCell id="m9_a4" value="Kích hoạt cảnh báo bảo mật tới Quản trị viên" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;" vertex="1" parent="m9_security_act_box"><mxGeometry x="660" y="190" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m9_c1" style="strokeWidth=2;" edge="1" parent="m9_security_act_box" source="m9_a1" target="m9_a2"/>
+    <mxCell id="m9_c2" style="strokeWidth=2;" edge="1" parent="m9_security_act_box" source="m9_a2" target="m9_a3"/>
+    <mxCell id="m9_c3" value="Có bất thường" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m9_security_act_box" source="m9_a3" target="m9_a4"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m9_security_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m9_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m9_security_seq_box"><mxGeometry x="100" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m9_s_api" value="Máy Chủ Thông Báo &amp; Logs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m9_security_seq_box"><mxGeometry x="380" y="40" width="170" height="40" as="geometry" /></mxCell>
+    <mxCell id="m9_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m9_security_seq_box"><mxGeometry x="680" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m9_sc1" value="1. POST /api/notifications { title, content }" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m9_security_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="165" y="120" as="sourcePoint"/><mxPoint x="465" y="120" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m9_sc2" value="2. INSERT INTO notifications &amp; security_logs" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m9_security_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="465" y="180" as="sourcePoint"/><mxPoint x="740" y="180" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m9_sc3" value="3. 201 Created Phát thông báo thành công" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m9_security_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="465" y="260" as="sourcePoint"/><mxPoint x="165" y="260" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m9_security_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m9_st1" value="CHƯA ĐỌC&#xa;(Thông báo mới gửi)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF08A;" vertex="1" parent="m9_security_state_box"><mxGeometry x="100" y="150" width="200" height="70" as="geometry" /></mxCell>
+    <mxCell id="m9_st2" value="ĐÃ ĐỌC&#xa;(Người dùng đã mở xem)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m9_security_state_box"><mxGeometry x="400" y="150" width="200" height="70" as="geometry" /></mxCell>
+    <mxCell id="m9_stc1" style="strokeWidth=2;" edge="1" parent="m9_security_state_box" source="m9_st1" target="m9_st2"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m9_security_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m9_sc1" value="Màn hình: /admin-notifications&#xa;(Phát thông báo toàn trường)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m9_security_screen_box"><mxGeometry x="80" y="150" width="240" height="75" as="geometry" /></mxCell>
+    <mxCell id="m9_sc2" value="Màn hình: /security-logs&#xa;(Nhật ký bảo mật &amp; Audit Trail)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m9_security_screen_box"><mxGeometry x="420" y="150" width="240" height="75" as="geometry" /></mxCell>
+    <mxCell id="m9_scc1" style="strokeWidth=2;" edge="1" parent="m9_security_screen_box" source="m9_sc1" target="m9_sc2"/>
+  
+        </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

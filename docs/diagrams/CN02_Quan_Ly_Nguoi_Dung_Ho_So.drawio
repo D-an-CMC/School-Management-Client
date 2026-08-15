@@ -1,0 +1,80 @@
+<mxfile host="app.diagrams.net" modified="2026-08-15T10:02:17.426Z" agent="Next-AI-DrawIO" version="24.0.0">
+  <diagram id="diag_cn2" name="CN2 - Quản Lý Người Dùng & Hồ Sơ">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <mxCell id="m2_user_header" value="&lt;b&gt;CHỨC NĂNG 2: QUẢN LÝ NGƯỜI DÙNG, HỒ SƠ HỌC SINH & GIÁO VIÊN&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+    <mxGeometry x="600" y="20" width="1600" height="45" as="geometry" />
+  </mxCell>
+
+  <!-- 1. SƠ ĐỒ USE CASE (GÓC TRÊN BÊN TRÁI) -->
+  <mxCell id="m2_user_uc_box" value="&lt;b&gt;1. SƠ ĐỒ USE CASE (Các Chức Năng &amp; Tác Nhân)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="800" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_u_admin" value="Quản Trị Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="50" y="150" width="50" height="100" as="geometry" /></mxCell>
+    <mxCell id="m2_uc1" value="Tạo mới tài khoản Giáo viên / Học sinh" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="240" y="80" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m2_uc2" value="Cập nhật hồ sơ cá nhân &amp; Thông tin phụ huynh" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="240" y="180" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m2_uc3" value="Tìm kiếm &amp; Lọc danh sách theo Vai trò/Khối lớp" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;" vertex="1" parent="m2_user_uc_box"><mxGeometry x="240" y="280" width="280" height="65" as="geometry" /></mxCell>
+    <mxCell id="m2_c1" style="strokeWidth=2;" edge="1" parent="m2_user_uc_box" source="m2_u_admin" target="m2_uc1"/>
+    <mxCell id="m2_c2" style="strokeWidth=2;" edge="1" parent="m2_user_uc_box" source="m2_u_admin" target="m2_uc2"/>
+    <mxCell id="m2_c3" style="strokeWidth=2;" edge="1" parent="m2_user_uc_box" source="m2_u_admin" target="m2_uc3"/>
+  
+
+  <!-- 2. SƠ ĐỒ HOẠT ĐỘNG (GÓC TRÊN Ở GIỮA) -->
+  <mxCell id="m2_user_act_box" value="&lt;b&gt;2. SƠ ĐỒ HOẠT ĐỘNG (Quy Trình Nghiệp Vụ &amp; Ràng Buộc)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="880" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_a_start" value="Bắt đầu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#3B82F6;fontColor=#FFFFFF;" vertex="1" parent="m2_user_act_box"><mxGeometry x="50" y="50" width="90" height="50" as="geometry" /></mxCell>
+    <mxCell id="m2_a_form" value="Nhập thông tin: Mã, Họ tên, Email, Vai trò" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m2_user_act_box"><mxGeometry x="190" y="45" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m2_a_dup" value="Trùng Mã / Email?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;" vertex="1" parent="m2_user_act_box"><mxGeometry x="490" y="35" width="150" height="80" as="geometry" /></mxCell>
+    <mxCell id="m2_a_save" value="Thêm mới vào bảng users và bảng chi tiết" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_act_box"><mxGeometry x="440" y="170" width="250" height="60" as="geometry" /></mxCell>
+    <mxCell id="m2_a_end" value="Tạo người dùng thành công" style="ellipse;whiteSpace=wrap;html=1;fillColor=#22C55E;fontColor=#FFFFFF;" vertex="1" parent="m2_user_act_box"><mxGeometry x="465" y="280" width="200" height="50" as="geometry" /></mxCell>
+    <mxCell id="m2_ac1" style="strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_start" target="m2_a_form"/>
+    <mxCell id="m2_ac2" style="strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_form" target="m2_a_dup"/>
+    <mxCell id="m2_ac3" value="Không trùng" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_dup" target="m2_a_save"/>
+    <mxCell id="m2_ac4" style="strokeWidth=2;" edge="1" parent="m2_user_act_box" source="m2_a_save" target="m2_a_end"/>
+  
+
+  <!-- 3. SƠ ĐỒ TUẦN TỰ (GÓC TRÊN BÊN PHẢI) -->
+  <mxCell id="m2_user_seq_box" value="&lt;b&gt;3. SƠ ĐỒ TUẦN TỰ (Tương Tác Giao Diện &lt;--&gt; Máy Chủ &lt;--&gt; Cơ Sở Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1830" y="80" width="920" height="700" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_s_c" value="Giao Diện Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m2_user_seq_box"><mxGeometry x="100" y="40" width="130" height="40" as="geometry" /></mxCell>
+    <mxCell id="m2_s_api" value="Máy Chủ Quản Lý Người Dùng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_seq_box"><mxGeometry x="380" y="40" width="180" height="40" as="geometry" /></mxCell>
+    <mxCell id="m2_s_db" value="Cơ Sở Dữ Liệu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;" vertex="1" parent="m2_user_seq_box"><mxGeometry x="680" y="40" width="120" height="40" as="geometry" /></mxCell>
+    <mxCell id="m2_sc1" value="1. Gửi yêu cầu tạo tài khoản mới" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m2_user_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="165" y="120" as="sourcePoint"/><mxPoint x="470" y="120" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m2_sc2" value="2. Lưu bản ghi người dùng vào CSDL" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m2_user_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="470" y="180" as="sourcePoint"/><mxPoint x="740" y="180" as="targetPoint"/></mxGeometry></mxCell>
+    <mxCell id="m2_sc3" value="3. Phản hồi tạo thành công kèm mã người dùng" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;dashed=1;" edge="1" parent="m2_user_seq_box"><mxGeometry relative="1" as="geometry"><mxPoint x="470" y="260" as="sourcePoint"/><mxPoint x="165" y="260" as="targetPoint"/></mxGeometry></mxCell>
+  
+
+  <!-- 4. SƠ ĐỒ TRẠNG THÁI (GÓC DƯỚI BÊN TRÁI) -->
+  <mxCell id="m2_user_state_box" value="&lt;b&gt;4. SƠ ĐỒ TRẠNG THÁI (Vòng Đời Trạng Thái Của Thực Thể / Dữ Liệu)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="810" width="1350" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_st1" value="HOẠT ĐỘNG&#xa;(Tài khoản có thể đăng nhập)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_state_box"><mxGeometry x="100" y="150" width="220" height="70" as="geometry" /></mxCell>
+    <mxCell id="m2_st2" value="TẠM KHÓA&#xa;(Vô hiệu hóa quyền truy cập)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;" vertex="1" parent="m2_user_state_box"><mxGeometry x="460" y="150" width="240" height="70" as="geometry" /></mxCell>
+    <mxCell id="m2_stc1" value="Khóa tài khoản" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="m2_user_state_box" source="m2_st1" target="m2_st2"/>
+    <mxCell id="m2_stc2" value="Mở khóa tài khoản" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="m2_user_state_box" source="m2_st2" target="m2_st1"/>
+  
+
+  <!-- 5. LUỒNG NGƯỜI DÙNG & MÀN HÌNH (GÓC DƯỚI BÊN PHẢI) -->
+  <mxCell id="m2_user_screen_box" value="&lt;b&gt;5. LUỒNG NGƯỜI DÙNG &amp; ĐIỀU HƯỚNG MÀN HÌNH (Hành Trình Thao Tác)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="1430" y="810" width="1320" height="500" as="geometry" />
+  </mxCell>
+  
+    <mxCell id="m2_sc1" value="Màn hình: /user-management&#xa;(Danh sách người dùng)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;" vertex="1" parent="m2_user_screen_box"><mxGeometry x="80" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m2_sc2" value="Cửa sổ: Thêm Người Dùng Mới" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;" vertex="1" parent="m2_user_screen_box"><mxGeometry x="420" y="150" width="220" height="75" as="geometry" /></mxCell>
+    <mxCell id="m2_scc1" value="Bấm Thêm mới" style="strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="m2_user_screen_box" source="m2_sc1" target="m2_sc2"/>
+  
+  
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

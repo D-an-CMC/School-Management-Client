@@ -1,0 +1,51 @@
+<mxfile host="app.diagrams.net" modified="2026-08-15T10:02:17.431Z" agent="Next-AI-DrawIO" version="24.0.0">
+  <diagram id="diag_cn7_8" name="CN7&8 - Đánh Giá Cuối Năm & Chuyển Giao Năm Học">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+  <mxCell id="p4_title" value="&lt;b&gt;CHỨC NĂNG 7 &amp; 8: ĐÁNH GIÁ CUỐI NĂM &amp; QUY TRÌNH CHUYỂN GIAO NĂM HỌC MỚI&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#0F172A;" vertex="1" parent="1">
+    <mxGeometry x="400" y="20" width="1800" height="40" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_box" value="&lt;b&gt;QUY TRÌNH TỔNG KẾT, XÉT LÊN LỚP &amp; PHÂN LỚP NĂM HỌC MỚI (4 BƯỚC WIZARD)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#1E293B;rounded=1;fontSize=15;" vertex="1" parent="1">
+    <mxGeometry x="50" y="80" width="2530" height="800" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_s1" value="&lt;b&gt;1. Tính Điểm Cả Năm &amp; Tổng Hợp Chuyên Cần&lt;/b&gt;&#xa;• Điểm TBCN = (TBM_HK1 + 2*TBM_HK2) / 3&#xa;• Đếm tổng số buổi vắng học trong cả năm&#xa;• Phân loại Học lực &amp; Hạnh kiểm học sinh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;align=left;spacingLeft=15;" vertex="1" parent="p4_box">
+    <mxGeometry x="50" y="80" width="340" height="120" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_s2" value="&lt;b&gt;Vắng &gt; 45 buổi?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="p4_box">
+    <mxGeometry x="470" y="65" width="200" height="150" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_absent" value="&lt;b&gt;Cờ Cảnh Báo Vắng Quá Quy Định&lt;/b&gt;&#xa;Đề xuất: LƯU BAN DO VẮNG QUÁ QUY CHẾ&#xa;(Đưa vào diện Hội đồng xem xét)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#FB923C;fontColor=#7C2D12;" vertex="1" parent="p4_box">
+    <mxGeometry x="445" y="280" width="250" height="90" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_s3" value="&lt;b&gt;Xét Điểm TB &amp; Hạnh Kiểm&lt;/b&gt;&#xa;Điểm TBCN &gt;= 5.0 &amp; Môn ĐG Đạt?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontColor=#78350F;" vertex="1" parent="p4_box">
+    <mxGeometry x="760" y="65" width="230" height="150" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_promote" value="&lt;b&gt;ĐỦ ĐIỀU KIỆN LÊN LỚP&lt;/b&gt;&#xa;• Khối 9 -&gt; Xét tốt nghiệp THCS&#xa;• Khối 6, 7, 8 -&gt; Lên khối lớp kế tiếp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;" vertex="1" parent="p4_box">
+    <mxGeometry x="1070" y="60" width="250" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_remedial" value="&lt;b&gt;RÈN LUYỆN HÈ / THI LẠI&lt;/b&gt;&#xa;Yêu cầu rèn luyện hè hoặc thi lại môn" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="p4_box">
+    <mxGeometry x="1070" y="160" width="250" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_wizard" value="&lt;b&gt;2. Khởi Chạy Quy Trình Chuyển Năm Học&lt;/b&gt;&#xa;• Bước 1: Chọn Năm học cũ &amp; Năm học mới&#xa;• Bước 2: Xem trước danh sách phân lớp tự động&#xa;• Bước 3: Xử lý các trường hợp lưu ban / thi lại&#xa;• Bước 4: Kích hoạt Năm học mới chính thức" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#A855F7;fontColor=#581C87;align=left;spacingLeft=15;" vertex="1" parent="p4_box">
+    <mxGeometry x="1400" y="60" width="380" height="180" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_apply" value="&lt;b&gt;3. Cập Nhật Cơ Sở Dữ Liệu Đồng Loạt&lt;/b&gt;&#xa;• Tạo phân lớp học sinh cho năm học mới&#xa;• Cập nhật trạng thái học sinh (Lên lớp, Tốt nghiệp)&#xa;• Đánh dấu Năm học mới là năm hiện tại" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;align=left;spacingLeft=15;" vertex="1" parent="p4_box">
+    <mxGeometry x="1880" y="60" width="380" height="180" as="geometry" />
+  </mxCell>
+  <mxCell id="p4_c1" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_s1" target="p4_s2"/>
+  <mxCell id="p4_c2" value="&gt; 45 buổi" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s2" target="p4_absent"/>
+  <mxCell id="p4_c3" value="&lt;= 45 buổi" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s2" target="p4_s3"/>
+  <mxCell id="p4_c4" value="Đạt yêu cầu" style="strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s3" target="p4_promote"/>
+  <mxCell id="p4_c5" value="Chưa đạt" style="strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="p4_box" source="p4_s3" target="p4_remedial"/>
+  <mxCell id="p4_c6" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_promote" target="p4_wizard"/>
+  <mxCell id="p4_c7" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_remedial" target="p4_wizard"/>
+  <mxCell id="p4_c8" style="strokeWidth=2;" edge="1" parent="p4_box" source="p4_absent" target="p4_wizard"/>
+  <mxCell id="p4_c9" style="strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="p4_box" source="p4_wizard" target="p4_apply"/>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

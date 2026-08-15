@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" modified="2026-08-15T09:46:17.005Z" agent="Next-AI-DrawIO" version="24.0.0">
+  <diagram id="tkb" name="Auto-Schedule-Workflow">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+  <mxCell id="title_tkb" value="&lt;b&gt;QUY TRÌNH XẾP THỜI KHÓA BIỂU TỰ ĐỘNG (AUTO-SCHEDULER)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#1E293B;" vertex="1" parent="1">
+    <mxGeometry x="350" y="30" width="800" height="40" as="geometry" />
+  </mxCell>
+  <mxCell id="t_start" value="Bắt đầu xếp TKB" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;" vertex="1" parent="1">
+    <mxGeometry x="100" y="200" width="160" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="t_load" value="1. Tải Lớp, GV, Môn, Phòng, Định mức tiết" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontColor=#78350F;" vertex="1" parent="1">
+    <mxGeometry x="320" y="190" width="220" height="100" as="geometry" />
+  </mxCell>
+  <mxCell id="t_split" value="2. Phân rã môn KHTN (Lý, Hóa, Sinh)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;" vertex="1" parent="1">
+    <mxGeometry x="600" y="190" width="200" height="100" as="geometry" />
+  </mxCell>
+  <mxCell id="t_matrix" value="3. Khởi tạo Ma trận Lịch Tuần (6x10)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#A855F7;fontColor=#581C87;" vertex="1" parent="1">
+    <mxGeometry x="860" y="190" width="200" height="100" as="geometry" />
+  </mxCell>
+  <mxCell id="t_eval" value="4. Kiểm tra Trùng GV / Phòng?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontColor=#7F1D1D;" vertex="1" parent="1">
+    <mxGeometry x="1120" y="165" width="220" height="150" as="geometry" />
+  </mxCell>
+  <mxCell id="t_backtrack" value="Backtracking &amp; Hoán đổi slot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#FB923C;fontColor=#7C2D12;" vertex="1" parent="1">
+    <mxGeometry x="1130" y="380" width="200" height="60" as="geometry" />
+  </mxCell>
+  <mxCell id="t_draft" value="5. Sinh Draft TKB &amp; Cho phép sửa tay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;" vertex="1" parent="1">
+    <mxGeometry x="1400" y="190" width="220" height="100" as="geometry" />
+  </mxCell>
+  <mxCell id="t_pub" value="Lưu chính thức vào DB" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontColor=#14532D;" vertex="1" parent="1">
+    <mxGeometry x="1680" y="200" width="160" height="80" as="geometry" />
+  </mxCell>
+  <mxCell id="tc1" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="t_start" target="t_load"/>
+  <mxCell id="tc2" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="t_load" target="t_split"/>
+  <mxCell id="tc3" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="t_split" target="t_matrix"/>
+  <mxCell id="tc4" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="t_matrix" target="t_eval"/>
+  <mxCell id="tc5" value="Xung đột" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="1" source="t_eval" target="t_backtrack"/>
+  <mxCell id="tc6" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" edge="1" parent="1" source="t_backtrack" target="t_matrix"/>
+  <mxCell id="tc7" value="Thỏa mãn" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="1" source="t_eval" target="t_draft"/>
+  <mxCell id="tc8" value="Duyệt" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="1" source="t_draft" target="t_pub"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

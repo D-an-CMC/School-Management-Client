@@ -140,6 +140,12 @@ export function getStudentsCount(): Promise<number> {
   return getStudentStats().then((s) => s.totalStudents ?? 0);
 }
 
+export async function getUnassignedStudentsCount(): Promise<number> {
+  const res = await apiFetch('/api/students/unassigned/count');
+  const json = (await res.json()) as { success: boolean; data?: { unassignedCount?: number } };
+  return json.success ? (json.data?.unassignedCount ?? 0) : 0;
+}
+
 export async function getTeachers(params?: { search?: string; subjectId?: number; page?: number; limit?: number }) {
   const qs = new URLSearchParams();
   if (params?.search) qs.set('search', params.search);
