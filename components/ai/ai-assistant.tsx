@@ -13,7 +13,6 @@ import {
   AiToolStepData,
   AiConversation,
 } from '@/lib/api'
-import { Bot, Send, Plus, Trash2, History, X, Loader2, BookOpen, Database, Search, MessageSquareText, Table2, BarChart3 } from 'lucide-react'
 
 interface LocalMessage {
   id: string
@@ -51,6 +50,7 @@ const SUGGESTIONS: Record<string, string[]> = {
 
 const TOOL_LABEL: Record<string, string> = {
   execute_sql: 'Truy vấn dữ liệu',
+  execute_write: 'Ghi dữ liệu',
   rag_search: 'Tìm tài liệu',
   get_db_schema: 'Xem cấu trúc CSDL',
 }
@@ -65,21 +65,21 @@ function MarkdownView({ text }: { text: string }) {
       <ReactMarkdown
         components={{
         a: ({ node, ...props }) => (
-          <a {...props} className="text-blue-600 underline underline-offset-2 break-all" target="_blank" rel="noopener noreferrer" />
+          <a {...props} className="text-blue-700 underline underline-offset-2 break-all" target="_blank" rel="noopener noreferrer" />
         ),
         table: ({ node, ...props }) => (
-          <div className="my-2 overflow-x-auto rounded-lg border border-gray-200">
+          <div className="my-2 overflow-x-auto rounded border border-gray-300">
             <table {...props} className="w-full text-[11px] border-collapse" />
           </div>
         ),
         thead: ({ node, ...props }) => (
-          <thead {...props} className="bg-[#003366] text-white" />
+          <thead {...props} className="bg-gray-100 text-gray-700" />
         ),
         th: ({ node, ...props }) => (
           <th {...props} className="px-2 py-1.5 text-left font-semibold whitespace-nowrap" />
         ),
         td: ({ node, ...props }) => (
-          <td {...props} className="px-2 py-1 border-t border-gray-100 text-gray-700 align-top" />
+          <td {...props} className="px-2 py-1 border-t border-gray-200 text-gray-700 align-top" />
         ),
         code: ({ node, className, children, ...props }) => {
           const inline = !className
@@ -88,8 +88,8 @@ function MarkdownView({ text }: { text: string }) {
               {...props}
               className={
                 inline
-                  ? 'bg-gray-100 text-rose-600 px-1 py-0.5 rounded text-[10.5px] font-mono'
-                  : 'block bg-gray-900 text-emerald-300 p-2 rounded-lg text-[10.5px] font-mono overflow-x-auto my-1.5 whitespace-pre'
+                  ? 'bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-[10.5px] font-mono'
+                  : 'block bg-gray-100 text-gray-800 p-2 rounded text-[10.5px] font-mono overflow-x-auto my-1.5 whitespace-pre'
               }
             >
               {children}
@@ -103,7 +103,7 @@ function MarkdownView({ text }: { text: string }) {
         h2: ({ node, ...props }) => <h2 {...props} className="text-[13px] font-bold mt-2 mb-1" />,
         h3: ({ node, ...props }) => <h3 {...props} className="text-xs font-bold mt-1.5 mb-0.5" />,
         blockquote: ({ node, ...props }) => (
-          <blockquote {...props} className="border-l-2 border-blue-300 pl-2 my-1 text-gray-600 italic" />
+          <blockquote {...props} className="border-l-2 border-gray-300 pl-2 my-1 text-gray-600 italic" />
         ),
       }}
       >
@@ -119,53 +119,19 @@ function cellText(v: unknown): string {
   return String(v)
 }
 
-// Kiểm tra dữ liệu dạng (nhãn, số) để vẽ bar chart
-function chartable(data: AiToolStepData): boolean {
-  if (!data?.columns || !data?.rows || data.columns.length < 2 || data.rows.length < 2) return false
-  const v = data.rows[0][1]
-  return typeof v === 'number' || (typeof v === 'string' && v.trim() !== '' && isFinite(Number(v)))
-}
-
-function MiniBarChart({ data }: { data: AiToolStepData }) {
-  if (!data?.columns || !data?.rows) return null
-  const [labelCol, valueCol] = data.columns
-  const vals = data.rows.map((r) => ({ label: cellText(r[0]), value: Number(r[1]) }))
-  const max = Math.max(...vals.map((v) => v.value), 1)
-  return (
-    <div className="mt-2 space-y-1">
-      <p className="text-[10px] font-bold text-gray-500 flex items-center gap-1">
-        <BarChart3 size={11} /> Biểu đồ: {labelCol} theo {valueCol}
-      </p>
-      <div className="space-y-1">
-        {vals.map((v, i) => (
-          <div key={i} className="flex items-center gap-1.5">
-            <span className="w-20 text-[9px] text-gray-500 truncate text-right shrink-0">{v.label}</span>
-            <div className="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
-              <div
-                className="h-full rounded bg-[#003366]"
-                style={{ width: `${Math.max((v.value / max) * 100, 2)}%` }}
-              />
-            </div>
-            <span className="w-8 text-[9px] text-gray-600 font-semibold shrink-0">{v.value}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
+// Bảng dữ liệu tối giản (không màu, không biểu đồ)
 function StepDataTable({ data, maxRows }: { data: AiToolStepData; maxRows?: number }) {
   if (!data?.columns || !data?.rows || data.rows.length === 0) return null
   const cols = data.columns
   const rows = maxRows ? data.rows.slice(0, maxRows) : data.rows
   return (
-    <div className="mt-2 rounded-lg border border-gray-200 overflow-hidden">
+    <div className="mt-2 rounded border border-gray-300 overflow-hidden">
       <div className="max-h-40 overflow-auto">
         <table className="w-full text-[10px]">
-          <thead className="sticky top-0 bg-[#003366] text-white">
+          <thead className="sticky top-0 bg-gray-100">
             <tr>
               {cols.map((c) => (
-                <th key={c} className="px-2 py-1.5 text-left font-semibold whitespace-nowrap">{c}</th>
+                <th key={c} className="px-2 py-1.5 text-left font-semibold text-gray-700 whitespace-nowrap">{c}</th>
               ))}
             </tr>
           </thead>
@@ -191,32 +157,30 @@ function DataModal({ step, onClose }: { step: AiToolStep; onClose: () => void })
   const hasData = !!data && !!data.columns && !!data.rows && data.rows.length > 0
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] bg-black/40 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
+        className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-4 py-3 bg-[#003366] text-white flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            <Table2 size={16} />
-            <p className="text-sm font-bold">Dữ liệu truy vấn</p>
+        <div className="px-4 py-2.5 border-b border-gray-200 flex items-center justify-between shrink-0">
+          <div>
+            <p className="text-sm font-bold text-gray-900">Kết quả dữ liệu</p>
             {hasData && (
-              <span className="text-[10px] bg-white/15 px-1.5 py-0.5 rounded">
-                {data.rowCount ?? data.rows!.length} dòng {data.limited && data.rows!.length >= data.limited ? `(giới hạn ${data.limited})` : ''}
-              </span>
+              <p className="text-[10px] text-gray-500">
+                {data.rowCount ?? data.rows!.length} dòng{data.limited && data.rows!.length >= data.limited ? ` (giới hạn ${data.limited})` : ''}
+              </p>
             )}
           </div>
-          <button onClick={onClose} className="w-7 h-7 rounded-full hover:bg-white/15 flex items-center justify-center cursor-pointer">
-            <X size={16} />
+          <button onClick={onClose} className="text-xs text-gray-600 hover:text-gray-900 font-medium cursor-pointer">
+            Đóng
           </button>
         </div>
         <div className="p-3 overflow-auto">
           {data?.error && !hasData && (
-            <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">{data.error}</div>
+            <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded p-3">{data.error}</div>
           )}
-          {hasData && chartable(data) && <MiniBarChart data={data} />}
           {hasData && <StepDataTable data={data} />}
           {!hasData && !data?.error && (
             <p className="text-xs text-gray-500">Không có dữ liệu để hiển thị.</p>
@@ -227,26 +191,21 @@ function DataModal({ step, onClose }: { step: AiToolStep; onClose: () => void })
   )
 }
 
-function StepBadges({ step }: { step: AiToolStep }) {
+// Huy hiệu gọi tool — tối giản, không màu, không icon
+function ToolBadge({ step }: { step: AiToolStep }) {
   const data = step.data
   const hasData = !!data && !!data.columns && !!data.rows && data.rows.length > 0
   const err = !!data?.error
-  if (!hasData) return null
   return (
-    <div className="mt-2 flex items-center gap-2">
-      <span className="text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">
-        {data.rowCount ?? data.rows!.length} dòng
+    <div className="mt-1.5 inline-flex flex-wrap items-center gap-1.5 text-[10px] text-gray-600">
+      <span className="border border-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">
+        {TOOL_LABEL[step.tool] || step.tool}
       </span>
-      {chartable(data) && (
-        <span className="text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">
-          <BarChart3 size={9} className="inline mr-0.5" /> Chart
-        </span>
+      <span>{step.summary}</span>
+      {hasData && (
+        <span className="text-gray-400">({data.rowCount ?? data.rows!.length} dòng)</span>
       )}
-      {err && (
-        <span className="text-[9px] font-bold bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded">
-          Có lỗi — AI đang thử lại
-        </span>
-      )}
+      {err && <span className="text-red-600">— có lỗi, AI đang thử lại</span>}
     </div>
   )
 }
@@ -415,76 +374,54 @@ export function AiAssistant() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2.5 px-4 py-3 bg-[#003366] hover:bg-[#002244] text-white rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 group cursor-pointer border-2 border-white/20"
+          className="bg-white border border-gray-300 hover:border-gray-400 shadow-lg px-4 py-2.5 rounded-lg text-left cursor-pointer"
           title="Mở Trợ lý AI Trường học"
         >
-          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-amber-300 group-hover:rotate-12 transition-transform">
-            <Bot size={18} />
-          </div>
-          <div className="text-left hidden sm:block">
-            <p className="text-xs font-bold leading-tight">Trợ lý AI</p>
-            <p className="text-[10px] text-blue-200">Hỏi dữ liệu & quy chế trường</p>
-          </div>
-          <span className="relative flex h-2.5 w-2.5 ml-1">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
-          </span>
+          <p className="text-xs font-bold text-gray-900">Trợ lý AI Trường học</p>
+          <p className="text-[10px] text-gray-500">Hỏi số liệu, quy chế, điểm, TKB...</p>
         </button>
       )}
 
       {isOpen && (
-        <div className="w-[370px] sm:w-[440px] h-[580px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
-          <div className="bg-[#003366] text-white px-4 py-3 flex items-center justify-between shadow-md shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-amber-300 border border-white/20">
-                <Bot size={20} />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold flex items-center gap-1.5">
-                  Trợ lý AI Trường Học
-                  <span className="text-[9px] font-semibold bg-amber-400/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-300/30">
-                    AGENT + RAG
-                  </span>
-                </h3>
-                <p className="text-[10px] text-blue-200 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  Sẵn sàng • Vai trò: {roleName}
-                </p>
-              </div>
+        <div className="w-[370px] sm:w-[440px] h-[580px] bg-white rounded-lg shadow-xl border border-gray-300 flex flex-col overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between shrink-0">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900">Trợ lý AI Trường học</h3>
+              <p className="text-[10px] text-gray-500">Quyền truy cập: {roleName}</p>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-3 text-xs">
               <button
                 onClick={newSession}
-                className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                className="text-gray-600 hover:text-gray-900 font-medium cursor-pointer"
                 title="Phiên mới"
               >
-                <Plus size={18} />
+                Phiên mới
               </button>
               <button
                 onClick={openHistory}
-                className={`w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors ${historyOpen ? 'bg-white/15 text-white' : 'text-white/80'}`}
+                className={`font-medium cursor-pointer ${historyOpen ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
                 title="Lịch sử hội thoại"
               >
-                <History size={18} />
+                Lịch sử
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                className="text-gray-600 hover:text-gray-900 font-medium cursor-pointer"
                 title="Đóng"
               >
-                <X size={18} />
+                Đóng
               </button>
             </div>
           </div>
 
           {activeConv && (
             <div className="px-4 py-1.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between text-[11px] text-gray-600 shrink-0">
-              <span className="truncate font-medium">💬 {activeConv.title || 'Hội thoại'}</span>
+              <span className="truncate font-medium">{activeConv.title || 'Hội thoại'}</span>
               <button
                 onClick={() => removeConversation(activeConv.conversation_id)}
-                className="text-red-500 hover:text-red-700 flex items-center gap-0.5 shrink-0 ml-2"
+                className="text-gray-500 hover:text-red-600 font-medium shrink-0 ml-2 cursor-pointer"
               >
-                <Trash2 size={12} /> Xóa
+                Xóa
               </button>
             </div>
           )}
@@ -501,9 +438,8 @@ export function AiAssistant() {
                 <button
                   key={c.conversation_id}
                   onClick={() => openConversation(c)}
-                  className="w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors flex items-center gap-2"
+                  className="w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <MessageSquareText size={14} className="text-gray-400 shrink-0" />
                   <span className="truncate flex-1 text-xs text-gray-700">
                     {c.title || 'Hội thoại'}
                   </span>
@@ -515,17 +451,17 @@ export function AiAssistant() {
             </div>
           )}
 
-          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-gray-50/50">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-gray-50">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[88%] p-3 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-[88%] p-3 rounded-lg text-xs sm:text-sm leading-relaxed border ${
                     msg.sender === 'user'
-                      ? 'bg-[#003366] text-white rounded-br-none shadow-sm'
-                      : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none shadow-xs'
+                      ? 'bg-gray-200 border-gray-300 text-gray-900'
+                      : 'bg-white border-gray-300 text-gray-800'
                   }`}
                 >
                   <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
@@ -533,53 +469,39 @@ export function AiAssistant() {
                   </p>
 
                   {msg.steps && msg.steps.length > 0 && (
-                    <div className="mt-3 pt-2 border-t border-gray-100 space-y-2">
+                    <div className="mt-3 pt-2 border-t border-gray-200 space-y-1.5">
                       {msg.steps.map((s, i) => (
                         <div key={i} className="text-[10px] text-gray-500">
-                          <div className="flex items-center gap-1.5 font-medium">
-                            {s.tool === 'rag_search' ? (
-                              <Search size={11} className="text-emerald-500" />
-                            ) : s.tool === 'execute_sql' ? (
-                              <Database size={11} className="text-blue-500" />
-                            ) : (
-                              <BookOpen size={11} className="text-amber-500" />
+                          <div className="flex flex-col gap-0.5">
+                            <ToolBadge step={s} />
+                            {s.tool === 'execute_sql' && s.data && (
+                              <>
+                                {s.data?.error ? (
+                                  <p className="mt-0.5 text-red-600">{s.data.error}</p>
+                                ) : (
+                                  <>
+                                    <StepDataTable data={s.data} maxRows={8} />
+                                    {s.data.rows && s.data.rows.length > 8 && (
+                                      <button
+                                        onClick={() => setModalStep(s)}
+                                        className="mt-1 text-[10px] font-medium text-gray-600 hover:text-gray-900 underline underline-offset-2 cursor-pointer self-start"
+                                      >
+                                        Xem đầy đủ ({s.data.rows.length} dòng)
+                                      </button>
+                                    )}
+                                  </>
+                                )}
+                              </>
                             )}
-                            <span className="text-gray-400">
-                              {TOOL_LABEL[s.tool] || s.tool}:
-                            </span>
-                            <span className="truncate">{s.summary}</span>
                           </div>
-                          {s.tool === 'execute_sql' && s.data && (
-                            <>
-                              <StepBadges step={s} />
-                              {s.data?.error ? (
-                                <p className="mt-1 text-red-500">⚠️ {s.data.error}</p>
-                              ) : (
-                                <>
-                                  <StepDataTable data={s.data} maxRows={8} />
-                                  {s.data.rows && s.data.rows.length > 8 && (
-                                    <button
-                                      onClick={() => setModalStep(s)}
-                                      className="mt-1.5 text-[10px] font-bold text-[#003366] hover:underline flex items-center gap-1 cursor-pointer"
-                                    >
-                                      <Table2 size={10} /> Xem đầy đủ ({s.data.rows.length} dòng)
-                                    </button>
-                                  )}
-                                </>
-                              )}
-                            </>
-                          )}
                         </div>
                       ))}
                     </div>
                   )}
 
                   {msg.citations && msg.citations.length > 0 && (
-                    <div className="mt-2.5 pt-2 border-t border-gray-100 text-[10px] text-gray-500">
-                      <p className="font-bold text-[#003366] mb-1 flex items-center gap-1">
-                        <BookOpen size={12} />
-                        Nguồn tham khảo:
-                      </p>
+                    <div className="mt-2.5 pt-2 border-t border-gray-200 text-[10px] text-gray-500">
+                      <p className="font-semibold mb-0.5">Nguồn tham khảo:</p>
                       <ul className="space-y-0.5 list-disc list-inside">
                         {msg.citations.slice(0, 4).map((c, i) => (
                           <li key={i} className="truncate">
@@ -592,9 +514,9 @@ export function AiAssistant() {
                   )}
 
                   {msg.warnings && msg.warnings.length > 0 && (
-                    <div className="mt-2 text-[10px] text-amber-600">
+                    <div className="mt-2 text-[10px] text-gray-600">
                       {msg.warnings.map((w, i) => (
-                        <p key={i}>⚠️ {w}</p>
+                        <p key={i}>Lưu ý: {w}</p>
                       ))}
                     </div>
                   )}
@@ -604,16 +526,13 @@ export function AiAssistant() {
             ))}
 
             {loading && (
-              <div className="flex flex-col gap-1.5 bg-white border border-gray-200 text-gray-500 p-3 rounded-2xl rounded-bl-none max-w-[85%] text-xs shadow-xs">
-                <div className="flex items-center gap-2">
-                  <Loader2 size={14} className="animate-spin text-[#003366]" />
-                  <span>Agent đang phân tích & truy vấn...</span>
-                </div>
-                <div className="flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#003366] animate-bounce" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#003366] animate-bounce [animation-delay:0.15s]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#003366] animate-bounce [animation-delay:0.3s]" />
-                </div>
+              <div className="flex items-center gap-2 bg-white border border-gray-300 text-gray-600 p-3 rounded-lg max-w-[85%] text-xs">
+                <span className="flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0.15s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0.3s]" />
+                </span>
+                <span>Đang truy vấn dữ liệu...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -625,7 +544,7 @@ export function AiAssistant() {
                 <button
                   key={q}
                   onClick={() => handleSend(q)}
-                  className="text-[10px] px-2.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#003366] hover:text-white text-gray-600 border border-gray-200 transition-colors cursor-pointer"
+                  className="text-[10px] px-2.5 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 border border-gray-300 transition-colors cursor-pointer"
                 >
                   {q}
                 </button>
@@ -646,18 +565,18 @@ export function AiAssistant() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Hỏi: điểm số, TKB, sĩ số, quy chế..."
-                className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:bg-white transition-all text-gray-900"
+                className="flex-1 px-3 py-2.5 text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 focus:bg-white transition-all text-gray-900"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
-                className="w-9 h-9 rounded-xl bg-[#003366] hover:bg-[#002244] text-white flex items-center justify-center transition-colors disabled:opacity-40 cursor-pointer shrink-0 shadow-sm"
+                className="px-3.5 h-9 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold transition-colors disabled:opacity-40 cursor-pointer shrink-0"
               >
-                <Send size={16} />
+                Gửi
               </button>
             </form>
             <p className="text-[9px] text-gray-400 text-center mt-1.5 font-medium">
-              Agentic AI + RAG • NVIDIA NIM • Đúng vai trò của bạn
+              AI truy vấn dữ liệu theo đúng quyền của bạn
             </p>
           </div>
         </div>
