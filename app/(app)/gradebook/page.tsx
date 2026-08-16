@@ -8,12 +8,9 @@ import {
   getMyGrades,
   getMyGradesYear,
   getMyStudentInfo,
-  getClasses,
   getClassStudents,
   getGradesByClass,
   saveClassGrades,
-  getSubjects,
-  getTeacherSubjects,
   getMe,
   getTimetables,
 } from '@/lib/api'

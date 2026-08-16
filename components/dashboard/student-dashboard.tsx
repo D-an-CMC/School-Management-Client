@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/lib/auth-context'
 import { getMyStudentInfo, getMyGrades, getMyActivities, getMyNotifications } from '@/lib/api'
 
 export function StudentDashboard({ user }: { user: any }) {

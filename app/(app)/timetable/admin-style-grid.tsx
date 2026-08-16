@@ -1,7 +1,5 @@
 'use client'
 
-import React from 'react'
-
 // ──────────────────────────────────────────────────────
 // Admin-style read-only timetable grid
 // Renders timetable entries exactly like the admin page:

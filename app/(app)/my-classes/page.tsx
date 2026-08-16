@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { useAcademic } from '@/lib/academic-context'
 import { getClasses, getClassStudents, getMyStudentInfo } from '@/lib/api'
-import Link from 'next/link'
 
 export default function MyClassesPage() {
   const { user } = useAuth()

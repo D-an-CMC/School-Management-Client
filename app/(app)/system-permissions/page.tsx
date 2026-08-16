@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useCallback } from 'react'
-import { getRoles, getAllPermissions, updateRolePermissions } from '@/lib/api'
+import { getRoles, updateRolePermissions } from '@/lib/api'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

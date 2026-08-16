@@ -76,7 +76,6 @@ export default function YearTransitionPage() {
   const [students, setStudents] = useState<StudentRow[]>([])
   const [classes, setClasses] = useState<any[]>([])
   const [loadingPreview, setLoadingPreview] = useState(false)
-  const [loadingClasses, setLoadingClasses] = useState(false)
   const [applying, setApplying] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -139,12 +138,11 @@ export default function YearTransitionPage() {
 
   const loadClasses = async () => {
     if (!toYearId) return
-    setLoadingClasses(true)
     try {
       const list = await getYearTransitionClasses(Number(toYearId))
       setClasses(Array.isArray(list) ? list : [])
-    } finally {
-      setLoadingClasses(false)
+    } catch {
+      // API lỗi — giữ nguyên danh sách hiện tại.
     }
   }
 

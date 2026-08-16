@@ -16,8 +16,6 @@ import {
   getStudentCodePreview,
   getSchoolYears,
   getStudentStats,
-  getTeacherStats,
-  getGradeStats,
   getSubjects,
   getDepartments,
   getTeacherCodePreview
