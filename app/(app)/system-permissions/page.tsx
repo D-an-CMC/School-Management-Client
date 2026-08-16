@@ -184,11 +184,19 @@ export default function SystemPermissionsPage() {
         return curIds !== origIds
       })
 
-      await Promise.all(
-        changedRoles.map(role =>
-          updateRolePermissions(role.role_id, getActivePermissionIds(role.modules))
-        )
+      // H4: trước đây bỏ qua kết quả — mọi request lỗi vẫn báo "đã lưu".
+      const results = await Promise.all(
+        changedRoles.map(async role => {
+          const res = await updateRolePermissions(role.role_id, getActivePermissionIds(role.modules))
+          return res?.success === true ? null : (res?.error || 'Lỗi API không xác định')
+        })
       )
+      const failed = results.filter(Boolean)
+      if (failed.length > 0) {
+        setError(`${failed.length} vai trò lưu thất bại: ${failed[0]}`)
+        setSaving(false)
+        return
+      }
 
       // Update snapshot so changesCount resets
       setOriginalData(JSON.parse(JSON.stringify(rolesData)))

@@ -79,6 +79,8 @@ export default function YearTransitionPage() {
   const [applying, setApplying] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [activatingActivate, setActivatingActivate] = useState(false)
+  const [activateError, setActivateError] = useState('')
   const [confirmActivate, setConfirmActivate] = useState(false)
   const [overview, setOverview] = useState<any>(null)
 
@@ -147,6 +149,8 @@ export default function YearTransitionPage() {
   }
 
   const handleApply = async () => {
+    // M1: chặn double-click — hai request Apply chạy đồng thời sẽ chuyển 2 lần.
+    if (applying) return
     setError('')
     setMessage('')
     const missingClass = Object.entries(decisions).some(
@@ -185,13 +189,23 @@ export default function YearTransitionPage() {
   }
 
   const doActivate = async () => {
+    // M1: guard double-activate + try/catch để không nhấn hỏng không phản hồi.
+    if (activatingActivate) return
+    setActivatingActivate(true)
     setConfirmActivate(false)
-    const res = await activateSchoolYear(Number(toYearId))
-    if (res.success) {
-      setMessage('Đã kích hoạt năm học mới.')
-      reload()
-    } else {
-      setError(res.error || 'Kích hoạt thất bại')
+    setActivateError('')
+    try {
+      const res = await activateSchoolYear(Number(toYearId))
+      if (res.success) {
+        setMessage('Đã kích hoạt năm học mới.')
+        reload()
+      } else {
+        setActivateError(res.error || 'Kích hoạt thất bại')
+      }
+    } catch (err: any) {
+      setActivateError(err.message || 'Kích hoạt thất bại')
+    } finally {
+      setActivatingActivate(false)
     }
   }
 
@@ -341,6 +355,11 @@ export default function YearTransitionPage() {
         {error && (
           <div className="bg-rose-50 border border-rose-300 text-rose-800 text-sm font-semibold rounded-lg px-4 py-3">
             {error}
+          </div>
+        )}
+        {activateError && (
+          <div className="bg-rose-50 border border-rose-300 text-rose-800 text-sm font-semibold rounded-lg px-4 py-3">
+            {activateError}
           </div>
         )}
 
@@ -544,9 +563,10 @@ export default function YearTransitionPage() {
               </button>
               <button
                 onClick={handleActivate}
-                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold transition"
+                disabled={activatingActivate}
+                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
               >
-                4. Kích hoạt năm học mới
+                {activatingActivate ? 'Đang kích hoạt...' : '4. Kích hoạt năm học mới'}
               </button>
             </div>
           </div>

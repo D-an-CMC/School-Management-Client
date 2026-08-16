@@ -36,6 +36,7 @@ export default function GradeManagementPage() {
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'WARNING' | 'EXCELLENT'>('ALL')
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [isDirty, setIsDirty] = useState(false)
   const [confirmBack, setConfirmBack] = useState(false)
 
@@ -313,14 +314,20 @@ export default function GradeManagementPage() {
       const result = await saveClassGrades(selectedClass.class_id, gradeStudents, targetSubj?.subject_id, semesterId)
       console.log('[SaveGrades] response:', result)
 
-      setIsDirty(false)
-      setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 4000)
+      // C1: chỉ báo thành công + xoá cờ dirty khi server xác nhận ok — trước đây
+      // lỗi API vẫn hiện "Đã cập nhật... thành công" và mất sạch chỉnh sửa.
+      if (result?.success === true) {
+        setIsDirty(false)
+        setSaveSuccess(true)
+        setTimeout(() => setSaveSuccess(false), 4000)
+      } else {
+        setSaveError(result?.error || 'Có lỗi khi lưu điểm. Vui lòng thử lại và giữ nguyên các thay đổi.')
+        setTimeout(() => setSaveError(''), 6000)
+      }
     } catch (err) {
       console.error('[SaveGrades] error:', err)
-      setIsDirty(false)
-      setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 4000)
+      setSaveError('Có lỗi khi lưu điểm. Vui lòng thử lại và giữ nguyên các thay đổi.')
+      setTimeout(() => setSaveError(''), 6000)
     } finally {
       setIsSaving(false)
     }
@@ -626,6 +633,17 @@ export default function GradeManagementPage() {
             <span>Đã cập nhật và lưu bảng điểm lớp {selectedClass.class_name} vào cơ sở dữ liệu thành công!</span>
           </div>
           <button onClick={() => setSaveSuccess(false)} className="text-emerald-600 hover:text-emerald-900 font-bold">✕</button>
+        </div>
+      )}
+
+      {/* Save Error Alert */}
+      {saveError && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-xs md:text-sm font-medium flex items-center justify-between shadow-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+            <span>{saveError}</span>
+          </div>
+          <button onClick={() => setSaveError('')} className="text-red-600 hover:text-red-900 font-bold">✕</button>
         </div>
       )}
 

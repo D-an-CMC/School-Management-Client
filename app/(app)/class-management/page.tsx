@@ -23,40 +23,14 @@ interface Teacher {
   subject?: string
 }
 
-const INITIAL_MOCK_CLASSES = [
-  { class_id: 1, class_name: 'Lớp 10A1', grade_name: 'Khối 10', grade_level: 10, homeroom_teacher_id: 1, homeroom_teacher_name: 'Trần Hoàng Nam', student_count: 38 },
-  { class_id: 2, class_name: 'Lớp 11B2', grade_name: 'Khối 11', grade_level: 11, homeroom_teacher_id: 2, homeroom_teacher_name: 'Nguyễn Thị Minh', student_count: 42 },
-  { class_id: 3, class_name: 'Lớp 12C3', grade_name: 'Khối 12', grade_level: 12, homeroom_teacher_id: 3, homeroom_teacher_name: 'Phạm Đức Anh', student_count: 40 },
-  { class_id: 4, class_name: 'Lớp 9A2', grade_name: 'Khối 9', grade_level: 9, homeroom_teacher_id: null, homeroom_teacher_name: '', student_count: 36 },
-  { class_id: 5, class_name: 'Lớp 8A1', grade_name: 'Khối 8', grade_level: 8, homeroom_teacher_id: 4, homeroom_teacher_name: 'Đặng Quốc Bảo', student_count: 35 },
-  { class_id: 6, class_name: 'Lớp 7A3', grade_name: 'Khối 7', grade_level: 7, homeroom_teacher_id: 5, homeroom_teacher_name: 'Vũ Hải Yến', student_count: 39 },
-]
-
-const INITIAL_MOCK_TEACHERS: Teacher[] = [
-  { teacher_id: 1, full_name: 'Trần Hoàng Nam', teacher_code: 'GV001', department: 'Tổ Toán', email: 'nam.th@cmc.edu.vn', phone: '0912 345 678' },
-  { teacher_id: 2, full_name: 'Nguyễn Thị Minh', teacher_code: 'GV002', department: 'Tổ Văn', email: 'minh.nt@cmc.edu.vn', phone: '0912 345 679' },
-  { teacher_id: 3, full_name: 'Phạm Đức Anh', teacher_code: 'GV003', department: 'Tổ Ngoại Ngữ', email: 'anh.pd@cmc.edu.vn', phone: '0912 345 680' },
-  { teacher_id: 4, full_name: 'Đặng Quốc Bảo', teacher_code: 'GV004', department: 'Tổ Vật Lý', email: 'bao.dq@cmc.edu.vn', phone: '0912 345 681' },
-  { teacher_id: 5, full_name: 'Vũ Hải Yến', teacher_code: 'GV005', department: 'Tổ Hóa Học', email: 'yen.vh@cmc.edu.vn', phone: '0912 345 682' },
-  { teacher_id: 6, full_name: 'Hoàng Quốc Việt', teacher_code: 'GV006', department: 'Tổ Sinh Học', email: 'viet.hq@cmc.edu.vn', phone: '0912 345 683' },
-  { teacher_id: 7, full_name: 'Bùi Thị Hà', teacher_code: 'GV007', department: 'Tổ Lịch Sử', email: 'ha.bt@cmc.edu.vn', phone: '0912 345 684' },
-]
-
-const INITIAL_MOCK_STUDENTS: Student[] = [
-  { student_id: 101, student_code: 'HS2024001', full_name: 'Lê Hải Nam', gender: 'Nam', date_of_birth: '2010-05-14', status: 'Đang học' },
-  { student_id: 102, student_code: 'HS2024002', full_name: 'Nguyễn Anh Thư', gender: 'Nữ', date_of_birth: '2010-08-22', status: 'Đang học' },
-  { student_id: 103, student_code: 'HS2024003', full_name: 'Quách Gia Huy', gender: 'Nam', date_of_birth: '2010-11-03', status: 'Đang học' },
-  { student_id: 104, student_code: 'HS2024004', full_name: 'Trần Bảo Minh', gender: 'Nam', date_of_birth: '2010-01-19', status: 'Đang học' },
-  { student_id: 105, student_code: 'HS2024005', full_name: 'Phạm Phương Thảo', gender: 'Nữ', date_of_birth: '2010-04-30', status: 'Đang học' },
-  { student_id: 106, student_code: 'HS2024006', full_name: 'Đỗ Tuấn Kiệt', gender: 'Nam', date_of_birth: '2010-09-12', status: 'Đang học' },
-]
-
 export default function ClassManagementPage() {
   const [classes, setClasses] = useState<any[]>([])
   const [selectedClass, setSelectedClass] = useState<any | null>(null)
   const [students, setStudents] = useState<Student[]>([])
   const [teachers, setTeachers] = useState<Teacher[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [reloadTick, setReloadTick] = useState(0)
   const [totalStudentsAll, setTotalStudentsAll] = useState(0)
   const [unassignedCount, setUnassignedCount] = useState(0)
 
@@ -129,6 +103,7 @@ export default function ClassManagementPage() {
 
   useEffect(() => {
     setLoading(true)
+    setLoadError('')
     Promise.all([
       getClasses({ limit: 50, schoolYearId: selectedSchoolYearId ?? undefined }).catch(() => null),
       getTeachers({ limit: 50 }).catch(() => null),
@@ -137,21 +112,24 @@ export default function ClassManagementPage() {
     ]).then(([classRes, teacherRes, totalStudents, unassigned]) => {
       setTotalStudentsAll(totalStudents)
       setUnassignedCount(unassigned)
+      // H1: không bao giờ render dữ liệu giả như thật — trước đây mock classes
+      // (id 1-6) hiện như lớp thật và cho phép sửa/xoá ghi vào lớp trùng id trong DB.
       if (classRes?.data && classRes.data.length > 0) {
         setClasses(classRes.data)
       } else {
-        setClasses(INITIAL_MOCK_CLASSES)
+        setClasses([])
+        setLoadError('Không tải được danh sách lớp (API trả rỗng hoặc lỗi). Hãy thử lại.')
       }
 
       if (teacherRes?.data && teacherRes.data.length > 0) {
         setTeachers(teacherRes.data)
       } else {
-        setTeachers(INITIAL_MOCK_TEACHERS)
+        setTeachers([])
       }
     }).finally(() => {
       setLoading(false)
     })
-  }, [selectedSchoolYearId])
+  }, [selectedSchoolYearId, reloadTick])
 
   // When class selected, fetch students
   const handleSelectClass = async (cls: any) => {
@@ -267,11 +245,20 @@ export default function ClassManagementPage() {
     const teacherName = teacherObj ? teacherObj.full_name : ''
 
     try {
-      await updateClass(selectedClass.class_id, {
+      const res = await updateClass(selectedClass.class_id, {
         homeroom_teacher_id: selectedTeacherId,
       })
+      // H2: không bao giờ "thành công cục bộ" khi API báo lỗi.
+      if (res?.success === false || res?.error) {
+        setNotify({ type: 'error', message: res?.error || 'Không cập nhật được giáo viên chủ nhiệm' })
+        setIsUpdatingTeacher(false)
+        return
+      }
     } catch (e) {
-      console.warn('Backend update teacher fallback to local state', e)
+      console.warn('Backend update teacher failed', e)
+      setNotify({ type: 'error', message: 'Không cập nhật được giáo viên chủ nhiệm — kiểm tra kết nối' })
+      setIsUpdatingTeacher(false)
+      return
     }
 
     // Update local states
@@ -350,34 +337,43 @@ export default function ClassManagementPage() {
     if (!selectedClass || ids.length === 0) return
     setIsAddingStudent(true)
     const toAdd = unassignedStudents.filter(s => ids.includes(s.student_id))
-    try {
-      await Promise.all(
-        toAdd.map(s =>
-          addStudentToClass(selectedClass.class_id, {
-            student_id: s.student_id,
-            full_name: s.full_name,
-            student_code: s.student_code,
-            gender: s.gender,
-            date_of_birth: s.date_of_birth || undefined,
-          })
-        )
+    // H2: chỉ công nhận học sinh nào API thêm THÀNH CÔNG — không giả định thành công.
+    const results = await Promise.all(
+      toAdd.map(s =>
+        addStudentToClass(selectedClass.class_id, {
+          student_id: s.student_id,
+          full_name: s.full_name,
+          student_code: s.student_code,
+          gender: s.gender,
+          date_of_birth: s.date_of_birth || undefined,
+        }).then(r => ({ student: s, ok: r?.success === true || r?.success == null, error: r?.error }))
       )
-    } catch (e) {
-      console.warn('Add students fallback to local', e)
+    )
+    const added = results.filter(r => r.ok).map(r => r.student)
+    const failed = results.filter(r => !r.ok)
+    if (failed.length > 0) {
+      setNotify({ type: 'error', message: `${failed.length} học sinh không thêm được (${failed[0].error || 'lỗi API'})` })
+      setIsAddingStudent(false)
+      return
+    }
+    if (added.length === 0) {
+      setNotify({ type: 'error', message: 'Không có học sinh nào được thêm' })
+      setIsAddingStudent(false)
+      return
     }
     // Add to local students list
-    setStudents(prev => [...toAdd.map(s => ({ ...s, status: 'Đang học' })), ...prev])
+    setStudents(prev => [...added.map(s => ({ ...s, status: 'Đang học' })), ...prev])
     // Remove from unassigned list
     setUnassignedStudents(prev => prev.filter(s => !ids.includes(s.student_id)))
     // Update count
-    const updatedCount = (selectedClass.student_count || students.length) + toAdd.length
+    const updatedCount = (selectedClass.student_count || students.length) + added.length
     const updatedClass = { ...selectedClass, student_count: updatedCount }
     setSelectedClass(updatedClass)
     setClasses(prev => prev.map(c => c.class_id === selectedClass.class_id ? updatedClass : c))
     setIsAddingStudent(false)
     setShowAddStudentModal(false)
     setSelectedUnassignedIds([])
-    setNotify({ type: 'success', message: `Đã thêm ${toAdd.length} học sinh vào lớp thành công` })
+    setNotify({ type: 'success', message: `Đã thêm ${added.length} học sinh vào lớp thành công` })
   }
 
   // Open add student modal and load unassigned students
@@ -417,9 +413,16 @@ export default function ClassManagementPage() {
   const handleRemoveStudent = async (studentId: number) => {
     if (selectedClass) {
       try {
-        await removeStudentFromClass(selectedClass.class_id, studentId)
+        const res = await removeStudentFromClass(selectedClass.class_id, studentId)
+        // H2: không xoá khỏi UI khi API thất bại — trước đây tưởng đã xoá rồi reload lại nguyên vẹn.
+        if (res?.success === false || res?.error) {
+          setNotify({ type: 'error', message: res?.error || 'Không xóa được học sinh khỏi lớp' })
+          return
+        }
       } catch (e) {
         console.warn('Failed to remove student on backend', e)
+        setNotify({ type: 'error', message: 'Không xóa được học sinh khỏi lớp — kiểm tra kết nối' })
+        return
       }
     }
     setStudents(prev => prev.filter(s => s.student_id !== studentId))
@@ -604,8 +607,18 @@ export default function ClassManagementPage() {
             Đang tải danh sách lớp học...
           </div>
         ) : filteredClasses.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center text-gray-500">
-            Không tìm thấy lớp học nào
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+            <p className="text-gray-500 font-medium mb-3">
+              {loadError || 'Không tìm thấy lớp học nào'}
+            </p>
+            {loadError && (
+              <button
+                onClick={() => setReloadTick(t => t + 1)}
+                className="px-4 py-2 bg-[#003366] text-white rounded-lg text-sm hover:bg-blue-700"
+              >
+                Tải lại
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

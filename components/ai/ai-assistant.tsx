@@ -263,6 +263,8 @@ export function AiAssistant() {
   const [activeConv, setActiveConv] = useState<AiConversation | null>(null)
   const [modalStep, setModalStep] = useState<AiToolStep | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  // M4: bỏ qua phản hồi của câu hỏi nếu người dùng đã chuyển/tạo hội thoại khác trong lúc chờ.
+  const convIdRef = useRef<number | undefined>(undefined)
 
   const role = user?.role || 'student'
   const roleName = ROLE_NAME[role] || 'Người dùng'
@@ -300,6 +302,7 @@ export function AiAssistant() {
   const openConversation = async (conv: AiConversation) => {
     setHistoryOpen(false)
     setLoading(true)
+    convIdRef.current = conv.conversation_id
     try {
       const msgs = await getAiConversationMessages(conv.conversation_id)
       const converted: LocalMessage[] = msgs.map((m) => ({
@@ -332,6 +335,7 @@ export function AiAssistant() {
   }
 
   const newSession = () => {
+    convIdRef.current = undefined
     setConversationId(undefined)
     setActiveConv(null)
     setMessages([])
@@ -342,6 +346,7 @@ export function AiAssistant() {
     const text = (textOverride ?? input).trim()
     if (!text || loading) return
 
+    const sendConvId = convIdRef.current
     const userMsg: LocalMessage = {
       id: `u${Date.now()}`,
       sender: 'user',
@@ -354,9 +359,12 @@ export function AiAssistant() {
 
     try {
       const res = await askAi(text, conversationId)
-      if (res.success && res.data) {
+      // M4: user đã chuyển hội thoại giữa chừng → không đổ câu trả lời vào chat hiện tại.
+      const stillCurrent = convIdRef.current === sendConvId
+      if (res.success && res.data && stillCurrent) {
         const d = res.data
         setConversationId(d.conversationId)
+        convIdRef.current = d.conversationId
         setActiveConv((prev) =>
           ({ conversation_id: d.conversationId!, title: prev?.title || text.slice(0, 60), created_at: prev?.created_at || '', updated_at: '' })
         )
@@ -372,7 +380,7 @@ export function AiAssistant() {
             timestamp: timeNow(),
           },
         ])
-      } else {
+      } else if (stillCurrent) {
         setMessages((prev) => [
           ...prev,
           {
@@ -384,15 +392,17 @@ export function AiAssistant() {
         ])
       }
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `a${Date.now()}`,
-          sender: 'ai',
-          text: 'Không thể kết nối đến máy chủ AI. Vui lòng kiểm tra kết nối và thử lại!',
-          timestamp: timeNow(),
-        },
-      ])
+      if (convIdRef.current === sendConvId) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `a${Date.now()}`,
+            sender: 'ai',
+            text: 'Không thể kết nối đến máy chủ AI. Vui lòng kiểm tra kết nối và thử lại!',
+            timestamp: timeNow(),
+          },
+        ])
+      }
     } finally {
       setLoading(false)
     }

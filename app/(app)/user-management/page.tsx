@@ -52,6 +52,7 @@ export default function UserManagementPage() {
   const { currentSchoolYear } = useAcademic()
   const [allUsers, setAllUsers] = useState<UserRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [usersError, setUsersError] = useState('')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [showFilter, setShowFilter] = useState(false)
@@ -246,9 +247,11 @@ export default function UserManagementPage() {
     setEditUsername(u.username || '')
     setEditPhone(u.phone || '')
     setEditGender(u.gender === 'Nữ' || u.gender === 'female' ? 'female' : 'male')
-    setEditDob(u.date_of_birth || '1990-10-12')
+    // H3: trước đây prefill DOB/code GIẢ ('1990-10-12', mã chế) — lưu nhầm là mất dữ liệu thật.
+    // Chỉ điền giá trị thực; rỗng là rỗng.
+    setEditDob(u.date_of_birth || '')
     setEditRole(u.role_name || activeTab)
-    setEditStudentCode(u.student_code || `CMC-2024-${String(u.user_id).padStart(4, '0')}`)
+    setEditStudentCode(u.student_code || '')
     setEditClassId(u.class_id || '')
     setEditGradeLevel(u.grade_level || '')
     setEditSchoolYearId('')
@@ -490,11 +493,13 @@ export default function UserManagementPage() {
 
   async function loadUsers() {
     setLoading(true)
-    const [uRes, sRes, tRes] = await Promise.all([
-      getUsers({ page: 1, limit: 1000 }),
-      getStudents({ page: 1, limit: 1000 }),
-      getTeachers({ page: 1, limit: 500 })
-    ])
+    setUsersError('')
+    try {
+      const [uRes, sRes, tRes] = await Promise.all([
+        getUsers({ page: 1, limit: 1000 }),
+        getStudents({ page: 1, limit: 1000 }),
+        getTeachers({ page: 1, limit: 500 })
+      ])
 
     const studentRows: UserRow[] = (sRes.data || []).filter((s: any) => s.user_id).map((s: any, idx: number) => ({
       user_id: s.user_id,
@@ -559,8 +564,14 @@ export default function UserManagementPage() {
     }))
 
     setAllUsers([...teacherRows, ...studentRows, ...adminUsers])
-    setPage(1)
-    setLoading(false)
+      setPage(1)
+    } catch (err: any) {
+      // H5: lỗi API giữ màn hình xoay vô hạn — giờ hiện lỗi + nút thử lại.
+      console.error('loadUsers failed', err)
+      setUsersError(err?.message || 'Không tải được dữ liệu người dùng')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const filtered = useMemo(() => {
@@ -887,6 +898,16 @@ export default function UserManagementPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" data-purpose="management-table">
           {loading ? (
             <div className="p-8 text-center text-gray-500 text-sm">Đang tải dữ liệu...</div>
+          ) : usersError ? (
+            <div className="p-8 text-center text-gray-500 text-sm">
+              <p className="mb-3 text-red-600">{usersError}</p>
+              <button
+                onClick={() => loadUsers()}
+                className="px-4 py-2 bg-[#003366] text-white rounded-lg text-sm hover:bg-blue-700"
+              >
+                Thử lại
+              </button>
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left">
