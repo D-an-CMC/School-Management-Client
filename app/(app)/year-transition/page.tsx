@@ -457,6 +457,7 @@ export default function YearTransitionPage() {
                     <th className="px-3 py-2">Họ tên</th>
                     <th className="px-3 py-2">Lớp cũ</th>
                     <th className="px-3 py-2">Khối</th>
+                    <th className="px-3 py-2">Điểm TBCN</th>
                     <th className="px-3 py-2">Kết quả xét</th>
                     <th className="px-3 py-2">Quyết định</th>
                     <th className="px-3 py-2">Lớp mới</th>
@@ -475,6 +476,15 @@ export default function YearTransitionPage() {
                         <td className="px-3 py-2 font-semibold text-[#111c2d]">{s.full_name}</td>
                         <td className="px-3 py-2 text-gray-500">{s.current_class_name ? s.current_class_name : '—'}</td>
                         <td className="px-3 py-2 text-gray-600">Khối {isAuto ? (s.suggested_grade_level ?? s.current_grade_level ?? '?') : (d?.grade_level ?? s.current_grade_level ?? '?')}</td>
+                        <td className="px-3 py-2">
+                          {s.avg_score != null ? (
+                            <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${s.avg_score >= 5 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                              {s.avg_score}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-gray-300">—</span>
+                          )}
+                        </td>
                         <td className={`px-3 py-2`}>
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold border ${YEAR_STATUS_COLOR[s.year_status] || 'bg-gray-100 text-gray-600 border-gray-300'}`}>
                             {YEAR_STATUS_LABEL[s.year_status] || s.year_status || '—'}

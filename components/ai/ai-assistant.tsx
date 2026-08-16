@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { useAuth } from '@/lib/auth-context'
 import {
   askAi,
@@ -56,6 +57,60 @@ const TOOL_LABEL: Record<string, string> = {
 
 function timeNow(): string {
   return new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+}
+
+function MarkdownView({ text }: { text: string }) {
+  return (
+    <div className="md-body whitespace-pre-wrap">
+      <ReactMarkdown
+        components={{
+        a: ({ node, ...props }) => (
+          <a {...props} className="text-blue-600 underline underline-offset-2 break-all" target="_blank" rel="noopener noreferrer" />
+        ),
+        table: ({ node, ...props }) => (
+          <div className="my-2 overflow-x-auto rounded-lg border border-gray-200">
+            <table {...props} className="w-full text-[11px] border-collapse" />
+          </div>
+        ),
+        thead: ({ node, ...props }) => (
+          <thead {...props} className="bg-[#003366] text-white" />
+        ),
+        th: ({ node, ...props }) => (
+          <th {...props} className="px-2 py-1.5 text-left font-semibold whitespace-nowrap" />
+        ),
+        td: ({ node, ...props }) => (
+          <td {...props} className="px-2 py-1 border-t border-gray-100 text-gray-700 align-top" />
+        ),
+        code: ({ node, className, children, ...props }) => {
+          const inline = !className
+          return (
+            <code
+              {...props}
+              className={
+                inline
+                  ? 'bg-gray-100 text-rose-600 px-1 py-0.5 rounded text-[10.5px] font-mono'
+                  : 'block bg-gray-900 text-emerald-300 p-2 rounded-lg text-[10.5px] font-mono overflow-x-auto my-1.5 whitespace-pre'
+              }
+            >
+              {children}
+            </code>
+          )
+        },
+        strong: ({ node, ...props }) => <strong {...props} className="font-bold text-gray-900" />,
+        ul: ({ node, ...props }) => <ul {...props} className="list-disc list-inside my-1 space-y-0.5" />,
+        ol: ({ node, ...props }) => <ol {...props} className="list-decimal list-inside my-1 space-y-0.5" />,
+        h1: ({ node, ...props }) => <h1 {...props} className="text-sm font-bold mt-2 mb-1" />,
+        h2: ({ node, ...props }) => <h2 {...props} className="text-[13px] font-bold mt-2 mb-1" />,
+        h3: ({ node, ...props }) => <h3 {...props} className="text-xs font-bold mt-1.5 mb-0.5" />,
+        blockquote: ({ node, ...props }) => (
+          <blockquote {...props} className="border-l-2 border-blue-300 pl-2 my-1 text-gray-600 italic" />
+        ),
+      }}
+      >
+        {text}
+      </ReactMarkdown>
+    </div>
+  )
 }
 
 function cellText(v: unknown): string {
@@ -463,7 +518,9 @@ export function AiAssistant() {
                       : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none shadow-xs'
                   }`}
                 >
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                  <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
+                    <MarkdownView text={msg.text} />
+                  </p>
 
                   {msg.steps && msg.steps.length > 0 && (
                     <div className="mt-3 pt-2 border-t border-gray-100 space-y-2">
