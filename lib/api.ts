@@ -893,24 +893,6 @@ export async function getSecurityLogStats() {
   return json.success ? json.data : null;
 }
 
-export async function askAiChatbot(question: string, provider: string = 'gemini') {
-  const res = await apiFetch('/api/ai/chat/ask', {
-    method: 'POST',
-    body: JSON.stringify({ question, provider }),
-  });
-  return res.json() as Promise<{
-    success: boolean;
-    data?: {
-      answer: string;
-      citations?: any[];
-      warnings?: string[];
-      role?: string;
-      userName?: string;
-    };
-    error?: string;
-  }>;
-}
-
 export async function getYearTransitionOverview() {
   const res = await apiFetch('/api/year-transition/overview');
   const json = (await res.json()) as { success: boolean; data?: any };
@@ -944,6 +926,94 @@ export async function activateSchoolYear(yearId: number) {
     body: JSON.stringify({ yearId }),
   });
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
+// ── AI Assistant ────────────────────────────────────────────────
+
+export interface AiCitation {
+  source_file: string;
+  title: string;
+  page_number?: number | null;
+  chunk_index?: number;
+}
+
+export interface AiToolStep {
+  tool: string;
+  summary: string;
+}
+
+export interface AiChatResponse {
+  success: boolean;
+  data?: {
+    answer: string;
+    citations?: AiCitation[];
+    warnings?: string[];
+    steps?: AiToolStep[];
+    conversationId?: number;
+    role?: string;
+    userName?: string;
+  };
+  error?: string;
+}
+
+export interface AiConversation {
+  conversation_id: number;
+  title: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AiMessage {
+  message_id: number;
+  conversation_id: number;
+  role: 'user' | 'assistant';
+  content: string;
+  tools_used?: AiToolStep[];
+  citations?: AiCitation[];
+  created_at: string;
+}
+
+export async function askAi(question: string, conversationId?: number): Promise<AiChatResponse> {
+  const res = await apiFetch('/api/ai/chat', {
+    method: 'POST',
+    body: JSON.stringify({ question, conversationId }),
+  });
+  return res.json() as Promise<AiChatResponse>;
+}
+
+export async function getAiConversations(): Promise<AiConversation[]> {
+  const res = await apiFetch('/api/ai/conversations');
+  const json = (await res.json()) as { success: boolean; data?: AiConversation[] };
+  return json.success && json.data ? json.data : [];
+}
+
+export async function getAiConversationMessages(id: number): Promise<AiMessage[]> {
+  const res = await apiFetch(`/api/ai/conversations/${id}`);
+  const json = (await res.json()) as {
+    success: boolean;
+    data?: { conversationId: number; messages: AiMessage[] };
+  };
+  return json.success && json.data ? json.data.messages : [];
+}
+
+export async function deleteAiConversation(id: number): Promise<boolean> {
+  const res = await apiFetch(`/api/ai/conversations/${id}`, { method: 'DELETE' });
+  const json = (await res.json()) as { success: boolean };
+  return json.success;
+}
+
+export async function syncAiRag(): Promise<{ indexed: { source: string; chunks: number }[] } | null> {
+  const res = await apiFetch('/api/ai/rag/sync', { method: 'POST' });
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data?: { indexed: any[] } };
+  return json.success && json.data ? json.data : null;
+}
+
+export async function getAiRagStatus(): Promise<{ sources: any[]; total: number } | null> {
+  const res = await apiFetch('/api/ai/rag/status');
+  if (!res.ok) return null;
+  const json = (await res.json()) as { success: boolean; data?: any };
+  return json.success && json.data ? json.data : null;
 }
 
 

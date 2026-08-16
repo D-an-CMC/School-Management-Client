@@ -6,7 +6,7 @@ import { useIsMobile } from '@/lib/use-media-query'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Header } from '@/components/layout/header'
 import { AcademicProvider } from '@/lib/academic-context'
-import { ChatWidget } from '@/components/layout/chat-widget'
+import { AiAssistant } from '@/components/ai/ai-assistant'
 import { useCallback, useEffect, useState } from 'react'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -69,7 +69,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             {children}
           </main>
         </div>
-        <ChatWidget />
+        <AiAssistant />
       </div>
     </AcademicProvider>
   )
