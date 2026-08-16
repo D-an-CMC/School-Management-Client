@@ -185,7 +185,17 @@ function DataModal({ step, onClose }: { step: AiToolStep; onClose: () => void })
           {data?.error && !hasData && (
             <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded p-3">{data.error}</div>
           )}
-          {hasData && <StepDataTable data={data} />}
+          {hasData && (
+            <>
+              <StepDataTable data={data} />
+              {data.subtables?.map((st, i) => (
+                <div key={i} className="mt-2">
+                  <p className="text-[10px] font-semibold text-gray-500 mb-1">{st.title}</p>
+                  <StepDataTable data={{ columns: st.columns, rows: st.rows }} />
+                </div>
+              ))}
+            </>
+          )}
           {!hasData && !data?.error && (
             <p className="text-xs text-gray-500">Không có dữ liệu để hiển thị.</p>
           )}
@@ -248,6 +258,12 @@ function ToolCallRow({ step, onView }: { step: AiToolStep; onView: () => void })
             ) : (
               <>
                 <StepDataTable data={data} maxRows={8} />
+                {data.subtables?.map((st, i) => (
+                  <div key={i} className="mt-1.5">
+                    <p className="text-[10px] font-semibold text-gray-500 mb-1">{st.title}</p>
+                    <StepDataTable data={{ columns: st.columns, rows: st.rows }} maxRows={8} />
+                  </div>
+                ))}
                 {hasRows && data.rows!.length > 8 && (
                   <button
                     onClick={onView}

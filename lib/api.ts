@@ -944,6 +944,7 @@ export interface AiToolStepData {
   limited?: number;
   sql?: string;
   error?: string;
+  subtables?: { title: string; columns: string[]; rows: unknown[][] }[];
 }
 
 export interface AiToolStep {
