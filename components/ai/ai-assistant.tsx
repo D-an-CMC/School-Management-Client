@@ -54,6 +54,9 @@ const TOOL_LABEL: Record<string, string> = {
   execute_write: 'Ghi dữ liệu',
   rag_search: 'Tìm tài liệu',
   get_db_schema: 'Xem cấu trúc CSDL',
+  list_tables: 'Danh sách bảng',
+  search_columns: 'Tìm cột',
+  read_table: 'Đọc bảng',
 }
 
 function timeNow(): string {
@@ -221,19 +224,24 @@ function ThoughtRow({ step }: { step: AiToolStep }) {
   )
 }
 
-// Dòng GỌI TOOL (tool calling) — nhãn + tên tool + kết quả rút gọn
+// Dòng GỌI TOOL (tool calling) — tên tool thật + nhãn + kết quả rút gọn
 function ToolCallRow({ step, onView }: { step: AiToolStep; onView: () => void }) {
   const data = step.data
   const hasRows = !!data && !!data.columns && !!data.rows && data.rows.length > 0
   return (
     <div className="flex flex-col items-start w-full">
-      <TypeLabel text="tool call" />
+      <div className="flex items-center gap-1.5">
+        <TypeLabel text="tool call" />
+        <code className="font-mono text-[9.5px] text-gray-400 bg-gray-100 border border-gray-200 px-1 rounded">
+          {step.tool}
+        </code>
+      </div>
       <div className="mt-1 flex flex-col gap-1 w-full">
         <span className="text-[10.5px] text-gray-700 font-medium">
           {TOOL_LABEL[step.tool] || step.tool}
           <span className="ml-1.5 text-gray-500 font-normal">{step.summary}</span>
         </span>
-        {step.tool === 'execute_sql' && data && (
+        {data && (
           <>
             {data.error ? (
               <p className="text-[10.5px] text-red-600">{data.error}</p>
