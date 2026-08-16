@@ -9,9 +9,10 @@ import {
   deleteAiConversation,
   AiCitation,
   AiToolStep,
+  AiToolStepData,
   AiConversation,
 } from '@/lib/api'
-import { Bot, Send, Plus, Trash2, History, X, Loader2, BookOpen, Database, Search, MessageSquareText } from 'lucide-react'
+import { Bot, Send, Plus, Trash2, History, X, Loader2, BookOpen, Database, Search, MessageSquareText, Table2, BarChart3 } from 'lucide-react'
 
 interface LocalMessage {
   id: string
@@ -57,6 +58,144 @@ function timeNow(): string {
   return new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
 }
 
+function cellText(v: unknown): string {
+  if (v == null) return '—'
+  if (typeof v === 'object') return JSON.stringify(v)
+  return String(v)
+}
+
+// Kiểm tra dữ liệu dạng (nhãn, số) để vẽ bar chart
+function chartable(data: AiToolStepData): boolean {
+  if (!data?.columns || !data?.rows || data.columns.length < 2 || data.rows.length < 2) return false
+  const v = data.rows[0][1]
+  return typeof v === 'number' || (typeof v === 'string' && v.trim() !== '' && isFinite(Number(v)))
+}
+
+function MiniBarChart({ data }: { data: AiToolStepData }) {
+  if (!data?.columns || !data?.rows) return null
+  const [labelCol, valueCol] = data.columns
+  const vals = data.rows.map((r) => ({ label: cellText(r[0]), value: Number(r[1]) }))
+  const max = Math.max(...vals.map((v) => v.value), 1)
+  return (
+    <div className="mt-2 space-y-1">
+      <p className="text-[10px] font-bold text-gray-500 flex items-center gap-1">
+        <BarChart3 size={11} /> Biểu đồ: {labelCol} theo {valueCol}
+      </p>
+      <div className="space-y-1">
+        {vals.map((v, i) => (
+          <div key={i} className="flex items-center gap-1.5">
+            <span className="w-20 text-[9px] text-gray-500 truncate text-right shrink-0">{v.label}</span>
+            <div className="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+              <div
+                className="h-full rounded bg-[#003366]"
+                style={{ width: `${Math.max((v.value / max) * 100, 2)}%` }}
+              />
+            </div>
+            <span className="w-8 text-[9px] text-gray-600 font-semibold shrink-0">{v.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function StepDataTable({ data, maxRows }: { data: AiToolStepData; maxRows?: number }) {
+  if (!data?.columns || !data?.rows || data.rows.length === 0) return null
+  const cols = data.columns
+  const rows = maxRows ? data.rows.slice(0, maxRows) : data.rows
+  return (
+    <div className="mt-2 rounded-lg border border-gray-200 overflow-hidden">
+      <div className="max-h-40 overflow-auto">
+        <table className="w-full text-[10px]">
+          <thead className="sticky top-0 bg-[#003366] text-white">
+            <tr>
+              {cols.map((c) => (
+                <th key={c} className="px-2 py-1.5 text-left font-semibold whitespace-nowrap">{c}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={i} className={i % 2 ? 'bg-gray-50' : 'bg-white'}>
+                {cols.map((c, j) => (
+                  <td key={j} className="px-2 py-1 text-gray-700 whitespace-nowrap max-w-[140px] overflow-hidden text-ellipsis">
+                    {cellText(r[j])}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function DataModal({ step, onClose }: { step: AiToolStep; onClose: () => void }) {
+  const data = step.data
+  const hasData = !!data && !!data.columns && !!data.rows && data.rows.length > 0
+  return (
+    <div
+      className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="px-4 py-3 bg-[#003366] text-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2">
+            <Table2 size={16} />
+            <p className="text-sm font-bold">Dữ liệu truy vấn</p>
+            {hasData && (
+              <span className="text-[10px] bg-white/15 px-1.5 py-0.5 rounded">
+                {data.rowCount ?? data.rows!.length} dòng {data.limited && data.rows!.length >= data.limited ? `(giới hạn ${data.limited})` : ''}
+              </span>
+            )}
+          </div>
+          <button onClick={onClose} className="w-7 h-7 rounded-full hover:bg-white/15 flex items-center justify-center cursor-pointer">
+            <X size={16} />
+          </button>
+        </div>
+        <div className="p-3 overflow-auto">
+          {data?.error && !hasData && (
+            <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">{data.error}</div>
+          )}
+          {hasData && chartable(data) && <MiniBarChart data={data} />}
+          {hasData && <StepDataTable data={data} />}
+          {!hasData && !data?.error && (
+            <p className="text-xs text-gray-500">Không có dữ liệu để hiển thị.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StepBadges({ step }: { step: AiToolStep }) {
+  const data = step.data
+  const hasData = !!data && !!data.columns && !!data.rows && data.rows.length > 0
+  const err = !!data?.error
+  if (!hasData) return null
+  return (
+    <div className="mt-2 flex items-center gap-2">
+      <span className="text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">
+        {data.rowCount ?? data.rows!.length} dòng
+      </span>
+      {chartable(data) && (
+        <span className="text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">
+          <BarChart3 size={9} className="inline mr-0.5" /> Chart
+        </span>
+      )}
+      {err && (
+        <span className="text-[9px] font-bold bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded">
+          Có lỗi — AI đang thử lại
+        </span>
+      )}
+    </div>
+  )
+}
+
 export function AiAssistant() {
   const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
@@ -67,6 +206,7 @@ export function AiAssistant() {
   const [historyOpen, setHistoryOpen] = useState(false)
   const [conversations, setConversations] = useState<AiConversation[]>([])
   const [activeConv, setActiveConv] = useState<AiConversation | null>(null)
+  const [modalStep, setModalStep] = useState<AiToolStep | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const role = user?.role || 'student'
@@ -326,23 +466,42 @@ export function AiAssistant() {
                   <p className="whitespace-pre-wrap">{msg.text}</p>
 
                   {msg.steps && msg.steps.length > 0 && (
-                    <div className="mt-3 pt-2 border-t border-gray-100 space-y-1">
+                    <div className="mt-3 pt-2 border-t border-gray-100 space-y-2">
                       {msg.steps.map((s, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-1.5 text-[10px] text-gray-500 font-medium"
-                        >
-                          {s.tool === 'rag_search' ? (
-                            <Search size={11} className="text-emerald-500" />
-                          ) : s.tool === 'execute_sql' ? (
-                            <Database size={11} className="text-blue-500" />
-                          ) : (
-                            <BookOpen size={11} className="text-amber-500" />
+                        <div key={i} className="text-[10px] text-gray-500">
+                          <div className="flex items-center gap-1.5 font-medium">
+                            {s.tool === 'rag_search' ? (
+                              <Search size={11} className="text-emerald-500" />
+                            ) : s.tool === 'execute_sql' ? (
+                              <Database size={11} className="text-blue-500" />
+                            ) : (
+                              <BookOpen size={11} className="text-amber-500" />
+                            )}
+                            <span className="text-gray-400">
+                              {TOOL_LABEL[s.tool] || s.tool}:
+                            </span>
+                            <span className="truncate">{s.summary}</span>
+                          </div>
+                          {s.tool === 'execute_sql' && s.data && (
+                            <>
+                              <StepBadges step={s} />
+                              {s.data?.error ? (
+                                <p className="mt-1 text-red-500">⚠️ {s.data.error}</p>
+                              ) : (
+                                <>
+                                  <StepDataTable data={s.data} maxRows={8} />
+                                  {s.data.rows && s.data.rows.length > 8 && (
+                                    <button
+                                      onClick={() => setModalStep(s)}
+                                      className="mt-1.5 text-[10px] font-bold text-[#003366] hover:underline flex items-center gap-1 cursor-pointer"
+                                    >
+                                      <Table2 size={10} /> Xem đầy đủ ({s.data.rows.length} dòng)
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                            </>
                           )}
-                          <span className="text-gray-400">
-                            {TOOL_LABEL[s.tool] || s.tool}:
-                          </span>
-                          <span className="truncate">{s.summary}</span>
                         </div>
                       ))}
                     </div>
@@ -436,6 +595,8 @@ export function AiAssistant() {
           </div>
         </div>
       )}
+
+      {modalStep && <DataModal step={modalStep} onClose={() => setModalStep(null)} />}
     </div>
   )
 }

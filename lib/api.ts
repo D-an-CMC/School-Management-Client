@@ -937,9 +937,19 @@ export interface AiCitation {
   chunk_index?: number;
 }
 
+export interface AiToolStepData {
+  columns?: string[];
+  rows?: unknown[][];
+  rowCount?: number;
+  limited?: number;
+  sql?: string;
+  error?: string;
+}
+
 export interface AiToolStep {
   tool: string;
   summary: string;
+  data?: AiToolStepData;
 }
 
 export interface AiChatResponse {
