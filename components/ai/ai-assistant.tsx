@@ -57,6 +57,12 @@ const TOOL_LABEL: Record<string, string> = {
   list_tables: 'Danh sách bảng',
   search_columns: 'Tìm cột',
   read_table: 'Đọc bảng',
+  get_current_context: 'Bối cảnh hiện tại',
+  get_student_report: 'Báo cáo học sinh',
+  get_class_summary: 'Tổng kết lớp',
+  get_attendance_report: 'Báo cáo điểm danh',
+  get_schedule: 'Thời khóa biểu',
+  get_exam_schedule: 'Lịch thi',
 }
 
 function timeNow(): string {
