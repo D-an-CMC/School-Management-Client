@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown'
 import { useAuth } from '@/lib/auth-context'
 import {
   askAi,
+  askAiStream,
   getAiConversations,
   getAiConversationMessages,
   deleteAiConversation,
@@ -267,6 +268,8 @@ export function AiAssistant() {
   const [conversations, setConversations] = useState<AiConversation[]>([])
   const [activeConv, setActiveConv] = useState<AiConversation | null>(null)
   const [modalStep, setModalStep] = useState<AiToolStep | null>(null)
+  // Agent activity stream: các bước (thought/tool) hiển thị LIVE khi đang chạy
+  const [liveSteps, setLiveSteps] = useState<AiToolStep[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
   // M4: bỏ qua phản hồi của câu hỏi nếu người dùng đã chuyển/tạo hội thoại khác trong lúc chờ.
   const convIdRef = useRef<number | undefined>(undefined)
@@ -307,6 +310,7 @@ export function AiAssistant() {
   const openConversation = async (conv: AiConversation) => {
     setHistoryOpen(false)
     setLoading(true)
+    setLiveSteps([])
     convIdRef.current = conv.conversation_id
     try {
       const msgs = await getAiConversationMessages(conv.conversation_id)
@@ -344,6 +348,7 @@ export function AiAssistant() {
     setConversationId(undefined)
     setActiveConv(null)
     setMessages([])
+    setLiveSteps([])
     setHistoryOpen(false)
   }
 
@@ -361,52 +366,82 @@ export function AiAssistant() {
     setMessages((prev) => [...prev, userMsg])
     setInput('')
     setLoading(true)
+    setLiveSteps([])
 
-    try {
-      const res = await askAi(text, conversationId)
-      // M4: user đã chuyển hội thoại giữa chừng → không đổ câu trả lời vào chat hiện tại.
-      const stillCurrent = convIdRef.current === sendConvId
-      if (res.success && res.data && stillCurrent) {
-        const d = res.data
+    // Hàm đóng gói message phản hồi (dùng chung cho stream + fallback)
+    const appendAssistant = (d: {
+      answer: string
+      citations?: AiCitation[]
+      warnings?: string[]
+      steps?: AiToolStep[]
+      conversationId?: number
+    }) => {
+      if (convIdRef.current !== sendConvId) return
+      if (d.conversationId) {
         setConversationId(d.conversationId)
         convIdRef.current = d.conversationId
         setActiveConv((prev) =>
           ({ conversation_id: d.conversationId!, title: prev?.title || text.slice(0, 60), created_at: prev?.created_at || '', updated_at: '' })
         )
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `a${Date.now()}`,
-            sender: 'ai',
-            text: d.answer,
-            citations: d.citations,
-            steps: d.steps,
-            warnings: d.warnings,
-            timestamp: timeNow(),
+      }
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `a${Date.now()}`,
+          sender: 'ai',
+          text: d.answer,
+          citations: d.citations,
+          steps: d.steps,
+          warnings: d.warnings,
+          timestamp: timeNow(),
+        },
+      ])
+    }
+    const appendError = (msg: string) => {
+      if (convIdRef.current !== sendConvId) return
+      setMessages((prev) => [...prev, { id: `a${Date.now()}`, sender: 'ai', text: msg, timestamp: timeNow() }])
+    }
+
+    try {
+      // Ưu tiên streaming: thought/tool hiện ngay khi agent thực hiện
+      let streamed = false
+      try {
+        streamed = await askAiStream(text, conversationId, {
+          onThought: (summary) => {
+            if (convIdRef.current !== sendConvId) return
+            setLiveSteps((prev) => [...prev, { tool: 'thought', summary }])
           },
-        ])
-      } else if (stillCurrent) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `a${Date.now()}`,
-            sender: 'ai',
-            text: res.error || 'Rất tiếc, đã có lỗi xử lý. Vui lòng thử lại sau!',
-            timestamp: timeNow(),
+          onTool: (step) => {
+            if (convIdRef.current !== sendConvId) return
+            setLiveSteps((prev) => [...prev, step])
           },
-        ])
+          onDone: (d) => {
+            setLiveSteps([])
+            appendAssistant(d)
+          },
+          onError: (message) => {
+            setLiveSteps([])
+            appendError(message || 'Rất tiếc, đã có lỗi xử lý. Vui lòng thử lại sau!')
+          },
+        })
+      } catch {
+        streamed = false
+      }
+
+      if (!streamed) {
+        // Fallback: API thường
+        setLiveSteps([])
+        const res = await askAi(text, conversationId)
+        if (res.success && res.data) {
+          appendAssistant(res.data)
+        } else {
+          appendError(res.error || 'Rất tiếc, đã có lỗi xử lý. Vui lòng thử lại sau!')
+        }
       }
     } catch {
       if (convIdRef.current === sendConvId) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `a${Date.now()}`,
-            sender: 'ai',
-            text: 'Không thể kết nối đến máy chủ AI. Vui lòng kiểm tra kết nối và thử lại!',
-            timestamp: timeNow(),
-          },
-        ])
+        setLiveSteps([])
+        appendError('Không thể kết nối đến máy chủ AI. Vui lòng kiểm tra kết nối và thử lại!')
       }
     } finally {
       setLoading(false)
@@ -559,6 +594,18 @@ export function AiAssistant() {
                 </div>
               )
             })}
+
+            {loading && liveSteps.length > 0 && (
+              <div className="flex flex-col items-start space-y-2">
+                {liveSteps.map((s, i) =>
+                  s.tool === 'thought' ? (
+                    <ThoughtRow key={`live-t${i}`} step={s} />
+                  ) : (
+                    <ToolCallRow key={`live-c${i}`} step={s} onView={() => setModalStep(s)} />
+                  )
+                )}
+              </div>
+            )}
 
             {loading && (
               <div className="flex flex-col items-start">

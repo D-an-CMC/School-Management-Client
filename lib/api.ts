@@ -991,6 +991,60 @@ export async function askAi(question: string, conversationId?: number): Promise<
   return res.json() as Promise<AiChatResponse>;
 }
 
+// ── Streaming (SSE qua POST) cho agent activity live ───────────
+export interface AiStreamHandlers {
+  onThought?: (summary: string) => void;
+  onTool?: (step: AiToolStep) => void;
+  onDone?: (d: {
+    answer: string;
+    steps: AiToolStep[];
+    citations: AiCitation[];
+    warnings: string[];
+    conversationId: number;
+  }) => void;
+  onError?: (message: string) => void;
+}
+
+export async function askAiStream(
+  question: string,
+  conversationId: number | undefined,
+  handlers: AiStreamHandlers
+): Promise<boolean> {
+  const res = await apiFetch('/api/ai/chat/stream', {
+    method: 'POST',
+    body: JSON.stringify({ question, conversationId }),
+  });
+  if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let idx: number;
+    while ((idx = buf.indexOf('\n\n')) !== -1) {
+      const raw = buf.slice(0, idx);
+      buf = buf.slice(idx + 2);
+      const ev = /^event: (\w+)/m.exec(raw);
+      const dt = /^data: (.+)$/m.exec(raw);
+      if (!ev || !dt) continue;
+      let data: any = {};
+      try {
+        data = JSON.parse(dt[1]);
+      } catch {
+        continue;
+      }
+      if (ev[1] === 'thought') handlers.onThought?.(String(data.summary ?? ''))
+      else if (ev[1] === 'tool') handlers.onTool?.({ tool: data.tool, summary: data.summary, data: data.data })
+      else if (ev[1] === 'done') handlers.onDone?.(data)
+      else if (ev[1] === 'error') handlers.onError?.(String(data.message ?? 'Lỗi không xác định.'))
+    }
+  }
+  return true;
+}
+
 export async function getAiConversations(): Promise<AiConversation[]> {
   const res = await apiFetch('/api/ai/conversations');
   const json = (await res.json()) as { success: boolean; data?: AiConversation[] };
