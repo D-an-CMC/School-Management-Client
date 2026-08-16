@@ -191,21 +191,67 @@ function DataModal({ step, onClose }: { step: AiToolStep; onClose: () => void })
   )
 }
 
-// Huy hiệu gọi tool — tối giản, không màu, không icon
-function ToolBadge({ step }: { step: AiToolStep }) {
-  const data = step.data
-  const hasData = !!data && !!data.columns && !!data.rows && data.rows.length > 0
-  const err = !!data?.error
+// Nhãn loại message — tối giản, chỉ chữ
+function TypeLabel({ text }: { text: string }) {
+  return <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">{text}</span>
+}
+
+// Dòng SUY NGHĨ (thought) — chữ nghiêng, xám, thu gọn
+function ThoughtRow({ step }: { step: AiToolStep }) {
+  const [open, setOpen] = useState(false)
+  const long = step.summary.length > 160
   return (
-    <div className="mt-1.5 inline-flex flex-wrap items-center gap-1.5 text-[10px] text-gray-600">
-      <span className="border border-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">
-        {TOOL_LABEL[step.tool] || step.tool}
-      </span>
-      <span>{step.summary}</span>
-      {hasData && (
-        <span className="text-gray-400">({data.rowCount ?? data.rows!.length} dòng)</span>
-      )}
-      {err && <span className="text-red-600">— có lỗi, AI đang thử lại</span>}
+    <div className="flex flex-col items-start w-full">
+      <button
+        onClick={() => long && setOpen((v) => !v)}
+        className={`text-left cursor-pointer ${long ? '' : 'cursor-default'}`}
+      >
+        <TypeLabel text="thought" />
+        <p className="mt-0.5 text-[10.5px] text-gray-500 italic leading-relaxed">
+          {long && !open ? step.summary.slice(0, 160) + '…' : step.summary}
+          {long && (
+            <span className="ml-1 text-gray-400 not-italic">
+              {open ? '(thu gọn)' : '(xem thêm)'}
+            </span>
+          )}
+        </p>
+      </button>
+    </div>
+  )
+}
+
+// Dòng GỌI TOOL (tool calling) — nhãn + tên tool + kết quả rút gọn
+function ToolCallRow({ step, onView }: { step: AiToolStep; onView: () => void }) {
+  const data = step.data
+  const hasRows = !!data && !!data.columns && !!data.rows && data.rows.length > 0
+  return (
+    <div className="flex flex-col items-start w-full">
+      <TypeLabel text="tool call" />
+      <div className="mt-1 flex flex-col gap-1 w-full">
+        <span className="text-[10.5px] text-gray-700 font-medium">
+          {TOOL_LABEL[step.tool] || step.tool}
+          <span className="ml-1.5 text-gray-500 font-normal">{step.summary}</span>
+        </span>
+        {step.tool === 'execute_sql' && data && (
+          <>
+            {data.error ? (
+              <p className="text-[10.5px] text-red-600">{data.error}</p>
+            ) : (
+              <>
+                <StepDataTable data={data} maxRows={8} />
+                {hasRows && data.rows!.length > 8 && (
+                  <button
+                    onClick={onView}
+                    className="text-[10px] font-medium text-gray-600 hover:text-gray-900 underline underline-offset-2 cursor-pointer self-start"
+                  >
+                    Xem đầy đủ ({data.rows!.length} dòng)
+                  </button>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -451,88 +497,80 @@ export function AiAssistant() {
             </div>
           )}
 
-          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-gray-50">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
-              >
-                <div
-                  className={`max-w-[88%] p-3 rounded-lg text-xs sm:text-sm leading-relaxed border ${
-                    msg.sender === 'user'
-                      ? 'bg-gray-200 border-gray-300 text-gray-900'
-                      : 'bg-white border-gray-300 text-gray-800'
-                  }`}
-                >
-                  <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
-                    <MarkdownView text={msg.text} />
-                  </p>
+          <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
+            {messages.map((msg) => {
+              if (msg.sender === 'user') {
+                return (
+                  <div key={msg.id} className="flex flex-col items-end">
+                    <div className="flex flex-col items-end">
+                      <TypeLabel text="user" />
+                      <div className="mt-1 max-w-[88%] p-3 rounded-lg text-xs sm:text-sm leading-relaxed border bg-gray-200 border-gray-300 text-gray-900">
+                        <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
+                          <MarkdownView text={msg.text} />
+                        </p>
+                      </div>
+                      <span className="text-[9px] text-gray-400 mt-1 px-1 font-medium">{msg.timestamp}</span>
+                    </div>
+                  </div>
+                )
+              }
+              // Assistant message: steps (thought/tool call) trước, rồi bubble trả lời
+              const thoughts = (msg.steps || []).filter((s) => s.tool === 'thought')
+              const toolCalls = (msg.steps || []).filter((s) => s.tool !== 'thought')
+              return (
+                <div key={msg.id} className="flex flex-col items-start">
+                  {thoughts.map((s, i) => (
+                    <ThoughtRow key={`t${i}`} step={s} />
+                  ))}
+                  {toolCalls.map((s, i) => (
+                    <ToolCallRow key={`c${i}`} step={s} onView={() => setModalStep(s)} />
+                  ))}
+                  <div className="flex flex-col items-start mt-1">
+                    <TypeLabel text="assistant" />
+                    <div className="mt-1 max-w-[88%] p-3 rounded-lg text-xs sm:text-sm leading-relaxed border bg-white border-gray-300 text-gray-800">
+                      <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
+                        <MarkdownView text={msg.text} />
+                      </p>
 
-                  {msg.steps && msg.steps.length > 0 && (
-                    <div className="mt-3 pt-2 border-t border-gray-200 space-y-1.5">
-                      {msg.steps.map((s, i) => (
-                        <div key={i} className="text-[10px] text-gray-500">
-                          <div className="flex flex-col gap-0.5">
-                            <ToolBadge step={s} />
-                            {s.tool === 'execute_sql' && s.data && (
-                              <>
-                                {s.data?.error ? (
-                                  <p className="mt-0.5 text-red-600">{s.data.error}</p>
-                                ) : (
-                                  <>
-                                    <StepDataTable data={s.data} maxRows={8} />
-                                    {s.data.rows && s.data.rows.length > 8 && (
-                                      <button
-                                        onClick={() => setModalStep(s)}
-                                        className="mt-1 text-[10px] font-medium text-gray-600 hover:text-gray-900 underline underline-offset-2 cursor-pointer self-start"
-                                      >
-                                        Xem đầy đủ ({s.data.rows.length} dòng)
-                                      </button>
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </div>
+                      {msg.citations && msg.citations.length > 0 && (
+                        <div className="mt-2.5 pt-2 border-t border-gray-200 text-[10px] text-gray-500">
+                          <p className="font-semibold mb-0.5">Nguồn tham khảo:</p>
+                          <ul className="space-y-0.5 list-disc list-inside">
+                            {msg.citations.slice(0, 4).map((c, i) => (
+                              <li key={i} className="truncate">
+                                {c.source_file || c.title || 'Tài liệu trường'}
+                                {c.chunk_index != null ? ` (đoạn ${c.chunk_index})` : ''}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      )}
 
-                  {msg.citations && msg.citations.length > 0 && (
-                    <div className="mt-2.5 pt-2 border-t border-gray-200 text-[10px] text-gray-500">
-                      <p className="font-semibold mb-0.5">Nguồn tham khảo:</p>
-                      <ul className="space-y-0.5 list-disc list-inside">
-                        {msg.citations.slice(0, 4).map((c, i) => (
-                          <li key={i} className="truncate">
-                            {c.source_file || c.title || 'Tài liệu trường'}
-                            {c.chunk_index != null ? ` (đoạn ${c.chunk_index})` : ''}
-                          </li>
-                        ))}
-                      </ul>
+                      {msg.warnings && msg.warnings.length > 0 && (
+                        <div className="mt-2 text-[10px] text-gray-600">
+                          {msg.warnings.map((w, i) => (
+                            <p key={i}>Lưu ý: {w}</p>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-
-                  {msg.warnings && msg.warnings.length > 0 && (
-                    <div className="mt-2 text-[10px] text-gray-600">
-                      {msg.warnings.map((w, i) => (
-                        <p key={i}>Lưu ý: {w}</p>
-                      ))}
-                    </div>
-                  )}
+                    <span className="text-[9px] text-gray-400 mt-1 px-1 font-medium">{msg.timestamp}</span>
+                  </div>
                 </div>
-                <span className="text-[9px] text-gray-400 mt-1 px-1 font-medium">{msg.timestamp}</span>
-              </div>
-            ))}
+              )
+            })}
 
             {loading && (
-              <div className="flex items-center gap-2 bg-white border border-gray-300 text-gray-600 p-3 rounded-lg max-w-[85%] text-xs">
-                <span className="flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0.15s]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0.3s]" />
-                </span>
-                <span>Đang truy vấn dữ liệu...</span>
+              <div className="flex flex-col items-start">
+                <TypeLabel text="thinking" />
+                <div className="mt-1 flex items-center gap-2 bg-white border border-gray-300 text-gray-600 px-3 py-2.5 rounded-lg max-w-[85%] text-xs">
+                  <span className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0.15s]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0.3s]" />
+                  </span>
+                  <span>Đang phân tích câu hỏi...</span>
+                </div>
               </div>
             )}
             <div ref={messagesEndRef} />
