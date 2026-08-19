@@ -10,6 +10,8 @@
 export interface AdminGridEntry {
   schedule_id?: number
   class_id?: number
+  class_name?: string
+  classes?: any
   subject_id?: number
   day_of_week?: string | number
   period_no?: number
@@ -90,8 +92,18 @@ function getSubjectTheme(id: number) {
 
 function getSubjectGroupKey(entry: AdminGridEntry | undefined): string | null {
   if (!entry) return null
-  if (entry.custom_subject_name) return `custom:${entry.custom_subject_name}`
-  return `id:${getSubjectForEntry(entry)?.subject_id ?? ''}`
+  // Group by class AND subject so different classes are never merged together
+  // (a teacher may teach the same subject in consecutive periods across classes).
+  const classKey = entry.class_id ?? (Array.isArray(entry.classes) ? entry.classes[0]?.class_id : entry.classes?.class_id) ?? ''
+  if (entry.custom_subject_name) return `c:${classKey}|custom:${entry.custom_subject_name}`
+  return `c:${classKey}|id:${getSubjectForEntry(entry)?.subject_id ?? ''}`
+}
+
+function getClassNameForEntry(entry: AdminGridEntry | undefined): string {
+  if (!entry) return ''
+  if (entry.class_name) return entry.class_name
+  const cls: any = Array.isArray(entry.classes) ? entry.classes[0] : entry.classes
+  return cls?.class_name ?? ''
 }
 
 function getSubjectForEntry(entry: AdminGridEntry | undefined) {
@@ -230,6 +242,9 @@ export default function AdminStyleTimetableGrid({
                         <span className="text-[9px] font-extrabold bg-purple-600 text-white px-1.5 py-0.5 rounded uppercase tracking-wide w-fit mb-1">Thi</span>
                       )}
                       <span className={`${titleFontSize} leading-tight block`}>{subject.subject_name}</span>
+                      {getClassNameForEntry(entry) && (
+                        <span className="text-[10px] font-bold block mt-0.5 text-[#001d36]">Lớp {getClassNameForEntry(entry)}</span>
+                      )}
                       {isMulti && !isExam && (
                         <span className="text-[10px] font-bold block mt-1 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full w-fit">
                           Tiết {slot.period} - {slot.period + streakLen - 1} ({streakLen} tiết liền)

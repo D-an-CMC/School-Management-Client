@@ -144,8 +144,8 @@ export default function YearResultPage() {
               <p className="text-2xl font-bold text-green-900">{overview.awards?.['HỌC SINH GIỎI'] ?? 0}</p>
             </div>
             <div className="rounded-lg bg-purple-50 p-3">
-              <p className="text-[10px] font-bold uppercase text-purple-700">Chờ duyệt</p>
-              <p className="text-2xl font-bold text-purple-900">{overview.promotions?.PENDING_REVIEW ?? 0}</p>
+              <p className="text-[10px] font-bold uppercase text-purple-700">Ở lại lớp</p>
+              <p className="text-2xl font-bold text-purple-900">{overview.promotions?.NOT_PROMOTED ?? 0}</p>
             </div>
           </div>
 

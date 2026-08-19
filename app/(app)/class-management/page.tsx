@@ -11,6 +11,8 @@ interface Student {
   gender: string
   date_of_birth?: string
   status?: string
+  class_id?: number
+  class_name?: string
 }
 
 interface Teacher {
@@ -398,9 +400,9 @@ export default function ClassManagementPage() {
         class_id: s.class_id,
         class_name: s.class_name,
       }))
-      // Exclude students already in current class
+      // Exclude students already in current class, already in another class, or graduated
       const currentIds = new Set(students.map(s => s.student_id))
-      setUnassignedStudents(all.filter(s => !currentIds.has(s.student_id)))
+      setUnassignedStudents(all.filter(s => !currentIds.has(s.student_id) && !s.class_id && String(s.status || '').toUpperCase() !== 'GRADUATED'))
     } catch {
       setUnassignedStudents([])
     } finally {

@@ -164,45 +164,37 @@ export default function YearResultDetailPage() {
       </div>
 
       {/* Actions */}
-      {!result.finalized && (
-        <div className="mt-6 bg-white border border-gray-200 rounded-lg p-5">
-          <h2 className="text-sm font-bold text-gray-900 mb-3">Xác nhận kết quả cuối (GVCN / Hiệu trưởng)</h2>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {FINAL_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setFinalResult(opt.value)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${finalResult === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-3">
+      <div className="mt-6 bg-white border border-gray-200 rounded-lg p-5">
+        <h2 className="text-sm font-bold text-gray-900 mb-3">Xác nhận kết quả cuối (GVCN / Hiệu trưởng)</h2>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {FINAL_OPTIONS.map((opt) => (
             <button
-              onClick={handleConfirm}
-              disabled={busy || !finalResult}
-              className="px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-50"
+              key={opt.value}
+              onClick={() => setFinalResult(opt.value)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${finalResult === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
             >
-              Xác nhận kết quả
+              {opt.label}
             </button>
-            <button
-              onClick={handleFinalize}
-              disabled={busy || !result.final_result}
-              className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
-            >
-              Khóa kết quả
-            </button>
-          </div>
-          <p className="text-[10px] text-gray-400 mt-3">Cần xác nhận kết quả cuối trước khi khóa.</p>
+          ))}
         </div>
-      )}
-
-      {result.finalized && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700 font-semibold">
-          Kết quả đã được khóa, không thể sửa đổi.
+        <div className="flex gap-3">
+          <button
+            onClick={handleConfirm}
+            disabled={busy || !finalResult}
+            className="px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-50"
+          >
+            Xác nhận kết quả
+          </button>
+          <button
+            onClick={handleFinalize}
+            disabled={busy || !result.final_result}
+            className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
+          >
+            Khóa kết quả
+          </button>
         </div>
-      )}
+        <p className="text-[10px] text-gray-400 mt-3">Cần xác nhận kết quả cuối trước khi khóa.</p>
+      </div>
     </div>
   )
 }
