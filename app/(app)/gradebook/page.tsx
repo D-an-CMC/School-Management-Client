@@ -85,12 +85,25 @@ const AVATAR_COLORS = [
 ]
 
 function StudentGradebook({ userName }: { userName: string }) {
-  const { selectedSemesterId, semesters, currentSchoolYear } = useAcademic()
+  const { selectedSemesterId, semesters, currentSchoolYear, setSelectedSemesterId } = useAcademic()
   const [subjects, setSubjects] = useState<SubjectGrade[]>([])
   const [loading, setLoading] = useState(true)
   const [studentInfo, setStudentInfo] = useState<any>(null)
   const [semMode, setSemMode] = useState<'sem1' | 'sem2' | 'year'>('year')
   const [yearRes, setYearRes] = useState<any>(null)
+
+  // Đồng bộ ngược: khi đổi học kỳ trên thanh header, cập nhật tab tương ứng.
+  useEffect(() => {
+    if (selectedSemesterId == null) return
+    const s1 = week1Semester(semesters, currentSchoolYear)
+    const s2 = s1 != null
+      ? semesters.find((s: any) => Number(s.school_year_id) === Number(currentSchoolYear?.school_year_id) && Number(s.semester_id) !== Number(s1))?.semester_id ?? null
+      : null
+    if (selectedSemesterId === s1) setSemMode('sem1')
+    else if (selectedSemesterId === s2) setSemMode('sem2')
+    else setSemMode('year')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSemesterId, semesters, currentSchoolYear])
 
   useEffect(() => {
     async function load() {
@@ -222,7 +235,18 @@ function StudentGradebook({ userName }: { userName: string }) {
         ] as const).map((t) => (
           <button
             key={t.key}
-            onClick={() => setSemMode(t.key)}
+            onClick={() => {
+              setSemMode(t.key)
+              // Đồng bộ học kỳ với thanh header: tab HK1/HK2 chọn đúng semester_id.
+              // Tab "Cả năm" KHÔNG đổi header để tránh effect đồng bộ ngược
+              // nhảy tab về Học kỳ 1.
+              const s1 = week1Semester(semesters, currentSchoolYear)
+              const s2 = s1 != null
+                ? semesters.find((s: any) => Number(s.school_year_id) === Number(currentSchoolYear?.school_year_id) && Number(s.semester_id) !== Number(s1))?.semester_id ?? null
+                : null
+              if (t.key === 'sem1' && s1 != null) setSelectedSemesterId(s1)
+              else if (t.key === 'sem2' && s2 != null) setSelectedSemesterId(s2)
+            }}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition ${
               semMode === t.key ? 'bg-[#001d36] text-white shadow' : 'text-gray-600 hover:bg-gray-100'
             }`}
@@ -378,7 +402,7 @@ function StudentGradebook({ userName }: { userName: string }) {
 }
 
 function TeacherGradebook({ userName }: { userName: string }) {
-  const { selectedSemesterId, selectedSchoolYearId, currentSchoolYear, semesters } = useAcademic()
+  const { selectedSemesterId, selectedSchoolYearId, currentSchoolYear, semesters, setSelectedSemesterId } = useAcademic()
   const [classes, setClasses] = useState<any[]>([])
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null)
   const [subjects, setSubjects] = useState<any[]>([])
@@ -406,6 +430,16 @@ function TeacherGradebook({ userName }: { userName: string }) {
       ? (sem2Id ?? effectiveSemesterId)
       : effectiveSemesterId
   const isYearView = semMode === 'year'
+
+  // Đồng bộ ngược: khi người dùng đổi học kỳ trên thanh header (selectedSemesterId),
+  // cập nhật tab tương ứng để nhất quán giữa header và các nút HK1/HK2/Cả năm.
+  useEffect(() => {
+    if (selectedSemesterId == null) return
+    if (selectedSemesterId === sem1Id) setSemMode('sem1')
+    else if (selectedSemesterId === sem2Id) setSemMode('sem2')
+    else setSemMode('year')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSemesterId, sem1Id, sem2Id])
 
   // Classes & subjects the teacher actually teaches come from the timetables of the
   // selected semester/year (not teaching_assignments, which may be empty).
@@ -657,7 +691,14 @@ function TeacherGradebook({ userName }: { userName: string }) {
         ] as const).map((t) => (
           <button
             key={t.key}
-            onClick={() => setSemMode(t.key)}
+            onClick={() => {
+              setSemMode(t.key)
+              // Đồng bộ học kỳ với thanh header: tab HK1/HK2 chọn đúng semester_id.
+              // Tab "Cả năm" KHÔNG đổi header để tránh effect đồng bộ ngược
+              // nhảy tab về Học kỳ 1 (khi header mặc định là HK1).
+              if (t.key === 'sem1' && sem1Id != null) setSelectedSemesterId(sem1Id)
+              else if (t.key === 'sem2' && sem2Id != null) setSelectedSemesterId(sem2Id)
+            }}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition ${
               semMode === t.key ? 'bg-[#001d36] text-white shadow' : 'text-gray-600 hover:bg-gray-100'
             }`}
