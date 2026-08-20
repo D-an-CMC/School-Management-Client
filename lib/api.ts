@@ -911,10 +911,42 @@ export async function getYearTransitionClasses(yearId: number) {
   return json.success ? json.data : [];
 }
 
-export async function applyYearTransition(fromYearId: number, toYearId: number, decisions: any[]) {
+export async function createSemestersForYear(yearId: number, semesters: { hk1Start?: string | null; hk1End?: string | null; hk2Start?: string | null; hk2End?: string | null }) {
+  const res = await apiFetch('/api/year-transition/semesters', {
+    method: 'POST',
+    body: JSON.stringify({ yearId, ...semesters }),
+  });
+  const json = (await res.json()) as { success: boolean; data?: any; error?: string };
+  return json;
+}
+
+export async function applyYearTransition(
+  fromYearId: number,
+  toYearId: number,
+  decisions: any[],
+  semesters?: { hk1Start?: string | null; hk1End?: string | null; hk2Start?: string | null; hk2End?: string | null }
+) {
   const res = await apiFetch('/api/year-transition/apply', {
     method: 'POST',
-    body: JSON.stringify({ fromYearId, toYearId, decisions }),
+    body: JSON.stringify({ fromYearId, toYearId, decisions, ...(semesters || {}) }),
+  });
+  const json = (await res.json()) as { success: boolean; data?: any; error?: string };
+  return json;
+}
+
+export async function revertYearTransition(fromYearId: number, toYearId: number) {
+  const res = await apiFetch('/api/year-transition/revert', {
+    method: 'POST',
+    body: JSON.stringify({ fromYearId, toYearId }),
+  });
+  const json = (await res.json()) as { success: boolean; data?: any; error?: string };
+  return json;
+}
+
+export async function clearYearData(yearId: number) {
+  const res = await apiFetch('/api/year-transition/clear', {
+    method: 'POST',
+    body: JSON.stringify({ yearId }),
   });
   const json = (await res.json()) as { success: boolean; data?: any; error?: string };
   return json;

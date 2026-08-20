@@ -929,7 +929,7 @@ export default function ClassManagementPage() {
                 {selectedClass.grade_name || `Khối ${selectedClass.grade_level || ''}`}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">Năm học 2025 - 2026 • Trường THCS CMC</p>
+            <p className="text-xs text-gray-500 mt-1">Năm học {currentSchoolYear?.year_name || `${startYear} - ${startYear + 1}`} • Trường THCS CMC</p>
           </div>
 
           <div className="flex items-center gap-3">

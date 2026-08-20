@@ -41,6 +41,8 @@ interface SubjectGrade {
   finalTerm: string
   average: string
   ranking?: string
+  ranking1?: string
+  ranking2?: string
   avg1?: number | null
   avg2?: number | null
   nonScored?: boolean
@@ -112,6 +114,8 @@ function StudentGradebook({ userName }: { userName: string }) {
               finalTerm: '--',
               average: s.yearAvg != null ? String(s.yearAvg) : '--',
               ranking: nonScored ? s.ranking : '',
+              ranking1: nonScored ? s.ranking1 : '',
+              ranking2: nonScored ? s.ranking2 : '',
               avg1: s.avg1,
               avg2: s.avg2,
               nonScored,
@@ -327,9 +331,9 @@ function StudentGradebook({ userName }: { userName: string }) {
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Học kỳ 1</p>
                       {nonScored ? (
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
-                          subj.ranking === 'Chưa đạt' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
+                          subj.ranking1 === 'Chưa đạt' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
                         }`}>
-                          {subj.ranking && subj.ranking !== 'Chưa đạt' ? 'Đạt' : subj.ranking || '—'}
+                          {subj.ranking1 && subj.ranking1 !== 'Chưa đạt' ? 'Đạt' : subj.ranking1 || '—'}
                         </span>
                       ) : (
                         <span className="text-xl font-bold text-gray-800">{subj.avg1 != null ? subj.avg1 : '—'}</span>
@@ -339,9 +343,9 @@ function StudentGradebook({ userName }: { userName: string }) {
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Học kỳ 2</p>
                       {nonScored ? (
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
-                          subj.ranking === 'Chưa đạt' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
+                          subj.ranking2 === 'Chưa đạt' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
                         }`}>
-                          {subj.ranking && subj.ranking !== 'Chưa đạt' ? 'Đạt' : subj.ranking || '—'}
+                          {subj.ranking2 && subj.ranking2 !== 'Chưa đạt' ? 'Đạt' : subj.ranking2 || '—'}
                         </span>
                       ) : (
                         <span className="text-xl font-bold text-gray-800">{subj.avg2 != null ? subj.avg2 : '—'}</span>

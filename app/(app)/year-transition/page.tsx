@@ -11,6 +11,8 @@ import {
   getYearTransitionClasses,
   applyYearTransition,
   activateSchoolYear,
+  revertYearTransition,
+  createSemestersForYear,
 } from '@/lib/api'
 import { useAcademic } from '@/lib/academic-context'
 import { CustomDatePicker } from '@/components/ui/custom-date-picker'
@@ -84,6 +86,15 @@ export default function YearTransitionPage() {
   const [confirmActivate, setConfirmActivate] = useState(false)
   const [overview, setOverview] = useState<any>(null)
 
+  // Bước nhập ngày học kỳ cho năm mới (HK1/HK2)
+  const [semesters, setSemesters] = useState<{ hk1Start: string; hk1End: string; hk2Start: string; hk2End: string }>({ hk1Start: '', hk1End: '', hk2Start: '', hk2End: '' })
+  const [confirmRevert, setConfirmRevert] = useState<{ fromYearId: number; fromName: string; toYearId: number; toName: string } | null>(null)
+  const [reverting, setReverting] = useState(false)
+  const [semestersCreated, setSemestersCreated] = useState(false)
+  const [creatingSemesters, setCreatingSemesters] = useState(false)
+  const [studentPage, setStudentPage] = useState(1)
+  const studentPageSize = 20
+
   // Modal tạo năm học mới
   const [showCreateYear, setShowCreateYear] = useState(false)
   const [newYear, setNewYear] = useState({ year_name: '', start_date: '', end_date: '' })
@@ -96,14 +107,49 @@ export default function YearTransitionPage() {
   const [decisions, setDecisions] = useState<Record<number, { status: string; class_id: number | null; grade_level: number | null }>>({})
 
   useEffect(() => {
-    getYearTransitionOverview().then(setOverview).catch(() => {})
-    getSchoolYears().then((data) => setYears(Array.isArray(data) ? data : []))
+    getYearTransitionOverview().then(setOverview).catch(() => { })
+    getSchoolYears().then((data) => {
+      const list = Array.isArray(data) ? data : []
+      setYears(list)
+      // Mặc định "Năm học cũ (kết thúc)" là năm hiện tại.
+      const current = list.find((y) => y.is_current)
+      if (current) setFromYearId(Number(current.school_year_id))
+    }).catch(() => { })
   }, [])
+
+  const handleCreateSemesters = async () => {
+    setError('')
+    setMessage('')
+    setActivateError('')
+    if (!toYearId) { setError('Hãy chọn năm học mới trước.'); return }
+    setCreatingSemesters(true)
+    try {
+      const sem = {
+        hk1Start: semesters.hk1Start || null,
+        hk1End: semesters.hk1End || null,
+        hk2Start: semesters.hk2Start || null,
+        hk2End: semesters.hk2End || null,
+      }
+      const res = await createSemestersForYear(Number(toYearId), sem)
+      if (!res.success) {
+        setError(res.error || 'Tạo học kỳ thất bại')
+        return
+      }
+      setSemestersCreated(true)
+      setMessage('Đã tạo Học kỳ 1 và Học kỳ 2 cho năm học mới.')
+    } catch (err: any) {
+      setError(err.message || 'Tạo học kỳ thất bại')
+    } finally {
+      setCreatingSemesters(false)
+    }
+  }
 
   const handlePreview = async () => {
     setError('')
     setMessage('')
     setDecisions({})
+    setSemesters({ hk1Start: '', hk1End: '', hk2Start: '', hk2End: '' })
+    setSemestersCreated(false)
     if (!fromYearId || !toYearId) {
       setError('Vui lòng chọn năm học cũ và năm học mới.')
       return
@@ -117,6 +163,7 @@ export default function YearTransitionPage() {
         return
       }
       setStudents(res.data?.students ?? [])
+      setStudentPage(1)
 
       // Chỉ khởi tạo quyết định cho học sinh cần quyết định (avg < 5, khác khối 9).
       // Còn lại backend tự xử lý (lên lớp / tốt nghiệp).
@@ -153,6 +200,7 @@ export default function YearTransitionPage() {
     if (applying) return
     setError('')
     setMessage('')
+    setActivateError('')
     const missingClass = Object.entries(decisions).some(
       ([sid, d]) => (d.status === 'PROMOTED' || d.status === 'RETAINED') && !d.class_id
     )
@@ -168,7 +216,14 @@ export default function YearTransitionPage() {
         class_id: d.class_id,
         grade_level: d.grade_level,
       }))
-      const res = await applyYearTransition(Number(fromYearId), Number(toYearId), list)
+      // Ngày học kỳ cho năm mới: chuyển '' -> null để backend tự suy nếu cần.
+      const sem = {
+        hk1Start: semesters.hk1Start || null,
+        hk1End: semesters.hk1End || null,
+        hk2Start: semesters.hk2Start || null,
+        hk2End: semesters.hk2End || null,
+      }
+      const res = await applyYearTransition(Number(fromYearId), Number(toYearId), list, sem)
       if (!res.success) {
         setError(res.error || 'Chuyển năm thất bại')
         return
@@ -185,6 +240,11 @@ export default function YearTransitionPage() {
     if (!toYearId) return
     setError('')
     setMessage('')
+    setActivateError('')
+    if (!semestersCreated) {
+      setActivateError('Bắt buộc phải tạo Học kỳ 1 và Học kỳ 2 cho năm học mới trước khi kích hoạt.')
+      return
+    }
     setConfirmActivate(true)
   }
 
@@ -206,6 +266,40 @@ export default function YearTransitionPage() {
       setActivateError(err.message || 'Kích hoạt thất bại')
     } finally {
       setActivatingActivate(false)
+    }
+  }
+
+  const handleRevert = (fromYearId: number, toYearId: number) => {
+    setError('')
+    setMessage('')
+    const fromName = years.find((y) => Number(y.school_year_id) === Number(fromYearId))?.year_name || '—'
+    const toName = years.find((y) => Number(y.school_year_id) === Number(toYearId))?.year_name || '—'
+    setConfirmRevert({ fromYearId, fromName, toYearId, toName })
+  }
+
+  const doRevert = async () => {
+    if (!confirmRevert || reverting) return
+    setReverting(true)
+    setConfirmRevert(null)
+    setError('')
+    setMessage('')
+    try {
+      const res = await revertYearTransition(confirmRevert.fromYearId, confirmRevert.toYearId)
+      if (res.success) {
+        setMessage(`Đã quay về năm học "${confirmRevert.fromName}". Dữ liệu năm "${confirmRevert.toName}" đã được xóa.`)
+        setStudents([])
+        setDecisions({})
+        getYearTransitionOverview().then(setOverview).catch(() => { })
+        const data = await getSchoolYears()
+        setYears(Array.isArray(data) ? data : [])
+        reload()
+      } else {
+        setError(res.error || 'Quay về năm cũ thất bại')
+      }
+    } catch (err: any) {
+      setError(err.message || 'Quay về năm cũ thất bại')
+    } finally {
+      setReverting(false)
     }
   }
 
@@ -371,7 +465,7 @@ export default function YearTransitionPage() {
               <label className="text-xs font-semibold text-gray-500">Năm học cũ (kết thúc)</label>
               <select
                 value={fromYearId}
-                onChange={(e) => setFromYearId(e.target.value as any)}
+                onChange={(e) => { setFromYearId(e.target.value as any); setToYearId('' as any); setSemestersCreated(false) }}
                 className="mt-1 w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg font-medium text-gray-800 focus:ring-2 focus:ring-[#003366] outline-none shadow-sm"
               >
                 <option value="">-- Chọn năm học cũ --</option>
@@ -387,15 +481,26 @@ export default function YearTransitionPage() {
               <div className="mt-1 flex gap-2">
                 <select
                   value={toYearId}
-                  onChange={(e) => setToYearId(e.target.value as any)}
+                  onChange={(e) => { setToYearId(e.target.value as any); setSemestersCreated(false) }}
                   className="flex-1 px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg font-medium text-gray-800 focus:ring-2 focus:ring-[#003366] outline-none shadow-sm"
                 >
                   <option value="">-- Chọn năm học mới --</option>
-                  {years.map((y) => (
-                    <option key={y.school_year_id} value={String(y.school_year_id)}>
-                      {y.year_name} {y.is_current ? '(hiện tại)' : ''}
-                    </option>
-                  ))}
+                  {years
+                    .filter((y) => {
+                      // Chỉ chọn các năm MỚI hơn năm cũ (start_date lớn hơn), không được chọn năm cũ/cùng.
+                      if (!fromYearId) return true
+                      const fromYear = years.find((fy) => Number(fy.school_year_id) === Number(fromYearId))
+                      if (!fromYear) return true
+                      const fStart = fromYear.start_date ? new Date(fromYear.start_date).getTime() : NaN
+                      const yStart = y.start_date ? new Date(y.start_date).getTime() : NaN
+                      if (isNaN(fStart) || isNaN(yStart)) return true
+                      return yStart > fStart
+                    })
+                    .map((y) => (
+                      <option key={y.school_year_id} value={String(y.school_year_id)}>
+                        {y.year_name} {y.is_current ? '(hiện tại)' : ''}
+                      </option>
+                    ))}
                 </select>
                 <button
                   onClick={() => { setCreateYearError(''); setShowCreateYear(true) }}
@@ -411,13 +516,71 @@ export default function YearTransitionPage() {
             disabled={loadingPreview}
             className="mt-4 px-5 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
           >
-            {loadingPreview ? 'Đang tải...' : '2. Đánh giá &amp; đề xuất'}
+            {loadingPreview ? 'Đang tải...' : '2. Đánh giá và đề xuất'}
           </button>
         </div>
 
+        {/* Ngày học kỳ cho năm mới */}
+        {fromYearId && toYearId && (
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
+              <h3 className="text-xs font-bold text-[#111c2d]">Ngày học kỳ cho năm mới (HK1 / HK2)</h3>
+              {semestersCreated && (
+                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">Đã tạo học kỳ ✓</span>
+              )}
+            </div>
+            <p className="text-[11px] text-gray-500 mb-3">Nhập ngày bắt đầu / kết thúc của Học kỳ 1 và Học kỳ 2. Nếu bỏ trống, hệ thống tự suy theo quy chế.</p>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold text-gray-500">HK1 bắt đầu</label>
+                <CustomDatePicker value={semesters.hk1Start} onChange={(v) => setSemesters((p) => ({ ...p, hk1Start: v }))} placeholder="dd/mm/yyyy" minYear={2015} maxYear={2035} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold text-gray-500">HK1 kết thúc</label>
+                <CustomDatePicker value={semesters.hk1End} onChange={(v) => setSemesters((p) => ({ ...p, hk1End: v }))} placeholder="dd/mm/yyyy" minYear={2015} maxYear={2035} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold text-gray-500">HK2 bắt đầu</label>
+                <CustomDatePicker value={semesters.hk2Start} onChange={(v) => setSemesters((p) => ({ ...p, hk2Start: v }))} placeholder="dd/mm/yyyy" minYear={2015} maxYear={2035} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold text-gray-500">HK2 kết thúc</label>
+                <CustomDatePicker value={semesters.hk2End} onChange={(v) => setSemesters((p) => ({ ...p, hk2End: v }))} placeholder="dd/mm/yyyy" minYear={2015} maxYear={2035} className="mt-1" />
+              </div>
+            </div>
+            <div className="flex justify-end mt-4 pt-4 border-t border-gray-200">
+              <button
+                onClick={handleCreateSemesters}
+                disabled={creatingSemesters || semestersCreated}
+                className="px-5 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
+              >
+                {creatingSemesters ? 'Đang tạo...' : semestersCreated ? 'Đã tạo học kỳ' : 'Xác nhận tạo học kỳ'}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Quản lý năm học */}
         <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-          <h2 className="text-sm font-bold text-[#111c2d] mb-4">Quản lý năm học</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h2 className="text-sm font-bold text-[#111c2d]">Quản lý năm học</h2>
+            {(() => {
+              const current = years.find((y) => y.is_current)
+              const prev = years
+                .filter((y) => !y.is_current && new Date(y.start_date).getTime() < new Date(current?.start_date || 0).getTime())
+                .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())[0]
+              if (!current || !prev) return null
+              return (
+                <button
+                  onClick={() => handleRevert(Number(prev.school_year_id), Number(current.school_year_id))}
+                  disabled={reverting}
+                  className="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold transition disabled:opacity-50"
+                >
+                  {reverting ? 'Đang xử lý...' : '↩ Quay về năm cũ'}
+                </button>
+              )
+            })()}
+          </div>
           <div className="flex flex-wrap gap-2">
             {years.map((y) => (
               <div key={y.school_year_id} className="flex items-center gap-2 pl-3 pr-1.5 py-1.5 rounded-lg border border-gray-200 bg-gray-50">
@@ -481,7 +644,7 @@ export default function YearTransitionPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((s) => {
+                  {students.slice((studentPage - 1) * studentPageSize, studentPage * studentPageSize).map((s) => {
                     const d = decisions[s.student_id]
                     const isAuto = !s.needs_decision
                     const autoStatus = s.suggested_status
@@ -516,11 +679,11 @@ export default function YearTransitionPage() {
                             <select
                               value={d?.status ?? 'RETAINED'}
                               onChange={(e) => updateDecision(s.student_id, { status: e.target.value })}
-                              className="px-2 py-1.5 text-xs bg-white border border-gray-300 rounded-lg font-semibold focus:outline-none"
+                              className="px-2 py-1.5 text-xs bg-white text-gray-800 border border-gray-300 rounded-lg font-semibold focus:outline-none"
                             >
-                              <option value="PROMOTED">Lên lớp</option>
-                              <option value="RETAINED">Lưu ban</option>
-                              <option value="TRANSFERRED">Chuyển trường</option>
+                              <option value="PROMOTED" className="text-gray-800">Lên lớp</option>
+                              <option value="RETAINED" className="text-gray-800">Lưu ban</option>
+                              <option value="TRANSFERRED" className="text-gray-800">Chuyển trường</option>
                             </select>
                           )}
                         </td>
@@ -535,11 +698,11 @@ export default function YearTransitionPage() {
                             <select
                               value={d?.class_id ?? ''}
                               onChange={(e) => updateDecision(s.student_id, { class_id: e.target.value ? Number(e.target.value) : null })}
-                              className="px-2 py-1.5 text-xs bg-white border border-gray-300 rounded-lg font-medium focus:outline-none"
+                              className="px-2 py-1.5 text-xs bg-white text-gray-800 border border-gray-300 rounded-lg font-medium focus:outline-none"
                             >
                               <option value="">-- Chọn lớp --</option>
                               {gradePool.map((c) => (
-                                <option key={c.class_id} value={String(c.class_id)}>
+                                <option key={c.class_id} value={String(c.class_id)} className="text-gray-800">
                                   {c.class_name}
                                 </option>
                               ))}
@@ -553,13 +716,37 @@ export default function YearTransitionPage() {
               </table>
             </div>
 
+            {students.length > studentPageSize && (
+              <div className="flex items-center justify-between gap-3 mt-4">
+                <span className="text-xs text-gray-500">
+                  Trang {studentPage} / {Math.ceil(students.length / studentPageSize)} — {students.length} học sinh
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setStudentPage((p) => Math.max(1, p - 1))}
+                    disabled={studentPage <= 1}
+                    className="px-3 py-1.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-xs font-semibold transition disabled:opacity-40"
+                  >
+                    ‹ Trước
+                  </button>
+                  <button
+                    onClick={() => setStudentPage((p) => Math.min(Math.ceil(students.length / studentPageSize), p + 1))}
+                    disabled={studentPage >= Math.ceil(students.length / studentPageSize)}
+                    className="px-3 py-1.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-xs font-semibold transition disabled:opacity-40"
+                  >
+                    Sau ›
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-col md:flex-row items-center justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
               <button
                 onClick={handleApply}
                 disabled={applying}
                 className="px-6 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
               >
-                {applying ? 'Đang xử lý...' : '3. Xác nhận &amp; phân lớp'}
+                {applying ? 'Đang xử lý...' : '3. Xác nhận & phân lớp'}
               </button>
               <button
                 onClick={handleActivate}
@@ -643,7 +830,7 @@ export default function YearTransitionPage() {
             </div>
           </div>
         </div>
-      , document.body)}
+        , document.body)}
       {confirmDelete && (
         <div className="fixed inset-0 z-[75] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmDelete(null)}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
@@ -687,6 +874,31 @@ export default function YearTransitionPage() {
             <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
               <button onClick={() => setConfirmActivate(false)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy Bỏ</button>
               <button onClick={doActivate} className="px-5 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition">Xác Nhận Kích Hoạt</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmRevert && (
+        <div className="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmRevert(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-5 bg-gradient-to-r from-amber-600 to-amber-500 text-white flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold">Quay Về Năm Cũ</h3>
+                <p className="text-xs text-amber-100 mt-0.5">Từ năm "{confirmRevert.toName}" về "{confirmRevert.fromName}"</p>
+              </div>
+              <button onClick={() => setConfirmRevert(null)} className="text-white/70 hover:text-white text-xl leading-none font-bold">✕</button>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-gray-700">
+                Bạn có chắc muốn quay về năm học <span className="font-bold text-amber-600">"{confirmRevert.fromName}"</span> và hủy bỏ năm học <span className="font-bold text-amber-600">"{confirmRevert.toName}"</span>?
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                Toàn bộ dữ liệu năm mới đã tạo (lớp, học kỳ, điểm, thời khóa biểu, kết quả...) sẽ bị xóa vĩnh viễn. Học sinh sẽ được khôi phục về đúng lớp/trạng thái của năm cũ.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button onClick={() => setConfirmRevert(null)} className="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-semibold transition">Hủy Bỏ</button>
+              <button onClick={doRevert} className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-semibold transition">Xác Nhận Quay Về</button>
             </div>
           </div>
         </div>
