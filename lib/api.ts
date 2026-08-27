@@ -1,4 +1,5 @@
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL || '').trim();
+const AI_BASE = (process.env.NEXT_PUBLIC_AI_URL || API_BASE).trim();
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -13,7 +14,11 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  const isAiRoute = path.startsWith('/api/ai/');
+  const baseUrl = isAiRoute ? AI_BASE : API_BASE;
+  const res = await fetch(`${baseUrl}${path}`, { ...options, headers });
+
+
 
   if (res.status === 401) {
     sessionStorage.removeItem('token');
@@ -865,7 +870,7 @@ export async function removeStudentFromClass(classId: number, studentId: number)
 export async function logoutApi() {
   try {
     await apiFetch('/api/auth/logout', { method: 'POST' });
-  } catch {}
+  } catch { }
   if (typeof window !== 'undefined') {
     sessionStorage.removeItem('token');
     window.location.href = '/login';
