@@ -570,9 +570,9 @@ export function AiAssistant() {
                     <div className="flex flex-col items-end">
                       <TypeLabel text="user" />
                       <div className="mt-1 max-w-[88%] p-3 rounded-lg text-xs sm:text-sm leading-relaxed border bg-gray-200 border-gray-300 text-gray-900">
-                        <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
+                        <div className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
                           <MarkdownView text={msg.text} />
-                        </p>
+                        </div>
                       </div>
                       <span className="text-[9px] text-gray-400 mt-1 px-1 font-medium">{msg.timestamp}</span>
                     </div>
@@ -593,9 +593,9 @@ export function AiAssistant() {
                   <div className="flex flex-col items-start mt-1">
                     <TypeLabel text="assistant" />
                     <div className="mt-1 max-w-[88%] p-3 rounded-lg text-xs sm:text-sm leading-relaxed border bg-white border-gray-300 text-gray-800">
-                      <p className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
+                      <div className="md-body prose-p:my-0.5 max-w-full overflow-x-auto">
                         <MarkdownView text={msg.text} />
-                      </p>
+                      </div>
 
                       {msg.citations && msg.citations.length > 0 && (
                         <div className="mt-2.5 pt-2 border-t border-gray-200 text-[10px] text-gray-500">
