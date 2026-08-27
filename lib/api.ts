@@ -13,7 +13,12 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  let url = `${API_BASE}${path}`;
+  if (path.startsWith('/api/ai')) {
+    url = `http://127.0.0.1:3002${path}`;
+  }
+
+  const res = await fetch(url, { ...options, headers });
 
   if (res.status === 401) {
     sessionStorage.removeItem('token');
