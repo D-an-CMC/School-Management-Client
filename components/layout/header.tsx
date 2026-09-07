@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
+
 import { cn } from '@/lib/utils'
 import { AcademicSelect } from '@/components/academic/academic-select'
 import { NotificationBell } from '@/components/notifications/notification-bell'
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 export function Header({ showMenuButton, onMenuClick }: HeaderProps) {
   const { user } = useAuth()
+
 
   return (
     <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0">

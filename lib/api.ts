@@ -222,6 +222,13 @@ export async function getGradeStats(schoolYearId?: number) {
   return json.success ? json.data : null;
 }
 
+export async function getAverageScoreStats(schoolYearId?: number) {
+  const qs = schoolYearId != null ? `?schoolYearId=${schoolYearId}` : '';
+  const res = await apiFetch(`/api/classes/stats/average-scores${qs}`);
+  const json = (await res.json()) as { success: boolean; data?: any[] };
+  return json.success ? json.data : null;
+}
+
 export async function getStudentAttendanceStats() {
   const res = await apiFetch('/api/students/stats/attendance');
   const json = (await res.json()) as { success: boolean; data?: { total: number; present: number; grades: { grade_level: number; total: number; present: number; percent: string }[] } };
@@ -480,6 +487,30 @@ export async function createNotification(data: {
   targetType: 'all' | 'admin' | 'teacher' | 'student' | 'parent' | 'medical' | 'accountant'
 }) {
   const res = await apiFetch('/api/notifications', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as { success: boolean; data?: any; error?: string };
+}
+
+export async function getActivities(params?: { page?: number; limit?: number }) {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  
+  const res = await apiFetch(`/api/activities?${query.toString()}`);
+  const json = (await res.json()) as { success: boolean; data?: any[] };
+  return json.success ? json.data : [];
+}
+
+export async function createActivity(data: {
+  activity_name: string
+  activity_type?: string
+  start_datetime: string
+  location?: string
+  description?: string
+}) {
+  const res = await apiFetch('/api/activities', {
     method: 'POST',
     body: JSON.stringify(data),
   });

@@ -19,7 +19,6 @@ const STATUS_OPTIONS = [
   { value: 'PRESENT', label: 'Có mặt' },
   { value: 'ABSENT_EXCUSED', label: 'Vắng có phép' },
   { value: 'ABSENT_UNEXCUSED', label: 'Vắng không phép' },
-  { value: 'LATE', label: 'Trễ' },
 ] as const
 
 const STATUS_COLORS: Record<string, string> = {
@@ -67,9 +66,11 @@ function toStatusCode(status?: string | null): string {
 
 export default function AttendancePage() {
   const { user } = useAuth()
-  const { selectedSchoolYearId } = useAcademic()
+  const { selectedSchoolYearId, currentSchoolYear } = useAcademic()
   const isTeacher = user?.role === 'teacher'
   const teacherId = (user as any)?.teacherId
+  
+  const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
 
   // Teacher state
   const [classes, setClasses] = useState<any[]>([])
@@ -100,10 +101,10 @@ export default function AttendancePage() {
   // Fetch teacher classes
   useEffect(() => {
     if (!isTeacher) return
-    getClasses({ teacherId, limit: 50, schoolYearId: selectedSchoolYearId ?? undefined })
+    getClasses({ teacherId, limit: 50, schoolYearId: effectiveYearId })
       .then((res) => setClasses(res?.data ?? []))
       .catch(() => {})
-  }, [isTeacher, teacherId, selectedSchoolYearId])
+  }, [isTeacher, teacherId, effectiveYearId])
 
   // Fetch current semester/year (for creating sessions)
   useEffect(() => {
@@ -115,10 +116,10 @@ export default function AttendancePage() {
   // Fetch teacher sessions (filtered by selected year)
   useEffect(() => {
     if (!isTeacher) return
-    getAttendanceSessions({ teacherId, limit: 50, schoolYearId: selectedSchoolYearId ?? undefined })
+    getAttendanceSessions({ teacherId, limit: 50, schoolYearId: effectiveYearId })
       .then((res) => setSessions(res?.data ?? []))
       .catch(() => {})
-  }, [isTeacher, teacherId, selectedSchoolYearId])
+  }, [isTeacher, teacherId, effectiveYearId])
 
   // Fetch students when class selected
   useEffect(() => {

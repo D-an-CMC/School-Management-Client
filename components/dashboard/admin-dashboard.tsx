@@ -3,13 +3,16 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAcademic } from '@/lib/academic-context'
-import { getStudentStats, getTeacherStats, getClassesCount, getGradeStats, } from '@/lib/api'
+import { getStudentStats, getTeacherStats, getClassesCount, getGradeStats, getAverageScoreStats, getStudentAttendanceStats } from '@/lib/api'
 
 export function AdminDashboard() {
     const pathname = usePathname()
     const { selectedSchoolYearId, currentSchoolYear, schoolYears } = useAcademic()
     const [stats, setStats] = useState<{ totalStudents: number; totalTeachers: number; totalClasses: number } | null>(null)
     const [gradeStats, setGradeStats] = useState<{ grade_level: number; class_count: number; student_count: number }[]>([])
+    const [avgStats, setAvgStats] = useState<any[]>([])
+    const [attendanceStats, setAttendanceStats] = useState<any>(null)
+    const [selectedGrade, setSelectedGrade] = useState<number | null>(null)
     const [loading, setLoading] = useState(true)
 
     const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
@@ -22,8 +25,10 @@ export function AdminDashboard() {
             getTeacherStats(),
             getClassesCount(effectiveYearId),
             getGradeStats(effectiveYearId),
+            getAverageScoreStats(effectiveYearId),
+            getStudentAttendanceStats()
         ])
-            .then(([studentStats, teacherStats, classesCount, gradeStatsData]) => {
+            .then(([studentStats, teacherStats, classesCount, gradeStatsData, avgStatsData, attendanceData]) => {
                 if (cancelled) return
                 setStats({
                     totalStudents: studentStats?.totalStudents ?? 0,
@@ -31,6 +36,8 @@ export function AdminDashboard() {
                     totalClasses: classesCount ?? 0,
                 })
                 setGradeStats(gradeStatsData || [])
+                setAvgStats(avgStatsData || [])
+                setAttendanceStats(attendanceData || null)
                 setLoading(false)
             })
             .catch(() => {
@@ -52,9 +59,7 @@ export function AdminDashboard() {
                 <p className="text-xs md:text-sm opacity-90 mb-3 md:mb-4">
                     Chào mừng bạn đến với hệ thống quản lý học tập trường THCS CMC.{activeYearName ? ` Đang xem: ${activeYearName}.` : ''}
                 </p>
-                <button className="bg-white text-[#0B3D5C] px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-semibold text-xs md:text-sm hover:bg-gray-100 transition-colors">
-                    Xem Báo Cáo Toàn Trường
-                </button>
+
             </div>
 
             {/* Stats Grid */}
@@ -77,18 +82,94 @@ export function AdminDashboard() {
                 {/* Left Column */}
                 <div className="lg:col-span-2 space-y-4 md:space-y-6">
                     <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
-                        <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-                            <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-blue-100 rounded text-blue-600 font-bold text-sm md:text-lg">📊</div>
-                            <div>
-                                <h3 className="text-sm md:text-base font-semibold text-gray-900">Thống kê Học tập</h3>
-                                <p className="text-[10px] md:text-sm text-gray-600 mt-0.5">Dữ liệu được cập nhật từ hệ thống</p>
+                        <div className="flex items-center justify-between mb-4 md:mb-6">
+                            <div className="flex items-center gap-2 md:gap-3">
+                                <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-blue-100 rounded text-blue-600 font-bold text-sm md:text-lg">📊</div>
+                                <div>
+                                    <h3 className="text-sm md:text-base font-semibold text-gray-900">
+                                        {selectedGrade ? `Điểm trung bình Khối ${selectedGrade}` : 'Thống kê Điểm trung bình theo Khối'}
+                                    </h3>
+                                    <p className="text-[10px] md:text-sm text-gray-600 mt-0.5">Dữ liệu được cập nhật từ hệ thống</p>
+                                </div>
+                            </div>
+                            {selectedGrade && (
+                                <button
+                                    onClick={() => setSelectedGrade(null)}
+                                    className="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors flex items-center gap-1"
+                                >
+                                    <span>←</span> Quay lại
+                                </button>
+                            )}
+                        </div>
+                        
+                        {/* Chart Area */}
+                        <div className="h-64 flex items-end gap-2 md:gap-6 pt-4 border-b border-gray-100 relative mb-4">
+                            {/* Y-axis labels */}
+                            <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-gray-400 pb-6 pr-2 border-r border-gray-100 w-8 text-right">
+                                <span>10</span>
+                                <span>7.5</span>
+                                <span>5</span>
+                                <span>2.5</span>
+                                <span>0</span>
+                            </div>
+                            
+                            <div className="flex-1 flex items-end justify-around h-full pl-8 pb-6 relative">
+                                {loading ? (
+                                    <div className="text-sm text-gray-500 self-center">Đang tải biểu đồ...</div>
+                                ) : !selectedGrade ? (
+                                    // Hiển thị các khối
+                                    (avgStats || []).map((grade) => (
+                                        <div key={grade.grade_level} className="flex flex-col items-center gap-2 group relative w-1/5 max-w-[60px] h-full justify-end cursor-pointer" onClick={() => setSelectedGrade(grade.grade_level)}>
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 bg-gray-800 text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none z-10 whitespace-nowrap">
+                                                {grade.average_score.toFixed(2)} điểm
+                                            </div>
+                                            <div 
+                                                className="w-full bg-gradient-to-t from-blue-600 to-indigo-400 rounded-t transition-all group-hover:from-blue-500 group-hover:to-indigo-300 shadow-sm"
+                                                style={{ height: `${(grade.average_score / 10) * 100}%`, minHeight: '2%' }}
+                                            ></div>
+                                            <span className="text-[10px] md:text-xs text-gray-600 font-medium whitespace-nowrap absolute -bottom-6">Khối {grade.grade_level}</span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    // Hiển thị các lớp trong khối
+                                    (avgStats.find(g => g.grade_level === selectedGrade)?.classes || []).map((cls: any, i: number) => (
+                                        <div key={i} className="flex flex-col items-center gap-2 group relative flex-1 max-w-[40px] h-full justify-end">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 bg-gray-800 text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none z-10 whitespace-nowrap">
+                                                {cls.average_score.toFixed(2)} điểm
+                                            </div>
+                                            <div 
+                                                className="w-full bg-gradient-to-t from-emerald-600 to-teal-400 rounded-t transition-all group-hover:from-emerald-500 group-hover:to-teal-300 shadow-sm"
+                                                style={{ height: `${(cls.average_score / 10) * 100}%`, minHeight: '2%' }}
+                                            ></div>
+                                            <span className="text-[9px] md:text-[11px] text-gray-600 font-medium whitespace-nowrap absolute -bottom-6">{cls.class_name}</span>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Column - Grade Stats Table */}
+                {/* Right Column - Grade Stats Table & Attendance */}
                 <div className="space-y-4 md:space-y-6">
+                    {/* Attendance Stats */}
+                    <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+                        <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Tỉ lệ đi học hôm nay</h3>
+                        <div className="flex items-center justify-between p-3 md:p-4 bg-green-50 rounded-lg border border-green-100">
+                            <div>
+                                <p className="text-xs text-green-700 font-medium">Toàn trường</p>
+                                <p className="text-lg md:text-2xl font-bold text-green-700">
+                                    {loading ? '...' : attendanceStats ? `${((attendanceStats.present / attendanceStats.total) * 100).toFixed(1)}%` : '0%'}
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] md:text-xs text-green-600">Có mặt: {attendanceStats?.present ?? 0}</p>
+                                <p className="text-[10px] md:text-xs text-gray-500">Tổng: {attendanceStats?.total ?? 0}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Grade Stats Table */}
                     <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
                         <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Thống kê theo khối</h3>
                         <div className="overflow-x-auto -mx-4 md:mx-0">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { useAcademic } from '@/lib/academic-context'
-import { getClasses, getAttendanceSessions, getTimetables } from '@/lib/api'
+import { getClasses, getAttendanceSessions, getTimetables, getActivities } from '@/lib/api'
 
 export function TeacherDashboard() {
   const { user } = useAuth()
@@ -12,6 +12,7 @@ export function TeacherDashboard() {
   const [classes, setClasses] = useState<any[]>([])
   const [sessions, setSessions] = useState<any[]>([])
   const [allTimetables, setAllTimetables] = useState<any[]>([])
+  const [activities, setActivities] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
@@ -20,30 +21,48 @@ export function TeacherDashboard() {
     : []
   const effectiveSemesterId = selectedSemesterId ?? (yearSems.find((s: any) => s.is_active)?.semester_id ?? yearSems[0]?.semester_id)
 
+  const JS_DAY_TO_DB_DAY = ['8', '2', '3', '4', '5', '6', '7']
+  const todayDateObj = new Date()
+  const todayKey = JS_DAY_TO_DB_DAY[todayDateObj.getDay()]
+
+  const todayDateStr = new Date(todayDateObj.getTime() - todayDateObj.getTimezoneOffset() * 60000)
+    .toISOString().split('T')[0]
+
   const DAY_LABELS: Record<string, string> = {
-    Monday: 'Thứ 2', Tuesday: 'Thứ 3', Wednesday: 'Thứ 4',
-    Thursday: 'Thứ 5', Friday: 'Thứ 6', Saturday: 'Thứ 7', Sunday: 'CN',
+    '2': 'Thứ 2', '3': 'Thứ 3', '4': 'Thứ 4',
+    '5': 'Thứ 5', '6': 'Thứ 6', '7': 'Thứ 7', '8': 'Chủ Nhật',
   }
-  const todayKey = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()]
   const todayName = DAY_LABELS[todayKey] || todayKey
-  const todayTimetables = allTimetables.filter((t: any) => t.day_of_week === todayKey)
+  const todayTimetables = allTimetables
+    .filter((t: any) => String(t.day_of_week) === todayKey)
+    .sort((a: any, b: any) => (a.period_no || 0) - (b.period_no || 0))
 
   useEffect(() => {
     if (!teacherId) return
     setLoading(true)
     Promise.all([
       getClasses({ teacherId, limit: 20, schoolYearId: effectiveYearId }),
-      getAttendanceSessions({ teacherId, limit: 5 }),
-      getTimetables({ teacherId, limit: 200, semesterId: effectiveSemesterId }),
+      getAttendanceSessions({ teacherId, limit: 5, schoolYearId: effectiveYearId }),
+      getTimetables({ teacherId, limit: 200, semesterId: effectiveSemesterId, weekStart: todayDateStr }),
+      getActivities({ limit: 10 }),
     ])
-    .then(([cls, sess, tt]) => {
+    .then(([cls, sess, tt, acts]) => {
       setClasses(cls?.data ?? [])
       setSessions(sess?.data ?? [])
       setAllTimetables(tt?.data ?? [])
+      setActivities(acts ?? [])
     })
     .catch(() => {})
     .finally(() => setLoading(false))
   }, [teacherId, effectiveYearId, effectiveSemesterId])
+
+  const upcomingActivities = activities.filter((a: any) => {
+    const activityDate = new Date(a.start_datetime);
+    activityDate.setHours(0, 0, 0, 0);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return activityDate >= now;
+  });
 
   const totalStudents = classes.reduce((sum, c) => sum + (c.student_count || 0), 0)
 
@@ -105,9 +124,29 @@ export function TeacherDashboard() {
           )}
         </div>
 
-        {/* My Classes */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
-          <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Lớp phụ trách</h2>
+        <div className="flex flex-col gap-4 md:gap-6">
+          {/* Activities */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+            <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Hoạt động sắp diễn ra</h2>
+            {upcomingActivities.length === 0 ? (
+              <p className="text-sm text-gray-500">Không có hoạt động nào sắp tới</p>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {upcomingActivities.slice(0, 4).map((a: any) => (
+                  <div key={a.activity_id} className="p-3 bg-gray-50 rounded-lg border-l-4 border-[#0066CC]">
+                    <p className="font-semibold text-sm text-gray-900">{a.activity_name}</p>
+                    <p className="text-xs text-gray-600 mt-1">{a.activity_type || 'Hoạt động'}</p>
+                    <p className="text-xs text-gray-600 mt-1">📅 {new Date(a.start_datetime).toLocaleDateString('vi-VN')}</p>
+                    <p className="text-xs text-gray-600">📍 {a.location || a.activity_type || 'TBD'}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* My Classes */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+            <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Lớp phụ trách</h2>
           {loading ? (
             <p className="text-sm text-gray-500">Đang tải...</p>
           ) : classes.length === 0 ? (
@@ -125,6 +164,7 @@ export function TeacherDashboard() {
               ))}
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

@@ -131,114 +131,6 @@ export default function SecurityLogsPage() {
 
   return (
     <div className="p-4 md:p-6 lg:p-8 min-h-screen bg-gray-50/50">
-      {/* Header Info Banner */}
-      <div className="mb-6 bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-xl p-4 md:p-5 shadow-sm flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-xl font-bold">
-            🛡️
-          </div>
-          <div>
-            <h1 className="font-bold text-base md:text-xl text-white">Nhật ký Bảo mật & Giám sát Truy cập</h1>
-            <p className="text-xs md:text-sm text-emerald-100 mt-0.5">
-              Ghi nhận tất cả lịch sử Đăng nhập, Đăng xuất và Thao tác hệ thống theo thời gian thực (Dành cho Admin).
-            </p>
-          </div>
-        </div>
-
-        <button
-          onClick={() => {
-            fetchLogs()
-            fetchStats()
-          }}
-          className="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5"
-        >
-          <span>🔄</span> Làm mới
-        </button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <div className="text-2xl mb-1">📊</div>
-          <div className="text-xl md:text-2xl font-bold text-blue-600">
-            {statsLoading ? '...' : (stats?.successCount || 0).toLocaleString()}
-          </div>
-          <div className="text-xs font-medium text-gray-900 mt-1">Truy cập thành công</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">Đăng nhập hợp lệ</div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <div className="text-2xl mb-1">⚠️</div>
-          <div className="text-xl md:text-2xl font-bold text-red-600">
-            {statsLoading ? '...' : (stats?.failureCount || 0).toLocaleString()}
-          </div>
-          <div className="text-xs font-medium text-gray-900 mt-1">Đăng nhập thất bại</div>
-          <div className="text-[11px] text-red-500 mt-0.5">Sai mật khẩu / Khóa</div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <div className="text-2xl mb-1">🔐</div>
-          <div className="text-xl md:text-2xl font-bold text-emerald-600">
-            {statsLoading ? '...' : (stats?.successRate || '100%')}
-          </div>
-          <div className="text-xs font-medium text-gray-900 mt-1">Tỷ lệ An toàn</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">Hệ thống bảo vệ</div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <div className="text-2xl mb-1">🔒</div>
-          <div className="text-xl md:text-2xl font-bold text-amber-600">
-            {statsLoading ? '...' : (stats?.todayCount || 0)}
-          </div>
-          <div className="text-xs font-medium text-gray-900 mt-1">Sự kiện Hôm nay</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">Ghi nhận trong phiên</div>
-        </div>
-      </div>
-
-      {/* Hourly Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 shadow-sm">
-          <h3 className="text-xs md:text-sm font-semibold text-gray-900 mb-4 flex items-center justify-between">
-            <span>📈 Tần suất Đăng nhập theo giờ</span>
-            <span className="text-[10px] text-gray-400 font-normal">12 Giờ gần nhất</span>
-          </h3>
-          <div className="flex items-end gap-2 h-36 pt-2 border-b border-gray-100">
-            {(stats?.hourlyLogins || [65, 45, 80, 55, 90, 70, 85, 60, 75, 40, 88, 95]).map((val, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
-                <div className="opacity-0 group-hover:opacity-100 absolute -top-6 bg-gray-800 text-white text-[9px] px-1.5 py-0.5 rounded transition-opacity pointer-events-none z-10 whitespace-nowrap">
-                  {val} lượt
-                </div>
-                <div
-                  className="w-full bg-gradient-to-t from-blue-600 to-indigo-500 rounded-t transition-all group-hover:from-blue-500 group-hover:to-indigo-400"
-                  style={{ height: `${val}%` }}
-                ></div>
-                <span className="text-[9px] text-gray-400 font-medium">{i * 2}h</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 shadow-sm">
-          <h3 className="text-xs md:text-sm font-semibold text-gray-900 mb-4 flex items-center justify-between">
-            <span>🔑 Phiên làm việc & Token JWT</span>
-            <span className="text-[10px] text-gray-400 font-normal">Xác thực tự động</span>
-          </h3>
-          <div className="flex items-end gap-2 h-36 pt-2 border-b border-gray-100">
-            {[30, 50, 25, 60, 35, 70, 45, 80, 55, 40, 65, 50].map((val, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
-                <div className="opacity-0 group-hover:opacity-100 absolute -top-6 bg-gray-800 text-white text-[9px] px-1.5 py-0.5 rounded transition-opacity pointer-events-none z-10 whitespace-nowrap">
-                  {val * 3} token
-                </div>
-                <div
-                  className="w-full bg-gradient-to-t from-emerald-600 to-teal-400 rounded-t transition-all group-hover:from-emerald-500 group-hover:to-teal-300"
-                  style={{ height: `${val}%` }}
-                ></div>
-                <span className="text-[9px] text-gray-400 font-medium">{i * 2}h</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Filters & Search Toolbar */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4 shadow-sm flex flex-wrap gap-3 items-center justify-between">
@@ -265,7 +157,7 @@ export default function SecurityLogsPage() {
               setStatusFilter(e.target.value)
               setPage(1)
             }}
-            className="px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 text-xs md:text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">Tất cả Trạng thái</option>
             <option value="Thành công">Thành công</option>
@@ -280,7 +172,7 @@ export default function SecurityLogsPage() {
               setActionFilter(e.target.value)
               setPage(1)
             }}
-            className="px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 text-xs md:text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">Tất cả Hành động</option>
             <option value="Đăng nhập">Đăng nhập</option>
