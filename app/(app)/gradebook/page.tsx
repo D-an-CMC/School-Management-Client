@@ -13,6 +13,7 @@ import {
   saveClassGrades,
   getMe,
   getTimetables,
+  predictStudentSemester,
 } from '@/lib/api'
 
 interface GradeRow {
@@ -40,6 +41,9 @@ interface SubjectGrade {
   midTerm: string
   finalTerm: string
   average: string
+  predictedCk?: number | null
+  predictedAvg?: number | null
+  predictionReason?: string
   ranking?: string
   ranking1?: string
   ranking2?: string
@@ -91,6 +95,49 @@ function StudentGradebook({ userName }: { userName: string }) {
   const [studentInfo, setStudentInfo] = useState<any>(null)
   const [semMode, setSemMode] = useState<'sem1' | 'sem2' | 'year'>('year')
   const [yearRes, setYearRes] = useState<any>(null)
+  const [aiPredictions, setAiPredictions] = useState<any | null>(null)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState('')
+
+  const handlePredictStudent = async () => {
+    if (!studentInfo?.student_id) return
+    const semId = semMode === 'sem1'
+      ? week1Semester(semesters, currentSchoolYear)
+      : semMode === 'sem2'
+        ? semesters.find((s: any) => Number(s.school_year_id) === Number(currentSchoolYear?.school_year_id) && Number(s.semester_id) !== Number(week1Semester(semesters, currentSchoolYear)))?.semester_id ?? null
+        : null
+    if (!semId) return
+    try {
+      setAiLoading(true)
+      setAiError('')
+      const res = await predictStudentSemester(studentInfo.student_id, semId)
+      if (!res.success || !res.data) {
+        setAiError(res.error || 'Chưa thể dự đoán điểm số.')
+        return
+      }
+      setAiPredictions(res.data)
+      const predMap = new Map<number, any>()
+      for (const p of res.data.subjects || []) {
+        predMap.set(Number(p.subject_id), p)
+      }
+      setSubjects((prev) =>
+        prev.map((s) => {
+          const p = predMap.get(Number(s.subject_id))
+          if (!p) return s
+          return {
+            ...s,
+            predictedCk: p.predicted_ck,
+            predictedAvg: p.predicted_avg,
+            predictionReason: p.reason,
+          }
+        })
+      )
+    } catch {
+      setAiError('Không kết nối được dịch vụ ML dự đoán.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
 
   // Đồng bộ ngược: khi đổi học kỳ trên thanh header, cập nhật tab tương ứng.
   useEffect(() => {
@@ -221,10 +268,32 @@ function StudentGradebook({ userName }: { userName: string }) {
           <h2 className="text-2xl font-bold text-gray-900">Bảng điểm của {userName}</h2>
           {className && <p className="text-sm text-gray-500 mt-1">{className}</p>}
         </div>
-        <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
-          <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-          Xuất PDF
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          {semMode !== 'year' && (
+            <button
+              onClick={handlePredictStudent}
+              disabled={aiLoading}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-xs font-bold hover:from-indigo-700 hover:to-purple-700 transition shadow-sm disabled:opacity-50 cursor-pointer"
+              title="Dự đoán điểm Cuối kỳ và ĐTB học kỳ bằng mô hình AI"
+            >
+              {aiLoading ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Đang phân tích AI...
+                </>
+              ) : (
+                <>
+                  <span>✨</span>
+                  AI Dự Đoán Điểm CK
+                </>
+              )}
+            </button>
+          )}
+          <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
+            <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+            Xuất PDF
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 bg-white border border-gray-200 rounded-xl p-2 shadow-sm w-fit">
@@ -255,6 +324,36 @@ function StudentGradebook({ userName }: { userName: string }) {
           </button>
         ))}
       </div>
+
+      {/* AI Prediction Summary Banner */}
+      {aiPredictions?.semester_avg_predicted && semMode !== 'year' && (
+        <div className="p-4 bg-gradient-to-r from-indigo-50/90 via-purple-50/80 to-blue-50/80 border border-indigo-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+              ✨
+            </div>
+            <div>
+              <p className="text-sm font-bold text-indigo-950">
+                Dự đoán kết quả học kỳ bởi AI (Học kỳ {aiPredictions.semester})
+              </p>
+              <p className="text-xs text-indigo-700">
+                Đã dự đoán thành công {aiPredictions.subjects_predicted}/{aiPredictions.subjects_total} môn học có đủ điểm TX & GK
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-lg border border-indigo-200 shadow-2xs">
+            <span className="text-xs font-bold text-gray-500 uppercase">ĐTB dự kiến:</span>
+            <span className="text-lg font-black text-indigo-600">{aiPredictions.semester_avg_predicted}</span>
+          </div>
+        </div>
+      )}
+
+      {aiError && (
+        <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between">
+          <span>{aiError}</span>
+          <button onClick={() => setAiError('')} className="font-bold hover:text-red-900">✕</button>
+        </div>
+      )}
 
       {semMode === 'year' && yearRes?.sem1Id && (
         <p className="text-xs text-gray-400 -mt-4">
@@ -324,7 +423,14 @@ function StudentGradebook({ userName }: { userName: string }) {
                           {rankVal || 'Chưa nhập'}
                         </span>
                       ) : (
-                        <span className={`text-3xl font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
+                        <div>
+                          <span className={`text-3xl font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
+                          {subj.average === '--' && subj.predictedAvg != null && (
+                            <p className="text-[11px] text-indigo-600 font-bold mt-0.5" title="ĐTB môn dự kiến bởi AI">
+                              ✨ Dự kiến: {subj.predictedAvg.toFixed(1)}
+                            </p>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -344,7 +450,17 @@ function StudentGradebook({ userName }: { userName: string }) {
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Cuối kỳ</p>
-                        <p className="text-sm font-bold text-gray-800">{subj.finalTerm !== '--' ? subj.finalTerm : '—'}</p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-bold text-gray-800">{subj.finalTerm !== '--' ? subj.finalTerm : '—'}</p>
+                          {subj.finalTerm === '--' && subj.predictedCk != null && (
+                            <span
+                              className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[11px] font-bold border border-indigo-200"
+                              title="Điểm cuối kỳ dự kiến theo phân tích AI"
+                            >
+                              ✨ Dự đoán: {subj.predictedCk.toFixed(1)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

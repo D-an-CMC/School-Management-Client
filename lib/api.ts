@@ -304,6 +304,88 @@ export async function saveClassGrades(classId: number, grades: any[], subjectId?
   return res.json() as Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
+// ── ML dự đoán điểm (qua School-Management-Sever → modsves-ml-api) ──
+
+export interface MlClassPrediction {
+  student_id: number;
+  predicted_ck: number | null;
+  predicted_avg: number | null;
+  current_avg?: number | null;
+  ck_actual?: number | null;
+  model?: string;
+  reason?: string;
+}
+
+export async function predictClassGrades(classId: number, subjectId: number, semesterId?: number) {
+  const res = await apiFetch('/api/ml/predict-class', {
+    method: 'POST',
+    body: JSON.stringify({ classId, subjectId, semesterId }),
+  });
+  return res.json() as Promise<{
+    success: boolean;
+    data?: {
+      class_id: number;
+      grade_level: number;
+      subject_id: number;
+      semester: string;
+      count: number;
+      predictions: MlClassPrediction[];
+    };
+    error?: string;
+    code?: string;
+  }>;
+}
+
+export async function predictStudentSemester(studentId: number, semesterId?: number) {
+  const res = await apiFetch('/api/ml/predict-student', {
+    method: 'POST',
+    body: JSON.stringify({ studentId, semesterId }),
+  });
+  return res.json() as Promise<{
+    success: boolean;
+    data?: {
+      student_id: number;
+      semester: string;
+      subjects: any[];
+      semester_avg_predicted: number | null;
+    };
+    error?: string;
+    code?: string;
+  }>;
+}
+
+export async function getMlHealth() {
+  const res = await apiFetch('/api/ml/health');
+  return res.json() as Promise<{ success: boolean; data?: any; error?: string; code?: string }>;
+}
+
+export async function predictSingleScore(payload: {
+  grade: number;
+  semester: string;
+  TX1: number;
+  TX2?: number;
+  TX3?: number;
+  TX4?: number;
+  GK: number;
+  DTB1?: number;
+}) {
+  const res = await apiFetch('/api/ml/predict', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return res.json() as Promise<{
+    success: boolean;
+    data?: {
+      grade: number;
+      semester: string;
+      predicted_ck: number;
+      model: string;
+    };
+    error?: string;
+    code?: string;
+  }>;
+}
+
 export async function getAttendanceSessions(params?: { teacherId?: number; classId?: number; semesterId?: number; schoolYearId?: number; page?: number; limit?: number }) {
   const qs = new URLSearchParams();
   if (params?.teacherId) qs.set('teacherId', String(params.teacherId));
@@ -1147,35 +1229,6 @@ export async function getAiRagStatus(): Promise<{ sources: any[]; total: number 
   if (!res.ok) return null;
   const json = (await res.json()) as { success: boolean; data?: any };
   return json.success && json.data ? json.data : null;
-}
-
-export interface MlClassPrediction {
-  student_id: number;
-  predicted_ck: number | null;
-  predicted_avg: number | null;
-  current_avg: number | null;
-  reason?: string;
-  model?: string;
-}
-
-export async function getMlClassPredictions(classId: number, subjectId: number, semesterId?: number): Promise<{
-  success: boolean;
-  data?: {
-    semester: string;
-    predictions: MlClassPrediction[];
-  };
-  error?: string;
-  code?: string;
-}> {
-  try {
-    const res = await apiFetch('/api/ml/predict-class', {
-      method: 'POST',
-      body: JSON.stringify({ classId, subjectId, semesterId }),
-    });
-    return (await res.json()) as any;
-  } catch (err: any) {
-    return { success: false, error: err?.message || 'Không thể kết nối dịch vụ ML' };
-  }
 }
 
 
