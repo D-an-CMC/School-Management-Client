@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects, predictClassGrades, type MlClassPrediction } from '@/lib/api'
+import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects, predictClassGrades, predictSingleScore, type MlClassPrediction } from '@/lib/api'
 import { useAcademic } from '@/lib/academic-context'
 import { isScoredSubject, isGradedSubject } from '@/lib/utils'
 
@@ -325,6 +325,71 @@ export default function GradeManagementPage() {
     return avg.toFixed(1)
   }
 
+  // Ref lưu timeout debounce dự đoán AI theo từng học sinh
+  const predictDebounceRef = useRef<{ [studentId: string]: NodeJS.Timeout }>({})
+
+  // Hàm tự động gọi AI tính lại điểm dự đoán cho 1 học sinh khi sửa điểm TX / GK
+  const triggerSingleAiPrediction = (studentIdStr: string, updatedStudent: GradeStudent) => {
+    // Chỉ chạy nếu môn có tính điểm và là học kỳ I/II
+    const targetSubj = subjectsList.find((s: any) => s.subject_name === selectedSubject)
+    if (!targetSubj || !isScoredSubject(targetSubj.subject_id)) return
+    if (selectedSemester === 'Cả Năm') return
+
+    // Lấy khối (6, 7, 8, 9) từ class_name hoặc grade_level
+    const gradeLevel = Number(selectedClass?.grade_level) ||
+      (selectedClass?.class_name ? parseInt((selectedClass.class_name.match(/\d+/) || [])[0], 10) : 6)
+    if (isNaN(gradeLevel) || gradeLevel < 6 || gradeLevel > 9) return
+
+    const semCode = selectedSemester === 'Học kỳ II' ? 'II' : 'I'
+
+    // Lọc điểm TX hợp lệ (chuyển đổi cả dấu phẩy sang dấu chấm nếu người dùng gõ kiểu VN)
+    const validTx = updatedStudent.freq
+      .map((f) => parseFloat(String(f).replace(',', '.')))
+      .filter((n) => !isNaN(n) && n >= 0 && n <= 10)
+    const gkNum = parseFloat(String(updatedStudent.midTerm).replace(',', '.'))
+
+    // Nếu chưa đủ điểm TX hoặc GK thì reset AI prediction về '--'
+    if (validTx.length === 0 || isNaN(gkNum) || gkNum < 0 || gkNum > 10) {
+      setGradeStudents((prev) =>
+        prev.map((s) => (s.id === studentIdStr ? { ...s, aiPrediction: '--', aiReason: 'Cần có điểm TX và điểm GK để AI dự đoán' } : s))
+      )
+      return
+    }
+
+    if (predictDebounceRef.current[studentIdStr]) {
+      clearTimeout(predictDebounceRef.current[studentIdStr])
+    }
+
+    predictDebounceRef.current[studentIdStr] = setTimeout(async () => {
+      try {
+        const avgTx = validTx.reduce((a, b) => a + b, 0) / validTx.length
+        const tx1 = validTx[0]
+        const tx2 = validTx[1] ?? avgTx
+        const tx3 = validTx[2] ?? avgTx
+        const tx4 = validTx[3] ?? avgTx
+
+        const res = await predictSingleScore({
+          grade: gradeLevel,
+          semester: semCode,
+          TX1: tx1,
+          TX2: tx2,
+          TX3: tx3,
+          TX4: tx4,
+          GK: gkNum,
+        })
+
+        if (res.success && res.data?.predicted_ck != null) {
+          const ck = Number(res.data.predicted_ck).toFixed(1)
+          setGradeStudents((prev) =>
+            prev.map((s) => (s.id === studentIdStr ? { ...s, aiPrediction: ck, aiModel: res.data?.model } : s))
+          )
+        }
+      } catch (err) {
+        console.error('[AI Predict Realtime] Error:', err)
+      }
+    }, 300)
+  }
+
   // Handle live editing of scores
   const handleScoreChange = (
     id: string,
@@ -333,27 +398,31 @@ export default function GradeManagementPage() {
     value: string
   ) => {
     setIsDirty(true)
-    setGradeStudents((prev) =>
-      prev.map((s) => {
-        if (s.id !== id) return s
-        let updated = { ...s }
-        if (field === 'freq' && typeof index === 'number') {
-          const newFreq = [...s.freq]
-          newFreq[index] = value
-          updated.freq = newFreq
-        } else if (field === 'midTerm') {
-          updated.midTerm = value
-        } else if (field === 'finalTerm') {
-          updated.finalTerm = value
-        }
+    const currentStudent = gradeStudents.find((s) => s.id === id)
+    if (!currentStudent) return
 
-        const newAvg = calculateAverage(updated.freq, updated.midTerm, updated.finalTerm)
-        updated.average = newAvg
-        const avgNum = parseFloat(newAvg)
-        updated.warning = !isNaN(avgNum) && avgNum < 5.0
-        return updated
-      })
-    )
+    let updated: GradeStudent = { ...currentStudent }
+    if (field === 'freq' && typeof index === 'number') {
+      const newFreq = [...currentStudent.freq]
+      newFreq[index] = value
+      updated.freq = newFreq
+    } else if (field === 'midTerm') {
+      updated.midTerm = value
+    } else if (field === 'finalTerm') {
+      updated.finalTerm = value
+    }
+
+    const newAvg = calculateAverage(updated.freq, updated.midTerm, updated.finalTerm)
+    updated.average = newAvg
+    const avgNum = parseFloat(newAvg)
+    updated.warning = !isNaN(avgNum) && avgNum < 5.0
+
+    setGradeStudents((prev) => prev.map((s) => (s.id === id ? updated : s)))
+
+    // Nếu sửa điểm Thường xuyên hoặc Giữa kỳ, tự động kích hoạt AI dự đoán lại điểm Cuối kỳ
+    if (field === 'freq' || field === 'midTerm') {
+      triggerSingleAiPrediction(id, updated)
+    }
   }
 
   // Handle live editing of "Đạt/Chưa đạt" ranking for non-scored subjects
@@ -989,15 +1058,10 @@ export default function GradeManagementPage() {
                       {s.aiPrediction !== '--' ? (
                         <div
                           className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-200 shadow-xs cursor-help transition hover:bg-indigo-100"
-                          title={`Dự đoán CK: ${s.aiPrediction} | ĐTB dự kiến: ${s.aiPredictedAvg || '--'} | Mô hình: ${s.aiModel || 'AI'}`}
+                          title={`Dự đoán điểm Cuối kỳ (CK): ${s.aiPrediction} | Mô hình: ${s.aiModel || 'AI'}`}
                         >
                           <span className="text-amber-500">✨</span>
                           <span>{s.aiPrediction}</span>
-                          {s.aiPredictedAvg && (
-                            <span className="text-[10px] text-indigo-500 font-normal">
-                              ({s.aiPredictedAvg})
-                            </span>
-                          )}
                         </div>
                       ) : (
                         <span

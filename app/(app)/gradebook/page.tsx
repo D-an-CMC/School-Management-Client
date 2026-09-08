@@ -221,7 +221,35 @@ function StudentGradebook({ userName }: { userName: string }) {
               }
             }
             subjectMap.forEach((e) => { e.average = calcAverage(e.freq, e.midTerm, e.finalTerm) })
-            setSubjects(Array.from(subjectMap.values()).filter((e) => isGradedSubject(e.subject_id)))
+            const mappedList = Array.from(subjectMap.values()).filter((e) => isGradedSubject(e.subject_id))
+            setSubjects(mappedList)
+
+            // Tự động gọi AI dự đoán điểm CK từng môn nếu có student_id
+            if (infoRes?.student_id && semId) {
+              predictStudentSemester(infoRes.student_id, semId)
+                .then((aiRes) => {
+                  if (aiRes?.success && aiRes?.data) {
+                    setAiPredictions(aiRes.data)
+                    const predMap = new Map<number, any>()
+                    for (const p of aiRes.data.subjects || []) {
+                      predMap.set(Number(p.subject_id), p)
+                    }
+                    setSubjects((prev) =>
+                      prev.map((s) => {
+                        const p = predMap.get(Number(s.subject_id))
+                        if (!p) return s
+                        return {
+                          ...s,
+                          predictedCk: p.predicted_ck,
+                          predictedAvg: p.predicted_avg,
+                          predictionReason: p.reason,
+                        }
+                      })
+                    )
+                  }
+                })
+                .catch(() => {})
+            }
           } else {
             setSubjects([])
           }
@@ -425,11 +453,6 @@ function StudentGradebook({ userName }: { userName: string }) {
                       ) : (
                         <div>
                           <span className={`text-3xl font-bold ${scoreColor(subj.average)}`}>{subj.average}</span>
-                          {subj.average === '--' && subj.predictedAvg != null && (
-                            <p className="text-[11px] text-indigo-600 font-bold mt-0.5" title="ĐTB môn dự kiến bởi AI">
-                              ✨ Dự kiến: {subj.predictedAvg.toFixed(1)}
-                            </p>
-                          )}
                         </div>
                       )}
                     </div>
@@ -437,7 +460,7 @@ function StudentGradebook({ userName }: { userName: string }) {
                 </div>
                 {semMode !== 'year' && !nonScored && (
                   <div className="px-5 py-3 border-b border-gray-100 bg-[#fafcff]">
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Điểm thường xuyên</p>
                         <p className="text-sm font-bold text-gray-800">
@@ -450,14 +473,27 @@ function StudentGradebook({ userName }: { userName: string }) {
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Cuối kỳ</p>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-bold text-gray-800">{subj.finalTerm !== '--' ? subj.finalTerm : '—'}</p>
-                          {subj.finalTerm === '--' && subj.predictedCk != null && (
-                            <span
-                              className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[11px] font-bold border border-indigo-200"
-                              title="Điểm cuối kỳ dự kiến theo phân tích AI"
+                        <p className="text-sm font-bold text-gray-800">{subj.finalTerm !== '--' ? subj.finalTerm : '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                          <span>✨</span> AI Dự Đoán
+                        </p>
+                        <div>
+                          {subj.predictedCk != null ? (
+                            <div
+                              className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-200 shadow-2xs"
+                              title={`Dự đoán điểm Cuối kỳ (CK): ${subj.predictedCk.toFixed(1)}`}
                             >
-                              ✨ Dự đoán: {subj.predictedCk.toFixed(1)}
+                              <span className="text-amber-500">✨</span>
+                              <span>{subj.predictedCk.toFixed(1)}</span>
+                            </div>
+                          ) : (
+                            <span
+                              className="text-gray-400 text-xs font-mono"
+                              title={subj.predictionReason || 'Cần có điểm TX và GK để AI dự đoán'}
+                            >
+                              —
                             </span>
                           )}
                         </div>
