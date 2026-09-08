@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects } from '@/lib/api'
+import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects, predictClassGrades } from '@/lib/api'
 import { useAcademic } from '@/lib/academic-context'
 import { isScoredSubject, isGradedSubject } from '@/lib/utils'
 
@@ -14,6 +14,9 @@ interface GradeStudent {
   midTerm: string
   finalTerm: string
   aiPrediction: string
+  aiPredictedAvg?: string
+  aiModel?: string
+  aiReason?: string
   average: string
   warning?: boolean
   ranking?: string
@@ -39,6 +42,8 @@ export default function GradeManagementPage() {
   const [saveError, setSaveError] = useState('')
   const [isDirty, setIsDirty] = useState(false)
   const [confirmBack, setConfirmBack] = useState(false)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState('')
 
   // Sync the local semester dropdown to the header selection (Học kỳ I/II) for ANY selected year.
   useEffect(() => {
@@ -176,12 +181,64 @@ export default function GradeManagementPage() {
       // Always load the freshest data from the server (no stale localStorage override).
       setGradeStudents(mapped)
       setIsDirty(false)
+      // Gọi ML dự đoán CK cho cả lớp (fire-and-forget, fill cột AI Dự Đoán).
+      fetchAiPredictions(cls, subj, sem, mapped)
     } catch {
       setGradeStudents([])
       setIsDirty(false)
     } finally {
       setLoading(false)
     }
+  }
+
+  // Dự đoán CK bằng ML (Sever /api/ml/predict-class → modsves-ml-api).
+  // Chỉ chạy cho môn có điểm; thiếu TX1-4/GK thì giữ '--'.
+  const fetchAiPredictions = async (cls: any, subj: string, sem: string, students: GradeStudent[]) => {
+    try {
+      const targetSubj = subjectsList.find((s: any) => s.subject_name === subj)
+      if (!targetSubj || !isScoredSubject(targetSubj.subject_id)) return
+      if (sem === 'Cả Năm') return
+      if (!students || students.length === 0) return
+      setAiLoading(true)
+      setAiError('')
+      const semesterId = resolveSemesterIdByLabel(sem)
+      const res = await predictClassGrades(cls.class_id, targetSubj.subject_id, semesterId ?? undefined).catch(() => null)
+      if (!res?.success || !res.data?.predictions) {
+        if (res && (res as any).code === 'ML_NOT_CONFIGURED') setAiError('Chưa cấu hình ML_API_URL trên Sever nên không dự đoán được.')
+        else if (res && !res.success) setAiError((res as any).error || 'Không gọi được ML dự đoán.')
+        return
+      }
+      const predMap = new Map<number, any>()
+      for (const p of res.data.predictions) predMap.set(Number(p.student_id), p)
+      setGradeStudents((prev) =>
+        prev.map((s) => {
+          const p = predMap.get(Number(s.student_id))
+          if (!p || p.predicted_ck == null) {
+            return {
+              ...s,
+              aiPrediction: '--',
+              aiReason: p?.reason || 'Cần có điểm TX và điểm GK để AI dự đoán',
+            }
+          }
+          const ck = Number(p.predicted_ck).toFixed(1)
+          const avg = p.predicted_avg != null ? Number(p.predicted_avg).toFixed(1) : undefined
+          return {
+            ...s,
+            aiPrediction: ck,
+            aiPredictedAvg: avg,
+            aiModel: p.model,
+          }
+        })
+      )
+    } catch {
+      // Im lặng khi ML offline — cột giữ '--'.
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  const handleRefreshPredictions = () => {
+    if (selectedClass) fetchAiPredictions(selectedClass, selectedSubject, selectedSemester, gradeStudents)
   }
 
   const handleSelectClass = (cls: any) => {
@@ -621,6 +678,22 @@ export default function GradeManagementPage() {
                 </>
               )}
             </button>
+
+            <button
+              onClick={handleRefreshPredictions}
+              disabled={aiLoading}
+              title="Dự đoán điểm Cuối kỳ bằng ML (cần TX1-4 + GK)"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+            >
+              {aiLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Đang dự đoán...
+                </>
+              ) : (
+                <>✨ Dự đoán CK</>
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -644,6 +717,17 @@ export default function GradeManagementPage() {
             <span>{saveError}</span>
           </div>
           <button onClick={() => setSaveError('')} className="text-red-600 hover:text-red-900 font-bold">✕</button>
+        </div>
+      )}
+
+      {/* AI Error Alert (ML offline / chưa cấu hình) */}
+      {aiError && (
+        <div className="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-800 text-xs md:text-sm font-medium flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-2">
+            <span>✨</span>
+            <span>{aiError}</span>
+          </div>
+          <button onClick={() => setAiError('')} className="text-indigo-600 hover:text-indigo-900 font-bold">✕</button>
         </div>
       )}
 
@@ -834,9 +918,27 @@ export default function GradeManagementPage() {
 
                     {/* AI Prediction */}
                     <td className="py-3 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-semibold border border-indigo-100">
-                        ✨ {s.aiPrediction}
-                      </span>
+                      {s.aiPrediction !== '--' ? (
+                        <div
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-200 shadow-xs cursor-help transition hover:bg-indigo-100"
+                          title={`Dự đoán CK: ${s.aiPrediction} | ĐTB dự kiến: ${s.aiPredictedAvg || '--'} | Mô hình: ${s.aiModel || 'AI'}`}
+                        >
+                          <span className="text-amber-500">✨</span>
+                          <span>{s.aiPrediction}</span>
+                          {s.aiPredictedAvg && (
+                            <span className="text-[10px] text-indigo-500 font-normal">
+                              ({s.aiPredictedAvg})
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span
+                          className="text-gray-300 text-xs font-mono cursor-help"
+                          title={s.aiReason || 'Cần có điểm TX và GK để AI dự đoán'}
+                        >
+                          —
+                        </span>
+                      )}
                     </td>
 
                     {/* Calculated Average */}
