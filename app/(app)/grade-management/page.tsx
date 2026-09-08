@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects } from '@/lib/api'
+import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects, getMlClassPredictions, type MlClassPrediction } from '@/lib/api'
 import { useAcademic } from '@/lib/academic-context'
 import { isScoredSubject, isGradedSubject } from '@/lib/utils'
 
@@ -35,6 +35,7 @@ export default function GradeManagementPage() {
   const [studentSearchQuery, setStudentSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'WARNING' | 'EXCELLENT'>('ALL')
   const [isSaving, setIsSaving] = useState(false)
+  const [isPredicting, setIsPredicting] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [isDirty, setIsDirty] = useState(false)
@@ -333,6 +334,52 @@ export default function GradeManagementPage() {
     }
   }
 
+  const handleRunAiPrediction = async () => {
+    if (!selectedClass) return
+    const targetSubj = subjectsList.find((s) => s.subject_name === selectedSubject)
+    if (!targetSubj) return
+    const semesterId = resolveSemesterIdByLabel(selectedSemester)
+
+    setIsPredicting(true)
+    try {
+      const res = await getMlClassPredictions(selectedClass.class_id, targetSubj.subject_id, semesterId)
+      if (res.success && res.data?.predictions) {
+        const predMap = new Map<number, MlClassPrediction>()
+        res.data.predictions.forEach((p: MlClassPrediction) => {
+          predMap.set(p.student_id, p)
+        })
+
+        setGradeStudents((prev) =>
+          prev.map((s) => {
+            const sid = s.student_id ?? parseInt(s.id)
+            const pred = predMap.get(sid)
+            if (!pred) return s
+
+            let displayPred = '--'
+            if (pred.predicted_ck != null) {
+              displayPred = `${pred.predicted_ck}`
+            } else if (pred.reason) {
+              displayPred = 'Chưa đủ điểm'
+            }
+
+            return {
+              ...s,
+              aiPrediction: displayPred,
+            }
+          })
+        )
+      } else {
+        setSaveError(res.error || 'Dịch vụ ML AI chưa phản hồi hoặc chưa cấu hình.')
+        setTimeout(() => setSaveError(''), 5000)
+      }
+    } catch (err: any) {
+      setSaveError(err.message || 'Lỗi khi gọi AI dự đoán điểm')
+      setTimeout(() => setSaveError(''), 5000)
+    } finally {
+      setIsPredicting(false)
+    }
+  }
+
   // Filtered classes list
   const filteredClasses = useMemo(() => {
     return classes.filter((cls) => {
@@ -600,6 +647,27 @@ export default function GradeManagementPage() {
                 <option value="Toán học">Môn: Toán học</option>
               )}
             </select>
+
+            {!nonScored && (
+              <button
+                onClick={handleRunAiPrediction}
+                disabled={isPredicting || loading}
+                className="px-3.5 py-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
+                title="Dự đoán điểm Cuối kỳ bằng mô hình Machine Learning"
+              >
+                {isPredicting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    Đang dự đoán...
+                  </>
+                ) : (
+                  <>
+                    <span>✨</span>
+                    <span>AI Dự Đoán</span>
+                  </>
+                )}
+              </button>
+            )}
 
             <button
               onClick={handleSaveGrades}

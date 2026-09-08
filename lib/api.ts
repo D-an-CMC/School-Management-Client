@@ -1149,4 +1149,34 @@ export async function getAiRagStatus(): Promise<{ sources: any[]; total: number 
   return json.success && json.data ? json.data : null;
 }
 
+export interface MlClassPrediction {
+  student_id: number;
+  predicted_ck: number | null;
+  predicted_avg: number | null;
+  current_avg: number | null;
+  reason?: string;
+  model?: string;
+}
+
+export async function getMlClassPredictions(classId: number, subjectId: number, semesterId?: number): Promise<{
+  success: boolean;
+  data?: {
+    semester: string;
+    predictions: MlClassPrediction[];
+  };
+  error?: string;
+  code?: string;
+}> {
+  try {
+    const res = await apiFetch('/api/ml/predict-class', {
+      method: 'POST',
+      body: JSON.stringify({ classId, subjectId, semesterId }),
+    });
+    return (await res.json()) as any;
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Không thể kết nối dịch vụ ML' };
+  }
+}
+
+
 
