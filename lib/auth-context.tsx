@@ -8,6 +8,7 @@ export interface User {
   name: string
   teacherId?: number
   studentId?: number
+  permissions?: string[]
 }
 import { loginApi, getMe } from './api'
 
@@ -15,6 +16,7 @@ interface AuthContextType {
   user: User | null
   isLoggedIn: boolean
   loading: boolean
+  hasPermission: (permissionName: string) => boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => void
 }
@@ -49,7 +51,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then((me) => {
         if (me) {
           const role = ROLE_MAP[me.role] || 'student'
-          setUser({ id: String(me.id), name: me.name, email: me.email, role, teacherId: (me as any).teacherId, studentId: (me as any).studentId } as any)
+          setUser({
+            id: String(me.id),
+            name: me.name,
+            email: me.email,
+            role,
+            teacherId: (me as any).teacherId,
+            studentId: (me as any).studentId,
+            permissions: (me as any).permissions || [],
+          } as any)
           setIsLoggedIn(true)
         }
       })
@@ -69,7 +79,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { token, user: u } = result.data
     sessionStorage.setItem('token', token)
     const role = ROLE_MAP[u.role] || 'student'
-    setUser({ id: Number(u.id), name: u.name, email: u.email, role, teacherId: (u as any).teacherId, studentId: (u as any).studentId })
+    setUser({
+      id: Number(u.id),
+      name: u.name,
+      email: u.email,
+      role,
+      teacherId: (u as any).teacherId,
+      studentId: (u as any).studentId,
+      permissions: (u as any).permissions || [],
+    })
     setIsLoggedIn(true)
   }
 
@@ -79,8 +97,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoggedIn(false)
   }
 
+  const hasPermission = (permName: string): boolean => {
+    if (!user) return false
+    if (user.role === 'admin') return true
+    return Array.isArray(user.permissions) && user.permissions.includes(permName)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, loading, hasPermission, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -13,7 +13,9 @@ import {
   activateSchoolYear,
   revertYearTransition,
   createSemestersForYear,
+  getYearResultsOverview,
 } from '@/lib/api'
+import Link from 'next/link'
 import { useAcademic } from '@/lib/academic-context'
 import { CustomDatePicker } from '@/components/ui/custom-date-picker'
 
@@ -106,6 +108,15 @@ export default function YearTransitionPage() {
   // Quyết định: student_id -> { status, class_id, grade_level }
   const [decisions, setDecisions] = useState<Record<number, { status: string; class_id: number | null; grade_level: number | null }>>({})
 
+  // Tình trạng Xét kết quả cuối năm của năm cũ
+  const [evalOverview, setEvalOverview] = useState<{
+    totalClasses?: number
+    doneClasses?: number
+    pendingClasses?: string[]
+    classes?: any[]
+  } | null>(null)
+  const [loadingEval, setLoadingEval] = useState(false)
+
   useEffect(() => {
     getYearTransitionOverview().then(setOverview).catch(() => { })
     getSchoolYears().then((data) => {
@@ -116,6 +127,25 @@ export default function YearTransitionPage() {
       if (current) setFromYearId(Number(current.school_year_id))
     }).catch(() => { })
   }, [])
+
+  // Theo dõi tình trạng xét kết quả cuối năm mỗi khi đổi năm cũ
+  useEffect(() => {
+    if (!fromYearId) {
+      setEvalOverview(null)
+      return
+    }
+    setLoadingEval(true)
+    getYearResultsOverview(Number(fromYearId))
+      .then((res) => {
+        if (res.success && res.data) {
+          setEvalOverview(res.data)
+        } else {
+          setEvalOverview(null)
+        }
+      })
+      .catch(() => setEvalOverview(null))
+      .finally(() => setLoadingEval(false))
+  }, [fromYearId])
 
   const handleCreateSemesters = async () => {
     setError('')
@@ -195,12 +225,23 @@ export default function YearTransitionPage() {
     }
   }
 
+  const isEvalPending = (evalOverview?.pendingClasses?.length ?? 0) > 0
+
   const handleApply = async () => {
     // M1: chặn double-click — hai request Apply chạy đồng thời sẽ chuyển 2 lần.
     if (applying) return
     setError('')
     setMessage('')
     setActivateError('')
+
+    // Điều kiện tiên quyết: Tất cả các lớp phải hoàn thành Xét kết quả cuối năm
+    if (isEvalPending) {
+      setError(
+        `Không thể chuyển năm học vì còn ${evalOverview?.pendingClasses?.length} lớp chưa hoàn thành "Xét kết quả cuối năm": ${evalOverview?.pendingClasses?.join(', ')}. Vui lòng hoàn thành xét duyệt tại mục "Xét kết quả cuối năm" trước khi chuyển năm.`
+      )
+      return
+    }
+
     const missingClass = Object.entries(decisions).some(
       ([sid, d]) => (d.status === 'PROMOTED' || d.status === 'RETAINED') && !d.class_id
     )
@@ -454,6 +495,56 @@ export default function YearTransitionPage() {
         {activateError && (
           <div className="bg-rose-50 border border-rose-300 text-rose-800 text-sm font-semibold rounded-lg px-4 py-3">
             {activateError}
+          </div>
+        )}
+
+        {/* Cảnh báo xét kết quả cuối năm */}
+        {fromYearId && (
+          <div className={`border rounded-2xl p-5 shadow-sm transition ${isEvalPending ? 'bg-amber-50/80 border-amber-300' : evalOverview ? 'bg-emerald-50/80 border-emerald-300' : 'bg-white border-gray-200'}`}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <span className={`material-symbols-outlined text-2xl mt-0.5 ${isEvalPending ? 'text-amber-600' : evalOverview ? 'text-emerald-600' : 'text-gray-400'}`}>
+                  {isEvalPending ? 'warning' : evalOverview ? 'verified' : 'hourglass_top'}
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-[#111c2d]">
+                      Điều kiện chuyển năm: Xét kết quả cuối năm
+                    </h3>
+                    {loadingEval && <span className="text-xs text-gray-400 italic">(Đang kiểm tra...)</span>}
+                  </div>
+                  {isEvalPending ? (
+                    <div className="mt-1 text-xs text-amber-900 leading-relaxed">
+                      <p className="font-semibold text-amber-800">
+                        Chưa đủ điều kiện chuyển năm: Còn {evalOverview?.pendingClasses?.length} lớp chưa hoàn tất xét kết quả cuối năm ({evalOverview?.doneClasses ?? 0}/{evalOverview?.totalClasses ?? 0} lớp hoàn thành).
+                      </p>
+                      <p className="mt-0.5 text-amber-700">
+                        Các lớp còn thiếu: <span className="font-bold underline">{evalOverview?.pendingClasses?.join(', ')}</span>. Tất cả các lớp bắt buộc phải hoàn thành xét kết quả trước khi admin được phép phân lớp và chuyển năm học.
+                      </p>
+                    </div>
+                  ) : evalOverview ? (
+                    <p className="mt-1 text-xs text-emerald-800 font-medium">
+                      ✓ Đã hoàn tất: Tất cả {evalOverview.totalClasses} lớp đã hoàn thành Xét kết quả cuối năm ({evalOverview.total ?? 0} học sinh). Đủ điều kiện để thực hiện chuyển năm học.
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Chọn năm học cũ để hệ thống kiểm tra tiến độ xét kết quả cuối năm của các lớp.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {isEvalPending && (
+                <Link
+                  href="/year-result"
+                  target="_blank"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap transition"
+                >
+                  <span>Đi tới Xét kết quả cuối năm</span>
+                  <span className="material-symbols-outlined text-[15px]">open_in_new</span>
+                </Link>
+              )}
+            </div>
           </div>
         )}
 
@@ -740,21 +831,31 @@ export default function YearTransitionPage() {
               </div>
             )}
 
-            <div className="flex flex-col md:flex-row items-center justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
-              <button
-                onClick={handleApply}
-                disabled={applying}
-                className="px-6 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
-              >
-                {applying ? 'Đang xử lý...' : '3. Xác nhận & phân lớp'}
-              </button>
-              <button
-                onClick={handleActivate}
-                disabled={activatingActivate}
-                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
-              >
-                {activatingActivate ? 'Đang kích hoạt...' : '4. Kích hoạt năm học mới'}
-              </button>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 mt-6 pt-4 border-t border-gray-200">
+              {isEvalPending ? (
+                <div className="flex items-center gap-2 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+                  <span className="material-symbols-outlined text-[16px]">warning</span>
+                  <span>Chưa thể chuyển năm: Còn {evalOverview?.pendingClasses?.length} lớp chưa hoàn thành xét kết quả cuối năm.</span>
+                </div>
+              ) : <div />}
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleApply}
+                  disabled={applying || isEvalPending}
+                  title={isEvalPending ? 'Phải hoàn thành xét kết quả cuối năm cho tất cả các lớp trước' : 'Xác nhận và phân lớp sang năm học mới'}
+                  className="px-6 py-2.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {applying ? 'Đang xử lý...' : '3. Xác nhận & phân lớp'}
+                </button>
+                <button
+                  onClick={handleActivate}
+                  disabled={activatingActivate}
+                  className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold transition disabled:opacity-50"
+                >
+                  {activatingActivate ? 'Đang kích hoạt...' : '4. Kích hoạt năm học mới'}
+                </button>
+              </div>
             </div>
           </div>
         )}

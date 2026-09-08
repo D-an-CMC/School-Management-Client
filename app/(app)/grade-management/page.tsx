@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { getClasses, getClassStudents, getGradesByClass, saveClassGrades, getSubjects, predictClassGrades, predictSingleScore, type MlClassPrediction } from '@/lib/api'
 import { useAcademic } from '@/lib/academic-context'
+import { useAuth } from '@/lib/auth-context'
 import { isScoredSubject, isGradedSubject } from '@/lib/utils'
 
 interface GradeStudent {
@@ -25,6 +26,9 @@ interface GradeStudent {
 }
 
 export default function GradeManagementPage() {
+  const { hasPermission } = useAuth()
+  const canEditGrades = hasPermission('PERM_GRADING_ENTER')
+  const canRunAI = hasPermission('PERM_AI_PREDICTION_RUN')
   const { selectedSemesterId, selectedSchoolYearId, semesters, currentSchoolYear, reload } = useAcademic()
   const [classes, setClasses] = useState<any[]>([])
   const [selectedClass, setSelectedClass] = useState<any | null>(null)
@@ -774,12 +778,12 @@ export default function GradeManagementPage() {
               )}
             </select>
 
-            {!nonScored && (
+            {isScoredSubject(selectedSubject) && (
               <button
                 onClick={handleRunAiPrediction}
-                disabled={isPredicting || loading}
-                className="px-3.5 py-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
-                title="Dự đoán điểm Cuối kỳ bằng mô hình Machine Learning"
+                disabled={isPredicting || loading || !canRunAI}
+                className="px-3.5 py-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                title={!canRunAI ? 'Chưa được cấp quyền chạy dự đoán AI' : 'Dự đoán điểm Cuối kỳ bằng mô hình Machine Learning'}
               >
                 {isPredicting ? (
                   <>
@@ -797,8 +801,9 @@ export default function GradeManagementPage() {
 
             <button
               onClick={handleSaveGrades}
-              disabled={isSaving}
-              className={`px-4 py-2 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer ${isDirty ? 'bg-amber-600 hover:bg-amber-700 font-bold ring-2 ring-amber-400' : 'bg-[#003366] hover:bg-[#002244]'
+              disabled={isSaving || !canEditGrades}
+              title={!canEditGrades ? 'Chưa được cấp quyền nhập & chỉnh sửa điểm' : 'Lưu sổ điểm'}
+              className={`px-4 py-2 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${isDirty ? 'bg-amber-600 hover:bg-amber-700 font-bold ring-2 ring-amber-400' : 'bg-[#003366] hover:bg-[#002244]'
                 }`}
             >
               {isSaving ? (
@@ -813,22 +818,6 @@ export default function GradeManagementPage() {
                   </svg>
                   {isDirty ? 'Lưu Điểm Ngay' : 'Lưu Sổ Điểm'}
                 </>
-              )}
-            </button>
-
-            <button
-              onClick={handleRefreshPredictions}
-              disabled={aiLoading}
-              title="Dự đoán điểm Cuối kỳ bằng ML (cần TX1-4 + GK)"
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
-            >
-              {aiLoading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Đang dự đoán...
-                </>
-              ) : (
-                <>✨ Dự đoán CK</>
               )}
             </button>
           </div>
@@ -1000,7 +989,10 @@ export default function GradeManagementPage() {
                         <select
                           value={s.ranking || ''}
                           onChange={(e) => handleRankingChange(s.id, e.target.value)}
+                          disabled={!canEditGrades}
                           className={`w-40 h-9 text-center font-bold text-xs border rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none cursor-pointer ${
+                            !canEditGrades ? 'opacity-60 cursor-not-allowed ' : ''
+                          }${
                             s.ranking === 'Chưa đạt' ? 'border-red-300 bg-red-50 text-red-700' :
                             s.ranking === 'Đạt' ? 'border-emerald-300 bg-emerald-50 text-emerald-700' :
                             'border-gray-300 bg-gray-50 text-gray-500'
@@ -1023,8 +1015,9 @@ export default function GradeManagementPage() {
                               type="text"
                               value={s.freq[fIdx] ?? ''}
                               onChange={(e) => handleScoreChange(s.id, 'freq', fIdx, e.target.value)}
+                              disabled={!canEditGrades}
                               placeholder="—"
-                              className="w-10 h-9 text-center font-bold text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-gray-50 text-gray-900 placeholder:text-gray-300 shadow-xs"
+                              className={`w-10 h-9 text-center font-bold text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-gray-50 text-gray-900 placeholder:text-gray-300 shadow-xs ${!canEditGrades ? 'opacity-60 cursor-not-allowed' : ''}`}
                             />
                           </div>
                         ))}
@@ -1037,8 +1030,9 @@ export default function GradeManagementPage() {
                         type="text"
                         value={s.midTerm}
                         onChange={(e) => handleScoreChange(s.id, 'midTerm', undefined, e.target.value)}
+                        disabled={!canEditGrades}
                         placeholder="—"
-                        className="w-12 h-9 text-center font-bold text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-blue-50/50 text-blue-900 placeholder:text-gray-300 shadow-xs"
+                        className={`w-12 h-9 text-center font-bold text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-blue-50/50 text-blue-900 placeholder:text-gray-300 shadow-xs ${!canEditGrades ? 'opacity-60 cursor-not-allowed' : ''}`}
                       />
                     </td>
 
@@ -1048,8 +1042,9 @@ export default function GradeManagementPage() {
                         type="text"
                         value={s.finalTerm}
                         onChange={(e) => handleScoreChange(s.id, 'finalTerm', undefined, e.target.value)}
+                        disabled={!canEditGrades}
                         placeholder="—"
-                        className="w-12 h-9 text-center font-bold text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-purple-50/50 text-purple-900 placeholder:text-gray-300 shadow-xs"
+                        className={`w-12 h-9 text-center font-bold text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-purple-50/50 text-purple-900 placeholder:text-gray-300 shadow-xs ${!canEditGrades ? 'opacity-60 cursor-not-allowed' : ''}`}
                       />
                     </td>
 

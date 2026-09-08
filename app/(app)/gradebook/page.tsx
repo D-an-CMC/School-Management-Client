@@ -296,32 +296,6 @@ function StudentGradebook({ userName }: { userName: string }) {
           <h2 className="text-2xl font-bold text-gray-900">Bảng điểm của {userName}</h2>
           {className && <p className="text-sm text-gray-500 mt-1">{className}</p>}
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          {semMode !== 'year' && (
-            <button
-              onClick={handlePredictStudent}
-              disabled={aiLoading}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-xs font-bold hover:from-indigo-700 hover:to-purple-700 transition shadow-sm disabled:opacity-50 cursor-pointer"
-              title="Dự đoán điểm Cuối kỳ và ĐTB học kỳ bằng mô hình AI"
-            >
-              {aiLoading ? (
-                <>
-                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Đang phân tích AI...
-                </>
-              ) : (
-                <>
-                  <span>✨</span>
-                  AI Dự Đoán Điểm CK
-                </>
-              )}
-            </button>
-          )}
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
-            <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-            Xuất PDF
-          </button>
-        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 bg-white border border-gray-200 rounded-xl p-2 shadow-sm w-fit">
@@ -554,6 +528,8 @@ function StudentGradebook({ userName }: { userName: string }) {
 }
 
 function TeacherGradebook({ userName }: { userName: string }) {
+  const { hasPermission } = useAuth()
+  const canEditGrades = hasPermission('PERM_GRADING_ENTER')
   const { selectedSemesterId, selectedSchoolYearId, currentSchoolYear, semesters, setSelectedSemesterId } = useAcademic()
   const [classes, setClasses] = useState<any[]>([])
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null)
@@ -824,10 +800,17 @@ function TeacherGradebook({ userName }: { userName: string }) {
               {saveErr}
             </span>
           )}
+          {!canEditGrades && (
+            <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[16px]">lock</span>
+              Chế độ chỉ xem (Chưa cấp quyền nhập điểm)
+            </span>
+          )}
           <button
             onClick={handleSave}
-            disabled={saving || rows.length === 0 || isYearView}
-            className="px-4 py-2 bg-[#001d36] hover:bg-[#00284d] text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm cursor-pointer"
+            disabled={saving || rows.length === 0 || isYearView || !canEditGrades}
+            title={!canEditGrades ? 'Bạn chưa được cấp quyền nhập & chỉnh sửa điểm' : 'Lưu điểm'}
+            className="px-4 py-2 bg-[#001d36] hover:bg-[#00284d] text-white rounded-lg text-xs font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">{saving ? 'hourglass_top' : 'save'}</span>
             {saving ? 'Dang luu...' : 'Luu diem'}
@@ -1006,8 +989,8 @@ function TeacherGradebook({ userName }: { userName: string }) {
                         <select
                           value={row.ranking || ''}
                           onChange={(e) => handleRankingChange(row.id, e.target.value)}
-                          disabled={isYearView}
-                          className={`w-32 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition cursor-pointer ${isYearView ? 'opacity-60 cursor-not-allowed ' : ''}${
+                          disabled={isYearView || !canEditGrades}
+                          className={`w-32 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition cursor-pointer ${isYearView || !canEditGrades ? 'opacity-60 cursor-not-allowed ' : ''}${
                             row.ranking === 'Chưa đạt' ? 'border-red-300 text-red-700 bg-red-50' :
                             row.ranking === 'Đạt' ? 'border-emerald-300 text-emerald-700 bg-emerald-50' :
                             'border-gray-200 text-gray-500 bg-gray-50'
@@ -1026,9 +1009,9 @@ function TeacherGradebook({ userName }: { userName: string }) {
                           type="text"
                           value={val}
                           onChange={(e) => handleScoreChange(row.id, 'freq', i, e.target.value)}
-                          disabled={isYearView}
+                          disabled={isYearView || !canEditGrades}
                           placeholder="-"
-                          className={`w-10 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${isYearView ? 'opacity-60 cursor-not-allowed ' : ''}${
+                          className={`w-10 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${isYearView || !canEditGrades ? 'opacity-60 cursor-not-allowed ' : ''}${
                             parseFloat(val) < 5 && val !== '' ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-gray-50'
                           }`}
                         />
@@ -1040,9 +1023,9 @@ function TeacherGradebook({ userName }: { userName: string }) {
                           type="text"
                           value={row[field]}
                           onChange={(e) => handleScoreChange(row.id, field, undefined, e.target.value)}
-                          disabled={isYearView}
+                          disabled={isYearView || !canEditGrades}
                           placeholder="-"
-                          className={`w-12 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${isYearView ? 'opacity-60 cursor-not-allowed ' : ''}${
+                          className={`w-12 h-8 text-center rounded-lg border text-xs font-bold focus:outline-none focus:border-[#001d36] transition ${isYearView || !canEditGrades ? 'opacity-60 cursor-not-allowed ' : ''}${
                             parseFloat(row[field]) < 5 && row[field] !== '' ? 'border-red-300 text-red-700 bg-red-50' : 'border-gray-200 text-gray-800 bg-gray-50'
                           }`}
                         />

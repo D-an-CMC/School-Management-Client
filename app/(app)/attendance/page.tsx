@@ -65,9 +65,10 @@ function toStatusCode(status?: string | null): string {
 }
 
 export default function AttendancePage() {
-  const { user } = useAuth()
+  const { user, hasPermission } = useAuth()
   const { selectedSchoolYearId, currentSchoolYear } = useAcademic()
-  const isTeacher = user?.role === 'teacher'
+  const isTeacher = user?.role === 'teacher' || user?.role === 'admin'
+  const canTakeAttendance = hasPermission('PERM_ATT_DAILY_CLOSE')
   const teacherId = (user as any)?.teacherId
   
   const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
@@ -344,13 +345,20 @@ export default function AttendancePage() {
           <div className="flex items-end">
             <button
               onClick={openSession}
-              disabled={creating}
-              className="w-full px-4 md:px-6 py-1.5 md:py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-60 text-xs md:text-sm"
+              disabled={creating || !canTakeAttendance}
+              title={!canTakeAttendance ? 'Bạn chưa được cấp quyền điểm danh' : 'Mở buổi điểm danh'}
+              className="w-full px-4 md:px-6 py-1.5 md:py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs md:text-sm"
             >
-              {creating ? 'Đang mở...' : session ? 'Mở lại buổi' : '＋ Tạo buổi điểm danh'}
+              {creating ? 'Đang mở...' : !canTakeAttendance ? 'Chưa cấp quyền điểm danh' : session ? 'Mở lại buổi' : '＋ Tạo buổi điểm danh'}
             </button>
           </div>
         </div>
+        {!canTakeAttendance && (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg mt-3 flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px]">lock</span>
+            Chế độ chỉ xem: Tài khoản chưa được cấp quyền tạo hoặc cập nhật điểm danh.
+          </p>
+        )}
         {session && (
           <p className="text-xs text-green-700 mt-3">
             Buổi hiện tại: {session.session_date} - {session.session === 'AFTERNOON' ? 'Chiều' : 'Sáng'} • Lớp {session.classes?.class_name ?? ''}
@@ -389,11 +397,12 @@ export default function AttendancePage() {
                           {STATUS_OPTIONS.map((st) => (
                             <button
                               key={st.value}
-                              onClick={() => setStatus(s.student_id, st.value)}
+                              onClick={() => canTakeAttendance && setStatus(s.student_id, st.value)}
+                              disabled={!canTakeAttendance}
                               className={`px-2 py-0.5 md:py-1 rounded text-[9px] md:text-[10px] font-semibold transition ${currentStatus === st.value
                                 ? `${STATUS_COLORS[st.value]} ring-2 ring-blue-400`
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
+                                } ${!canTakeAttendance ? 'opacity-60 cursor-not-allowed' : ''}`}
                             >
                               {st.label}
                             </button>
@@ -409,8 +418,9 @@ export default function AttendancePage() {
           <div className="p-3 md:p-4 border-t border-gray-200 flex justify-end">
             <button
               onClick={handleSaveAll}
-              disabled={saving}
-              className="px-4 md:px-6 py-1.5 md:py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-60 text-xs md:text-sm"
+              disabled={saving || !canTakeAttendance}
+              title={!canTakeAttendance ? 'Bạn chưa được cấp quyền điểm danh' : 'Lưu điểm danh'}
+              className="px-4 md:px-6 py-1.5 md:py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs md:text-sm"
             >
               {saving ? 'Đang lưu...' : '💾 Lưu điểm danh'}
             </button>

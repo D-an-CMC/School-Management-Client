@@ -381,6 +381,12 @@ export default function SystemPermissionsPage() {
                           <span className="w-1.5 h-1.5 rounded-full bg-green-600" />
                           Đang hoạt động
                         </span>
+                        {activeRole.role_name.toLowerCase() === 'admin' && (
+                          <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[13px]">shield</span>
+                            Toàn quyền hệ thống (Bypass)
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
                         ID: ROLE_{String(activeRole.role_id).padStart(3, '0')}
@@ -415,10 +421,11 @@ export default function SystemPermissionsPage() {
                           <input
                             type="checkbox"
                             checked={mod.enabled}
+                            disabled={activeRole.role_name.toLowerCase() === 'admin'}
                             onChange={() => toggleModuleMaster(mod.id)}
                             className="sr-only peer"
                           />
-                          <div className="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#003d64]" />
+                          <div className="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#003d64] peer-disabled:opacity-60" />
                         </label>
                       </div>
                       <div className="p-5 space-y-4">
@@ -431,8 +438,9 @@ export default function SystemPermissionsPage() {
                             <input
                               type="checkbox"
                               checked={item.enabled}
+                              disabled={activeRole.role_name.toLowerCase() === 'admin'}
                               onChange={() => togglePermissionItem(mod.id, item.id)}
-                              className="accent-[#003d64] w-4 h-4 rounded cursor-pointer"
+                              className="accent-[#003d64] w-4 h-4 rounded cursor-pointer disabled:cursor-not-allowed"
                             />
                           </div>
                         ))}

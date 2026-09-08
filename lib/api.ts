@@ -58,13 +58,21 @@ export async function loginApi(email: string, password: string) {
   return res.json() as Promise<AuthResponse | ApiError>;
 }
 
-export async function getMe(): Promise<{ id: number; email: string; role: string; name: string; teacherId?: number; studentId?: number } | null> {
+export async function getMe(): Promise<{ id: number; email: string; role: string; name: string; teacherId?: number; studentId?: number; permissions?: string[] } | null> {
   const res = await apiFetch('/api/auth/me');
   if (!res.ok) return null;
   const json = await res.json();
   if (!json?.success || !json?.data?.id) return null;
   const u = json.data;
-  return { id: u.id, email: u.email, role: u.role, name: u.name, teacherId: u.teacherId, studentId: u.studentId };
+  return {
+    id: u.id,
+    email: u.email,
+    role: u.role,
+    name: u.name,
+    teacherId: u.teacherId,
+    studentId: u.studentId,
+    permissions: u.permissions || [],
+  };
 }
 
 export async function getUsers(params?: { search?: string; role?: string; page?: number; limit?: number }) {
