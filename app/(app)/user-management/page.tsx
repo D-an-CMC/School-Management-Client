@@ -132,6 +132,10 @@ export default function UserManagementPage() {
   const [changingPw, setChangingPw] = useState(false)
   const [changePwError, setChangePwError] = useState('')
   const [changePwSuccess, setChangePwSuccess] = useState('')
+  const [showNewPw, setShowNewPw] = useState(false)
+  const [showConfirmPw, setShowConfirmPw] = useState(false)
+  const [copiedPw, setCopiedPw] = useState(false)
+  const [changePwFieldErrors, setChangePwFieldErrors] = useState<Record<string, string>>({})
   const [changePwFields, setChangePwFields] = useState<{ newPassword: string; confirmPassword: string }>({
     newPassword: '',
     confirmPassword: '',
@@ -267,9 +271,62 @@ export default function UserManagementPage() {
     setEditingUser(u)
     setChangePwError('')
     setChangePwSuccess('')
+    setChangePwFieldErrors({})
     setChangePwFields({ newPassword: '', confirmPassword: '' })
+    setShowNewPw(false)
+    setShowConfirmPw(false)
+    setCopiedPw(false)
     setShowChangePwModal(true)
   }
+
+  const generateRandomPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*'
+    const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+    const lower = 'abcdefghijkmnpqrstuvwxyz'
+    const num = '23456789'
+    const special = '@#$%*'
+    let pw = ''
+    pw += upper[Math.floor(Math.random() * upper.length)]
+    pw += lower[Math.floor(Math.random() * lower.length)]
+    pw += num[Math.floor(Math.random() * num.length)]
+    pw += special[Math.floor(Math.random() * special.length)]
+    for (let i = 0; i < 6; i++) {
+      pw += chars[Math.floor(Math.random() * chars.length)]
+    }
+    const generated = pw.split('').sort(() => 0.5 - Math.random()).join('')
+    setChangePwFields({ newPassword: generated, confirmPassword: generated })
+    setChangePwFieldErrors({})
+    setShowNewPw(true)
+    setShowConfirmPw(true)
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(generated)
+      setCopiedPw(true)
+      setTimeout(() => setCopiedPw(false), 3000)
+    }
+  }
+
+  const handleCopyPassword = () => {
+    if (!changePwFields.newPassword) return
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(changePwFields.newPassword)
+      setCopiedPw(true)
+      setTimeout(() => setCopiedPw(false), 3000)
+    }
+  }
+
+  const pwStrength = useMemo(() => {
+    const p = changePwFields.newPassword
+    if (!p) return { score: 0, label: 'Chưa nhập', color: 'bg-gray-200', text: 'text-gray-400', percent: '0%' }
+    let score = 0
+    if (p.length >= 6) score++
+    if (p.length >= 8) score++
+    if (/[A-Z]/.test(p) && /[a-z]/.test(p)) score++
+    if (/[0-9]/.test(p)) score++
+    if (/[^A-Za-z0-9]/.test(p)) score++
+    if (score <= 2) return { score: 1, label: 'Yếu', color: 'bg-red-500', text: 'text-red-600', percent: '33%' }
+    if (score <= 4) return { score: 2, label: 'Trung bình', color: 'bg-amber-500', text: 'text-amber-600', percent: '66%' }
+    return { score: 3, label: 'Mạnh', color: 'bg-emerald-500', text: 'text-emerald-600', percent: '100%' }
+  }, [changePwFields.newPassword])
 
   const handleDeleteUser = async () => {
     if (!deletingUser) return
@@ -288,12 +345,21 @@ export default function UserManagementPage() {
     e.preventDefault()
     if (!editingUser) return
     const errors: Record<string, string> = {}
-    if (!changePwFields.newPassword) errors.newPassword = 'Vui lòng nhập mật khẩu mới'
-    else if (changePwFields.newPassword.length < 6) errors.newPassword = 'Mật khẩu tối thiểu 6 ký tự'
-    if (changePwFields.newPassword !== changePwFields.confirmPassword) errors.confirmPassword = 'Xác nhận mật khẩu không khớp'
-    setChangePwError(Object.values(errors).join(', ') || '')
+    if (!changePwFields.newPassword) {
+      errors.newPassword = 'Vui lòng nhập mật khẩu mới'
+    } else if (changePwFields.newPassword.length < 6) {
+      errors.newPassword = 'Mật khẩu tối thiểu 6 ký tự'
+    }
+    if (!changePwFields.confirmPassword) {
+      errors.confirmPassword = 'Vui lòng xác nhận mật khẩu mới'
+    } else if (changePwFields.newPassword !== changePwFields.confirmPassword) {
+      errors.confirmPassword = 'Xác nhận mật khẩu không khớp'
+    }
+    setChangePwFieldErrors(errors)
     if (Object.keys(errors).length > 0) return
+
     setChangingPw(true)
+    setChangePwError('')
     try {
       const res = await updateUser(editingUser.user_id, { password: changePwFields.newPassword })
       if (!res.success) {
@@ -301,7 +367,7 @@ export default function UserManagementPage() {
         setChangingPw(false)
         return
       }
-      setChangePwSuccess('Đổi mật khẩu thành công')
+      showToast(`Đổi mật khẩu thành công cho ${editingUser.full_name || editingUser.username || editingUser.email}!`, 'success')
       setShowChangePwModal(false)
       setChangingPw(false)
     } catch (err: any) {
@@ -411,7 +477,7 @@ export default function UserManagementPage() {
       }
       closeAddModal()
       await loadUsers()
-      getStudentStats().then(data => setStudentStats(data)).catch(() => {})
+      getStudentStats().then(data => setStudentStats(data)).catch(() => { })
       setSubmitting(false)
     } catch (err: any) {
       setFormError(err.message || 'Lỗi không xác định')
@@ -501,69 +567,69 @@ export default function UserManagementPage() {
         getTeachers({ page: 1, limit: 500 })
       ])
 
-    const studentRows: UserRow[] = (sRes.data || []).filter((s: any) => s.user_id).map((s: any, idx: number) => ({
-      user_id: s.user_id,
-      email: s.email || `${(s.full_name || 'student').toLowerCase().replace(/\s+/g, '')}@student.cmc.edu.vn`,
-      username: s.full_name || '',
-      phone: s.phone || 'N/A',
-      is_active: s.status !== 'inactive',
-      role_id: 3,
-      role_name: 'HocSinh-PhuHuynh',
-      class_id: s.class_id,
-      class_name: s.class_name || 'Chưa phân lớp',
-      grade_level: s.grade_level || undefined,
-      full_name: s.full_name,
-      student_code: s.student_code || `HS-${String(s.user_id).padStart(4, '0')}`,
-      date_of_birth: s.date_of_birth || '',
-      gender: s.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
-      department: 'Học sinh',
-      title: 'Học sinh',
-      schedule_slot: s.schedule_slot || 'Ca sáng',
-      address: s.address,
-      enrollment_date: s.enrollment_date,
-      parent_full_name: s.parent_full_name,
-      parent_phone: s.parent_phone,
-    }))
+      const studentRows: UserRow[] = (sRes.data || []).filter((s: any) => s.user_id).map((s: any, idx: number) => ({
+        user_id: s.user_id,
+        email: s.email || `${(s.full_name || 'student').toLowerCase().replace(/\s+/g, '')}@student.cmc.edu.vn`,
+        username: s.full_name || '',
+        phone: s.phone || 'N/A',
+        is_active: s.status !== 'inactive',
+        role_id: 3,
+        role_name: 'HocSinh-PhuHuynh',
+        class_id: s.class_id,
+        class_name: s.class_name || 'Chưa phân lớp',
+        grade_level: s.grade_level || undefined,
+        full_name: s.full_name,
+        student_code: s.student_code || `HS-${String(s.user_id).padStart(4, '0')}`,
+        date_of_birth: s.date_of_birth || '',
+        gender: s.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
+        department: 'Học sinh',
+        title: 'Học sinh',
+        schedule_slot: s.schedule_slot || 'Ca sáng',
+        address: s.address,
+        enrollment_date: s.enrollment_date,
+        parent_full_name: s.parent_full_name,
+        parent_phone: s.parent_phone,
+      }))
 
-    const teacherRows: UserRow[] = (tRes.data || []).filter((t: any) => t.user_id).map((t: any, idx: number) => ({
-      user_id: t.user_id,
-      email: t.email || '',
-      username: t.full_name || '',
-      phone: t.phone || 'N/A',
-      is_active: true,
-      role_id: 2,
-      role_name: 'GiaoVien',
-      full_name: t.full_name,
-      date_of_birth: t.date_of_birth || '',
-      gender: t.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
-      class_name: t.homeroom_class_name || 'Bộ môn',
-      student_code: t.teacher_code || `GV-${String(t.user_id).padStart(4, '0')}`,
-      department: t.subject || t.department || 'Bộ môn chung',
-      subject: t.subject || t.department || 'Bộ môn chung',
-      title: 'Giảng viên',
-      schedule_slot: t.schedule_slot || 'Ca sáng'
-    }))
+      const teacherRows: UserRow[] = (tRes.data || []).filter((t: any) => t.user_id).map((t: any, idx: number) => ({
+        user_id: t.user_id,
+        email: t.email || '',
+        username: t.full_name || '',
+        phone: t.phone || 'N/A',
+        is_active: true,
+        role_id: 2,
+        role_name: 'GiaoVien',
+        full_name: t.full_name,
+        date_of_birth: t.date_of_birth || '',
+        gender: t.gender || (idx % 2 === 0 ? 'Nam' : 'Nữ'),
+        class_name: t.homeroom_class_name || 'Bộ môn',
+        student_code: t.teacher_code || `GV-${String(t.user_id).padStart(4, '0')}`,
+        department: t.subject || t.department || 'Bộ môn chung',
+        subject: t.subject || t.department || 'Bộ môn chung',
+        title: 'Giảng viên',
+        schedule_slot: t.schedule_slot || 'Ca sáng'
+      }))
 
-    const adminUsers: UserRow[] = (uRes.data || []).filter((u: any) => u.role_id == 1 || (u.role_name || '') === 'Admin').filter((u: any) => u.user_id).map((u: any, idx: number) => ({
-      user_id: u.user_id,
-      email: u.email || '',
-      username: u.username || u.email,
-      phone: u.phone || 'N/A',
-      emergency_phone: u.emergency_phone || 'N/A',
-      is_active: u.is_active !== false,
-      role_id: u.role_id,
-      role_name: 'Admin',
-      date_of_birth: u.date_of_birth || '',
-      gender: u.gender || (idx % 2 === 0 ? 'Nữ' : 'Nam'),
-      full_name: u.full_name || u.username || u.email,
-      title: u.title || 'Quản trị viên',
-      student_code: u.student_code || `NV-${String(u.user_id).padStart(4, '0')}`,
-      class_name: u.department || 'Chưa phân phòng ban',
-      department: u.department || 'Chưa phân phòng ban',
-      schedule_slot: u.schedule_slot || 'Ca hành chính'
-    }))
+      const adminUsers: UserRow[] = (uRes.data || []).filter((u: any) => u.role_id == 1 || (u.role_name || '') === 'Admin').filter((u: any) => u.user_id).map((u: any, idx: number) => ({
+        user_id: u.user_id,
+        email: u.email || '',
+        username: u.username || u.email,
+        phone: u.phone || 'N/A',
+        emergency_phone: u.emergency_phone || 'N/A',
+        is_active: u.is_active !== false,
+        role_id: u.role_id,
+        role_name: 'Admin',
+        date_of_birth: u.date_of_birth || '',
+        gender: u.gender || (idx % 2 === 0 ? 'Nữ' : 'Nam'),
+        full_name: u.full_name || u.username || u.email,
+        title: u.title || 'Quản trị viên',
+        student_code: u.student_code || `NV-${String(u.user_id).padStart(4, '0')}`,
+        class_name: u.department || 'Chưa phân phòng ban',
+        department: u.department || 'Chưa phân phòng ban',
+        schedule_slot: u.schedule_slot || 'Ca hành chính'
+      }))
 
-    setAllUsers([...teacherRows, ...studentRows, ...adminUsers])
+      setAllUsers([...teacherRows, ...studentRows, ...adminUsers])
       setPage(1)
     } catch (err: any) {
       // H5: lỗi API giữ màn hình xoay vô hạn — giờ hiện lỗi + nút thử lại.
@@ -692,7 +758,7 @@ export default function UserManagementPage() {
               <p className="text-sm font-medium text-gray-600">Tổng số giáo viên</p>
               <div className="flex items-baseline justify-between mt-2">
                 <span className="text-2xl font-bold text-blue-900">{totalTeachers}/{totalTeachers}</span>
-                <span className="text-xs font-semibold text-green-500">100% có mặt</span>
+
               </div>
             </div>
             {/* Teaching */}
@@ -700,7 +766,7 @@ export default function UserManagementPage() {
               <p className="text-sm font-medium text-gray-600">Giáo viên đứng lớp</p>
               <div className="flex items-baseline justify-between mt-2">
                 <span className="text-2xl font-bold text-blue-900">{activeTeachingCount}</span>
-                <span className="text-xs font-semibold text-gray-500">Đang trong tiết dạy</span>
+
               </div>
             </div>
             {/* Empty Slots */}
@@ -1438,11 +1504,11 @@ export default function UserManagementPage() {
 
             </div>
 
-            <div className="px-8 py-5 border-t border-gray-200 bg-white flex justify-end gap-3">
+            <div className="px-8 py-5 border-t border-gray-200 bg-white flex justify-end items-center gap-3">
               <button
                 type="button"
                 onClick={() => setShowDetailModal(false)}
-                className="px-6 py-2.5 rounded-full text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-all"
+                className="px-6 py-2.5 rounded-full text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
               >
                 Đóng
               </button>
@@ -1450,9 +1516,23 @@ export default function UserManagementPage() {
                 type="button"
                 onClick={() => {
                   setShowDetailModal(false)
+                  openChangePasswordModal(detailUser)
+                }}
+                className="px-5 py-2.5 rounded-full text-xs font-semibold border border-blue-200 bg-blue-50/70 text-blue-800 hover:bg-blue-100/80 flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+              >
+                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                  <path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                </svg>
+                Đổi mật khẩu
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDetailModal(false)
                   openEditModal(detailUser)
                 }}
-                className="px-6 py-2.5 rounded-full text-xs font-semibold bg-[#001d36] text-white shadow-lg flex items-center gap-2 hover:bg-blue-900 transition-all"
+                className="px-6 py-2.5 rounded-full text-xs font-semibold bg-[#001d36] text-white shadow-lg flex items-center gap-2 hover:bg-blue-900 transition-all cursor-pointer"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
@@ -1561,7 +1641,7 @@ export default function UserManagementPage() {
 
                     {/* Phone */}
                     <div className="flex flex-col gap-1.5">
-<label className="text-xs font-semibold text-gray-700">Số điện thoại <span className="text-red-500">*</span></label>
+                      <label className="text-xs font-semibold text-gray-700">Số điện thoại <span className="text-red-500">*</span></label>
                       <input
                         type="tel"
                         value={formPhone}
@@ -1908,48 +1988,363 @@ export default function UserManagementPage() {
       )}
 
       {/* Delete User Modal */}
-      {showDeleteModal && deletingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
-            <div className="p-5 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900">Xác nhận xóa tài khoản</h2>
+      {showDeleteModal && deletingUser && createPortal(
+        <div 
+          className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => { setShowDeleteModal(false); setDeletingUser(null); }}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-[420px] overflow-hidden border border-gray-100 animate-in zoom-in-95 duration-200" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                </svg>
+              </div>
+              <h2 className="text-lg font-bold text-gray-900 mb-2">Xác nhận xóa tài khoản</h2>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Bạn có chắc chắn muốn xóa tài khoản <strong className="text-gray-900">{deletingUser.full_name || deletingUser.username || deletingUser.email}</strong>? Hành động này không thể hoàn tác.
+              </p>
             </div>
-            <div className="p-5">
-              <p className="text-sm text-gray-700">Bạn có chắc chắn muốn xóa tài khoản <strong>{deletingUser.full_name || deletingUser.username || deletingUser.email}</strong>? Thao tác này không thể hoàn tác.</p>
-            </div>
-            <div className="flex justify-end gap-3 pt-2 pb-5 px-5">
-              <button onClick={() => { setShowDeleteModal(false); setDeletingUser(null) }} className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Hủy</button>
-              <button onClick={handleDeleteUser} className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700">Xóa</button>
+            <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-100">
+              <button 
+                type="button"
+                onClick={() => { setShowDeleteModal(false); setDeletingUser(null); }} 
+                className="px-5 py-2.5 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                type="button"
+                onClick={handleDeleteUser} 
+                className="px-5 py-2.5 bg-red-600 text-white rounded-xl text-xs font-semibold hover:bg-red-700 shadow-md transition-all cursor-pointer"
+              >
+                Xác nhận xóa
+              </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Change Password Modal */}
-      {showChangePwModal && editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center p-5 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900">Đổi mật khẩu</h2>
-              <button onClick={() => setShowChangePwModal(false)} className="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+      {showChangePwModal && editingUser && createPortal(
+        <div 
+          className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => { if (!changingPw) setShowChangePwModal(false) }}
+        >
+          <div 
+            className="bg-white w-full max-w-[500px] rounded-2xl shadow-2xl overflow-hidden border border-gray-100 animate-in zoom-in-95 duration-200 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-gray-900 leading-tight">Đổi mật khẩu tài khoản</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">Thiết lập lại mật khẩu đăng nhập cho người dùng</p>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowChangePwModal(false)}
+                disabled={changingPw}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                </svg>
+              </button>
             </div>
-            <form onSubmit={handleChangePassword} className="p-5 space-y-4">
-              {changePwError && <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-sm">{changePwError}</div>}
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Mật khẩu mới</label>
-                <input type="password" value={changePwFields.newPassword} onChange={(e) => setChangePwFields(prev => ({ ...prev, newPassword: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400" placeholder="Ít nhất 6 ký tự" />
+
+            {/* Target User Info Banner */}
+            <div className="px-6 pt-5 pb-1">
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#001d36] to-[#0d3b66] text-white font-bold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+                    {(editingUser.full_name || editingUser.username || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-gray-900 truncate">
+                        {editingUser.full_name || editingUser.username}
+                      </span>
+                      <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 text-blue-800 flex-shrink-0">
+                        {editingUser.title || editingUser.role_name || (editingUser.role_id === 1 ? 'Admin' : editingUser.role_id === 2 ? 'Giáo viên' : 'Học sinh')}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5 truncate">
+                      <span className="font-mono bg-white px-1.5 py-0.5 rounded border border-gray-200 text-[11px] text-gray-700">
+                        {editingUser.student_code || `ID: ${editingUser.user_id}`}
+                      </span>
+                      <span className="truncate">{editingUser.email}</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  {editingUser.is_active ? (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex-shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Hoạt động
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200/60 flex-shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                      Đang khóa
+                    </span>
+                  )}
+                </div>
               </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Xác nhận mật khẩu mới</label>
-                <input type="password" value={changePwFields.confirmPassword} onChange={(e) => setChangePwFields(prev => ({ ...prev, confirmPassword: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400" placeholder="Nhập lại mật khẩu mới" />
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleChangePassword} className="p-6 space-y-4">
+              {changePwError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3.5 py-2.5 rounded-xl text-xs flex items-start gap-2.5">
+                  <svg className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                    <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" />
+                    <circle cx="12" cy="16" r="0.5" fill="currentColor" strokeWidth="2" />
+                  </svg>
+                  <span>{changePwError}</span>
+                </div>
+              )}
+
+              {/* Quick Generator Toolbar */}
+              <div className="flex items-center justify-between bg-blue-50/60 border border-blue-100 rounded-xl px-3.5 py-2.5">
+                <span className="text-xs font-medium text-blue-950">Gợi ý tạo mật khẩu:</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={generateRandomPassword}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 shadow-2xs transition-all cursor-pointer"
+                  >
+                    <svg className="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    </svg>
+                    Tạo ngẫu nhiên
+                  </button>
+                  {changePwFields.newPassword && (
+                    <button
+                      type="button"
+                      onClick={handleCopyPassword}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-2xs transition-all cursor-pointer"
+                    >
+                      {copiedPw ? (
+                        <>
+                          <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          <span className="text-emerald-700">Đã chép</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" strokeWidth="2" />
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" strokeWidth="2" />
+                          </svg>
+                          <span>Sao chép</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setShowChangePwModal(false)} disabled={changingPw} className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50">Hủy</button>
-                <button type="submit" disabled={changingPw} className="px-4 py-2 bg-[#004d80] text-white rounded-lg text-sm font-medium hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed">{changingPw ? 'Đang đổi...' : 'Đổi mật khẩu'}</button>
+
+              {/* New Password */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                  Mật khẩu mới <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M7 11V7a5 5 0 0110 0v4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <input 
+                    type={showNewPw ? "text" : "password"}
+                    value={changePwFields.newPassword} 
+                    onChange={(e) => {
+                      setChangePwFields(prev => ({ ...prev, newPassword: e.target.value }))
+                      if (changePwFieldErrors.newPassword) {
+                        setChangePwFieldErrors(prev => { const n = { ...prev }; delete n.newPassword; return n })
+                      }
+                    }} 
+                    className={`w-full pl-9 pr-10 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 bg-white border rounded-xl focus:outline-none focus:ring-2 transition-all ${
+                      changePwFieldErrors.newPassword 
+                        ? 'border-red-300 focus:ring-red-200 focus:border-red-500' 
+                        : 'border-gray-300 focus:ring-blue-100 focus:border-[#001d36]'
+                    }`}
+                    placeholder="Nhập ít nhất 6 ký tự..." 
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPw(!showNewPw)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
+                  >
+                    {showNewPw ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {changePwFieldErrors.newPassword && (
+                  <p className="text-xs text-red-500 mt-1">{changePwFieldErrors.newPassword}</p>
+                )}
+
+                {/* Password strength meter */}
+                {changePwFields.newPassword && (
+                  <div className="mt-2 space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-500">Độ mạnh mật khẩu:</span>
+                      <span className={`font-bold ${pwStrength.text}`}>{pwStrength.label}</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                      <div 
+                        className={`h-full transition-all duration-300 ${pwStrength.color}`}
+                        style={{ width: pwStrength.percent }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-700">
+                    Xác nhận mật khẩu mới <span className="text-red-500">*</span>
+                  </label>
+                  {changePwFields.confirmPassword && (
+                    <span className={`text-[11px] font-medium flex items-center gap-1 ${
+                      changePwFields.newPassword === changePwFields.confirmPassword 
+                        ? 'text-emerald-600' 
+                        : 'text-amber-600'
+                    }`}>
+                      {changePwFields.newPassword === changePwFields.confirmPassword ? (
+                        <>
+                          <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          Khớp nhau
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M18 6L6 18M6 6l12 12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          Chưa khớp
+                        </>
+                      )}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <input 
+                    type={showConfirmPw ? "text" : "password"}
+                    value={changePwFields.confirmPassword} 
+                    onChange={(e) => {
+                      setChangePwFields(prev => ({ ...prev, confirmPassword: e.target.value }))
+                      if (changePwFieldErrors.confirmPassword) {
+                        setChangePwFieldErrors(prev => { const n = { ...prev }; delete n.confirmPassword; return n })
+                      }
+                    }} 
+                    className={`w-full pl-9 pr-10 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 bg-white border rounded-xl focus:outline-none focus:ring-2 transition-all ${
+                      changePwFieldErrors.confirmPassword 
+                        ? 'border-red-300 focus:ring-red-200 focus:border-red-500' 
+                        : 'border-gray-300 focus:ring-blue-100 focus:border-[#001d36]'
+                    }`}
+                    placeholder="Nhập lại chính xác mật khẩu..." 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPw(!showConfirmPw)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
+                  >
+                    {showConfirmPw ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {changePwFieldErrors.confirmPassword && (
+                  <p className="text-xs text-red-500 mt-1">{changePwFieldErrors.confirmPassword}</p>
+                )}
+              </div>
+
+              {/* Security Hint */}
+              <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-3 flex items-start gap-2.5 text-xs text-slate-600">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Mật khẩu mới sẽ có hiệu lực ngay lập tức. Hãy sao chép và chuyển cho người dùng để họ đăng nhập vào hệ thống.</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end items-center gap-3 pt-3 border-t border-gray-100">
+                <button 
+                  type="button" 
+                  onClick={() => setShowChangePwModal(false)} 
+                  disabled={changingPw} 
+                  className="px-5 py-2.5 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={changingPw} 
+                  className="px-6 py-2.5 bg-[#001d36] hover:bg-[#002b50] text-white rounded-xl text-xs font-semibold shadow-md hover:shadow-lg flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {changingPw ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Đang cập nhật...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M5 13l4 4L19 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span>Lưu mật khẩu mới</span>
+                    </>
+                  )}
+                </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Global Toast */}
