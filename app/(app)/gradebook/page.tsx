@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { useAcademic } from '@/lib/academic-context'
 import { isScoredSubject, isGradedSubject } from '@/lib/utils'
@@ -14,6 +14,9 @@ import {
   getMe,
   getTimetables,
   predictStudentSemester,
+  predictClassGrades,
+  predictSingleScore,
+  MlClassPrediction,
 } from '@/lib/api'
 
 interface GradeRow {
@@ -29,6 +32,10 @@ interface GradeRow {
   ranking?: string
   avg1?: string
   avg2?: string
+  aiPrediction?: string
+  aiPredictedAvg?: string
+  aiModel?: string
+  aiReason?: string
 }
 
 interface SubjectGrade {
@@ -543,6 +550,12 @@ function TeacherGradebook({ userName }: { userName: string }) {
   const [saveErr, setSaveErr] = useState<string | null>(null)
   const [semMode, setSemMode] = useState<'sem1' | 'sem2' | 'year'>('year')
 
+  // AI Prediction states & debounce ref
+  const [aiLoading, setAiLoading] = useState(false)
+  const [isPredicting, setIsPredicting] = useState(false)
+  const [aiError, setAiError] = useState('')
+  const predictDebounceRef = useRef<{ [studentId: string]: NodeJS.Timeout }>({})
+
   const effectiveYearId = selectedSchoolYearId ?? currentSchoolYear?.school_year_id ?? undefined
   const yearSems = effectiveYearId != null
     ? semesters.filter((s: any) => Number(s.school_year_id) === Number(effectiveYearId))
@@ -701,11 +714,171 @@ function TeacherGradebook({ userName }: { userName: string }) {
         }
       })
       setRows(mapped)
+      // Tự động gọi AI dự đoán CK cho cả lớp khi tải dữ liệu
+      if (!isYearView && selectedSubjectId && isScoredSubject(selectedSubjectId)) {
+        fetchAiPredictions(selectedClassId!, selectedSubjectId, activeSemesterId ?? undefined, mapped)
+      }
     } catch (err) {
       console.error('Failed to load grades', err)
       setRows([])
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Dự đoán CK bằng ML cho cả lớp (fill cột AI Dự Đoán)
+  const fetchAiPredictions = async (clsId: number, subjId: number, semId: number | undefined, currentRows: GradeRow[]) => {
+    try {
+      if (!isScoredSubject(subjId)) return
+      if (semMode === 'year') return
+      if (!currentRows || currentRows.length === 0) return
+      setAiLoading(true)
+      setAiError('')
+      const res = await predictClassGrades(clsId, subjId, semId).catch(() => null)
+      if (!res?.success || !res.data?.predictions) {
+        if (res && (res as any).code === 'ML_NOT_CONFIGURED') setAiError('Chưa cấu hình ML_API_URL trên Sever nên không dự đoán được.')
+        else if (res && !res.success) setAiError((res as any).error || 'Không gọi được ML dự đoán.')
+        return
+      }
+      const predMap = new Map<number, MlClassPrediction>()
+      for (const p of res.data.predictions) predMap.set(Number(p.student_id), p)
+      setRows((prev) =>
+        prev.map((s) => {
+          const sid = s.student_id ?? Number(s.id)
+          const p = predMap.get(sid)
+          if (!p || p.predicted_ck == null) {
+            return {
+              ...s,
+              aiPrediction: '--',
+              aiReason: p?.reason || 'Cần có điểm TX và điểm GK để AI dự đoán',
+            }
+          }
+          const ck = Number(p.predicted_ck).toFixed(1)
+          const avg = p.predicted_avg != null ? Number(p.predicted_avg).toFixed(1) : undefined
+          return {
+            ...s,
+            aiPrediction: ck,
+            aiPredictedAvg: avg,
+            aiModel: p.model,
+            aiReason: p.reason,
+          }
+        })
+      )
+    } catch {
+      // Im lặng khi ML offline — cột giữ '--'.
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  // Tự động gọi AI tính lại điểm dự đoán cho 1 học sinh khi sửa điểm TX / GK
+  const triggerSingleAiPrediction = (studentIdStr: string, updatedStudent: GradeRow) => {
+    if (semMode === 'year') return
+    if (!selectedSubjectId || !isScoredSubject(selectedSubjectId)) return
+
+    const gradeLevel = selectedClass?.class_name ? parseInt((selectedClass.class_name.match(/\d+/) || [])[0], 10) : 6
+    if (isNaN(gradeLevel) || gradeLevel < 6 || gradeLevel > 9) return
+
+    const semCode = semMode === 'sem2' ? 'II' : 'I'
+
+    const validTx = updatedStudent.freq
+      .map((f) => parseFloat(String(f).replace(',', '.')))
+      .filter((n) => !isNaN(n) && n >= 0 && n <= 10)
+    const gkNum = parseFloat(String(updatedStudent.midTerm).replace(',', '.'))
+
+    if (validTx.length === 0 || isNaN(gkNum) || gkNum < 0 || gkNum > 10) {
+      setRows((prev) =>
+        prev.map((s) => (s.id === studentIdStr ? { ...s, aiPrediction: '--', aiReason: 'Cần có điểm TX và điểm GK để AI dự đoán' } : s))
+      )
+      return
+    }
+
+    if (predictDebounceRef.current[studentIdStr]) {
+      clearTimeout(predictDebounceRef.current[studentIdStr])
+    }
+
+    predictDebounceRef.current[studentIdStr] = setTimeout(async () => {
+      try {
+        const avgTx = validTx.reduce((a, b) => a + b, 0) / validTx.length
+        const tx1 = validTx[0]
+        const tx2 = validTx[1] ?? avgTx
+        const tx3 = validTx[2] ?? avgTx
+        const tx4 = validTx[3] ?? avgTx
+
+        const res = await predictSingleScore({
+          grade: gradeLevel,
+          semester: semCode,
+          TX1: tx1,
+          TX2: tx2,
+          TX3: tx3,
+          TX4: tx4,
+          GK: gkNum,
+        })
+
+        if (res.success && res.data?.predicted_ck != null) {
+          const ck = Number(res.data.predicted_ck).toFixed(1)
+          setRows((prev) =>
+            prev.map((s) => (s.id === studentIdStr ? { ...s, aiPrediction: ck, aiModel: res.data?.model } : s))
+          )
+        }
+      } catch (err) {
+        console.error('[AI Predict Realtime] Error:', err)
+      }
+    }, 300)
+  }
+
+  // Chạy dự đoán AI thủ công khi bấm nút
+  const handleRunAiPrediction = async () => {
+    if (!selectedClassId || !selectedSubjectId || semMode === 'year') return
+    setIsPredicting(true)
+    setAiError('')
+    try {
+      const res = await predictClassGrades(selectedClassId, selectedSubjectId, activeSemesterId ?? undefined)
+      if (res.success && res.data?.predictions) {
+        const predMap = new Map<number, MlClassPrediction>()
+        res.data.predictions.forEach((p: MlClassPrediction) => {
+          predMap.set(p.student_id, p)
+        })
+
+        setRows((prev) =>
+          prev.map((s) => {
+            const sid = s.student_id ?? parseInt(s.id)
+            const pred = predMap.get(sid)
+            if (!pred) return s
+
+            let displayPred = '--'
+            if (pred.predicted_ck != null) {
+              displayPred = `${Number(pred.predicted_ck).toFixed(1)}`
+            } else if (pred.reason) {
+              displayPred = 'Chưa đủ điểm'
+            }
+
+            return {
+              ...s,
+              aiPrediction: displayPred,
+              aiModel: pred.model,
+              aiReason: pred.reason,
+              aiPredictedAvg: pred.predicted_avg != null ? Number(pred.predicted_avg).toFixed(1) : undefined,
+            }
+          })
+        )
+      } else {
+        const rawErr = res?.error || ''
+        const msg = rawErr.includes('fetch failed')
+          ? 'Không thể kết nối dịch vụ ML AI (port 8000). Vui lòng kiểm tra dịch vụ ML-LSTX.'
+          : (rawErr || 'Dịch vụ ML AI chưa phản hồi hoặc chưa cấu hình.')
+        setAiError(msg)
+        setTimeout(() => setAiError(''), 6000)
+      }
+    } catch (err: any) {
+      const rawErr = err?.message || ''
+      const msg = rawErr.includes('fetch failed')
+        ? 'Không thể kết nối dịch vụ ML AI (port 8000). Vui lòng kiểm tra dịch vụ ML-LSTX.'
+        : (rawErr || 'Lỗi khi gọi AI dự đoán điểm')
+      setAiError(msg)
+      setTimeout(() => setAiError(''), 6000)
+    } finally {
+      setIsPredicting(false)
     }
   }
 
@@ -716,14 +889,27 @@ function TeacherGradebook({ userName }: { userName: string }) {
 
   function handleScoreChange(id: string, field: 'freq' | 'midTerm' | 'finalTerm', index: number | undefined, value: string) {
     if (isYearView) return
-    setRows((prev) => prev.map((s) => {
-      if (s.id !== id) return s
-      let updated = { ...s }
-      if (field === 'freq' && typeof index === 'number') { const f = [...s.freq]; f[index] = value; updated.freq = f }
-      else updated = { ...s, [field]: value }
-      const avg = calcAverage(updated.freq, updated.midTerm, updated.finalTerm)
-      return { ...updated, average: avg, warning: parseFloat(avg) < 5.0 }
-    }))
+    const currentStudent = rows.find((s) => s.id === id)
+    if (!currentStudent) return
+
+    let updated = { ...currentStudent }
+    if (field === 'freq' && typeof index === 'number') {
+      const f = [...currentStudent.freq]
+      f[index] = value
+      updated.freq = f
+    } else {
+      updated = { ...currentStudent, [field]: value }
+    }
+    const avg = calcAverage(updated.freq, updated.midTerm, updated.finalTerm)
+    updated.average = avg
+    updated.warning = parseFloat(avg) < 5.0
+
+    setRows((prev) => prev.map((s) => (s.id === id ? updated : s)))
+
+    // Nếu sửa điểm Thường xuyên hoặc Giữa kỳ, tự động kích hoạt AI dự đoán lại điểm Cuối kỳ
+    if (field === 'freq' || field === 'midTerm') {
+      triggerSingleAiPrediction(id, updated)
+    }
   }
 
   function handleRankingChange(id: string, value: string) {
@@ -764,6 +950,7 @@ function TeacherGradebook({ userName }: { userName: string }) {
   const warningCount = rows.filter((r) => r.warning).length
   const excellentCount = rows.filter((r) => parseFloat(r.average) >= 8.5).length
   const filledCount = rows.filter((r) => r.ranking).length
+  const aiCount = rows.filter((r) => r.aiPrediction && r.aiPrediction !== '--' && r.aiPrediction !== 'Chưa đủ điểm').length
 
   if (loading && classes.length === 0) {
     return (
@@ -806,6 +993,26 @@ function TeacherGradebook({ userName }: { userName: string }) {
               Chế độ chỉ xem (Chưa cấp quyền nhập điểm)
             </span>
           )}
+          {!isYearView && !nonScored && (
+            <button
+              onClick={handleRunAiPrediction}
+              disabled={isPredicting || loading || rows.length === 0}
+              className="px-3.5 py-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              title="Dự đoán điểm Cuối kỳ bằng mô hình Machine Learning"
+            >
+              {isPredicting ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                  <span>Đang dự đoán...</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-amber-500">✨</span>
+                  <span>AI Dự Đoán</span>
+                </>
+              )}
+            </button>
+          )}
           <button
             onClick={handleSave}
             disabled={saving || rows.length === 0 || isYearView || !canEditGrades}
@@ -817,6 +1024,13 @@ function TeacherGradebook({ userName }: { userName: string }) {
           </button>
         </div>
       </div>
+
+      {aiError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-800 text-xs flex items-center gap-2 shadow-xs">
+          <span className="material-symbols-outlined text-amber-600 text-base">warning</span>
+          <span>{aiError}</span>
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-2 bg-white border border-gray-200 rounded-xl p-2 shadow-sm w-fit">
         {([
@@ -911,7 +1125,14 @@ function TeacherGradebook({ userName }: { userName: string }) {
             <h3 className="text-sm font-bold text-gray-900">
               {selectedClass?.class_name ?? 'Lop hoc'}{selectedSubject ? ` - ${selectedSubject.subject_name}` : ''}
             </h3>
-            <p className="text-xs text-gray-400 mt-0.5">{filledCount}/{rows.length} hoc sinh da co diem</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs text-gray-400 mt-0.5">{filledCount}/{rows.length} hoc sinh da co diem</p>
+              {!nonScored && !isYearView && aiCount > 0 && (
+                <span className="text-xs text-indigo-600 font-semibold flex items-center gap-1 mt-0.5">
+                  <span className="text-amber-500">✨</span> {aiCount}/{rows.length} học sinh có dự đoán AI
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -946,6 +1167,13 @@ function TeacherGradebook({ userName }: { userName: string }) {
                       ))}
                       <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">GK <span className="text-[8px] text-orange-500">x2</span></th>
                       <th className="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">CK <span className="text-[8px] text-red-500">x3</span></th>
+                      {!isYearView && (
+                        <th className="px-3 py-3 text-center text-[10px] font-bold text-indigo-700 uppercase tracking-wider w-28">
+                          <span className="inline-flex items-center gap-1">
+                            <span className="text-amber-500">✨</span> AI Dự Đoán
+                          </span>
+                        </th>
+                      )}
                       <th className="px-5 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">DTB</th>
                     </>
                   )}
@@ -1031,6 +1259,26 @@ function TeacherGradebook({ userName }: { userName: string }) {
                         />
                       </td>
                     ))}
+                    {!isYearView && (
+                      <td className="px-3 py-3 text-center">
+                        {row.aiPrediction && row.aiPrediction !== '--' ? (
+                          <div
+                            className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-200 shadow-xs cursor-help transition hover:bg-indigo-100"
+                            title={`Dự đoán điểm Cuối kỳ (CK): ${row.aiPrediction}${row.aiPredictedAvg ? ` | ĐTB dự kiến: ${row.aiPredictedAvg}` : ''} | Mô hình: ${row.aiModel || 'AI'}`}
+                          >
+                            <span className="text-amber-500">✨</span>
+                            <span>{row.aiPrediction}</span>
+                          </div>
+                        ) : (
+                          <span
+                            className="text-gray-300 text-xs font-mono cursor-help"
+                            title={row.aiReason || 'Cần có điểm TX và GK để AI dự đoán'}
+                          >
+                            —
+                          </span>
+                        )}
+                      </td>
+                    )}
                     <td className="px-5 py-3 text-center">
                       <span className={`inline-flex items-center justify-center w-14 py-1 rounded-full text-xs font-bold ${
                         row.warning ? 'bg-red-100 text-red-700' :

@@ -778,7 +778,7 @@ export default function GradeManagementPage() {
               )}
             </select>
 
-            {isScoredSubject(selectedSubject) && (
+            {isScoredSubject(subjectsList.find((s) => s.subject_name === selectedSubject)?.subject_id) && (
               <button
                 onClick={handleRunAiPrediction}
                 disabled={isPredicting || loading || !canRunAI}
